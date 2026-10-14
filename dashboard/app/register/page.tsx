@@ -27,17 +27,49 @@ export default function RegisterPage() {
   const [route, setRoute] = useState<"Exceptional Promise" | "Exceptional Talent">("Exceptional Promise");
   const [agreed, setAgreed] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !fullName) return;
-    setLoading(true);
-    login(email, fullName, accountType);
+    if (!email || !fullName) {
+      setError("Please complete all required fields.");
+      return;
+    }
+    if (!password || password.length < 6) {
+      setError("Password must be at least 6 characters in length.");
+      return;
+    }
 
-    setTimeout(() => {
-      setLoading(false);
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+          fullName: fullName.trim(),
+          orgName: orgName.trim(),
+          accountType,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Failed to create account. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      login(data.user, data.organization);
       router.push("/dashboard");
-    }, 400);
+    } catch {
+      setError("Failed to connect to registration server. Please check your connection.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -94,8 +126,13 @@ export default function RegisterPage() {
           </button>
         </div>
 
-        {/* Form Card */}
         <div className="p-6 sm:p-8 rounded-2xl border border-slate-800 bg-slate-900/60 shadow-xl space-y-5">
+          {error && (
+            <div className="p-3.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs flex items-center gap-2">
+              <span>{error}</span>
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4 text-xs">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>

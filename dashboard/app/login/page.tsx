@@ -22,25 +22,41 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) {
       setError("Please enter a valid email address.");
       return;
     }
-    if (!password || password.length < 6) {
-      setError("Please enter your password (minimum 6 characters).");
+    if (!password) {
+      setError("Please enter your account password.");
       return;
     }
 
     setLoading(true);
     setError(null);
 
-    login(email);
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Invalid email or password. Please verify your credentials.");
+        setLoading(false);
+        return;
+      }
+
+      login(data.user, data.organization);
       router.push("/dashboard");
-    }, 400);
+    } catch {
+      setError("Failed to connect to authentication server. Please check your connection.");
+      setLoading(false);
+    }
   };
 
   return (

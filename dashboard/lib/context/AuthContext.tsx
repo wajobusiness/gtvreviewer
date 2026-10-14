@@ -11,14 +11,20 @@ import {
 
 interface AuthContextType {
   user: UserSession;
+  isAuthenticated: boolean;
+  isLoading: boolean;
   organization: OrganizationSession;
   organizations: OrganizationSession[];
   project: ProjectSession | null;
   projects: ProjectSession[];
   auditRuns: AuditRunItem[];
   activeRunId: string;
-  login: (email: string, fullName?: string, role?: UserRole) => void;
-  logout: () => void;
+  login: (
+    userOrEmail: UserSession | string,
+    orgOrFullName?: OrganizationSession | string,
+    role?: UserRole
+  ) => void;
+  logout: () => Promise<void>;
   switchOrganization: (orgId: string) => void;
   switchOrganizationTier: (tier: "STARTER" | "PROFESSIONAL" | "FIRM_ENTERPRISE") => void;
   switchProject: (projectId: string) => void;
@@ -48,10 +54,10 @@ const defaultOrganization: OrganizationSession = {
   seatsMax: 5,
 };
 
-const defaultUser: UserSession = {
-  id: "usr-primary",
-  email: "solicitor@gtvreviewer.com",
-  fullName: "Lead Immigration Advisor",
+const guestUser: UserSession = {
+  id: "usr-guest",
+  email: "",
+  fullName: "Guest User",
   role: "SOLICITOR",
 };
 
@@ -60,24 +66,60 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [organizations, setOrganizations] = useState<OrganizationSession[]>([defaultOrganization]);
   const [currentOrgId, setCurrentOrgId] = useState<string>("org-primary");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  // Production clean state: Projects start empty unless loaded from user localStorage
+  // Production clean state: Projects start empty unless loaded from user storage
   const [projects, setProjects] = useState<ProjectSession[]>([]);
   const [currentProjectId, setCurrentProjectId] = useState<string>("");
 
   const [auditRunsByProject, setAuditRunsByProject] = useState<Record<string, AuditRunItem[]>>({});
   const [activeRunId, setActiveRunId] = useState<string>("");
 
-  const [user, setUser] = useState<UserSession>(defaultUser);
+  const [user, setUser] = useState<UserSession>(guestUser);
 
-  // Load persisted user session and projects from localStorage on mount
+  // Load session from /api/auth/me (database cookie) and projects from storage on mount
   useEffect(() => {
-    try {
-      const savedUser = localStorage.getItem("gt_user_session");
-      if (savedUser) {
-        setUser(JSON.parse(savedUser));
+    async function initSession() {
+      try {
+        // 1. Try server-side HTTP-only session verification
+        const res = await fetch("/api/auth/me");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.authenticated && data.user) {
+            setUser(data.user);
+            if (data.organization) {
+              setOrganizations([data.organization]);
+              setCurrentOrgId(data.organization.id);
+            }
+            try {
+              localStorage.setItem("gt_user_session", JSON.stringify(data.user));
+            } catch {}
+            setIsLoading(false);
+            return;
+          }
+        }
+      } catch {
+        // Fallback to client storage if server is temporarily unreachable
       }
 
+      // 2. Fallback to client localStorage if offline or network unavailable
+      try {
+        const savedUser = localStorage.getItem("gt_user_session");
+        if (savedUser) {
+          const parsed = JSON.parse(savedUser);
+          if (parsed.email && parsed.id) {
+            setUser(parsed);
+          }
+        }
+      } catch {}
+
+      setIsLoading(false);
+    }
+
+    initSession();
+
+    // Hydrate projects and audit runs
+    try {
       const savedProjects = localStorage.getItem("gt_user_projects");
       if (savedProjects) {
         const parsed = JSON.parse(savedProjects) as ProjectSession[];
@@ -93,31 +135,43 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (savedRuns) {
         setAuditRunsByProject(JSON.parse(savedRuns));
       }
-    } catch {
-      // Ignore localStorage read errors
-    }
+    } catch {}
   }, []);
 
-  const login = (email: string, fullName?: string, role: UserRole = "SOLICITOR") => {
-    const updated: UserSession = {
-      id: `usr-${Date.now()}`,
-      email,
-      fullName: fullName || email.split("@")[0],
-      role,
-    };
-    setUser(updated);
+  const login = (
+    userOrEmail: UserSession | string,
+    orgOrFullName?: OrganizationSession | string,
+    role: UserRole = "SOLICITOR"
+  ) => {
+    let updatedUser: UserSession;
+
+    if (typeof userOrEmail === "object") {
+      updatedUser = userOrEmail;
+      if (orgOrFullName && typeof orgOrFullName === "object") {
+        setOrganizations([orgOrFullName]);
+        setCurrentOrgId(orgOrFullName.id);
+      }
+    } else {
+      updatedUser = {
+        id: `usr-${Date.now()}`,
+        email: userOrEmail,
+        fullName: typeof orgOrFullName === "string" ? orgOrFullName : userOrEmail.split("@")[0],
+        role,
+      };
+    }
+
+    setUser(updatedUser);
     try {
-      localStorage.setItem("gt_user_session", JSON.stringify(updated));
+      localStorage.setItem("gt_user_session", JSON.stringify(updatedUser));
     } catch {}
   };
 
-  const logout = () => {
-    setUser({
-      id: "usr-guest",
-      email: "",
-      fullName: "Guest User",
-      role: "CANDIDATE",
-    });
+  const logout = async () => {
+    try {
+      await fetch("/api/auth/logout", { method: "POST" });
+    } catch {}
+
+    setUser(guestUser);
     try {
       localStorage.removeItem("gt_user_session");
     } catch {}
@@ -265,6 +319,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setActiveRunId(effectiveRunId);
   };
 
+  const isAuthenticated = Boolean(user && user.email && user.id && user.id !== "usr-guest");
   const currentOrg =
     organizations.find((o) => o.id === currentOrgId) || organizations[0];
   const currentProject =
@@ -275,6 +330,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     <AuthContext.Provider
       value={{
         user,
+        isAuthenticated,
+        isLoading,
         organization: currentOrg,
         organizations,
         project: currentProject,

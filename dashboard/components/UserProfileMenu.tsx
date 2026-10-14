@@ -2,13 +2,15 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
 import { User, Shield, Briefcase, UserCheck, ChevronDown, Check, Settings, CreditCard, LogOut } from "lucide-react";
 import { UserRole } from "@/types/auth";
 import { cn } from "@/lib/utils";
 
 export function UserProfileMenu() {
-  const { user, switchUserRole } = useAuth();
+  const router = useRouter();
+  const { user, switchUserRole, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -125,14 +127,18 @@ export function UserProfileMenu() {
               <CreditCard className="w-3.5 h-3.5 text-emerald-400" />
               <span>Subscription & Billing</span>
             </Link>
-            <Link
-              href="/login"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 text-red-400 hover:text-red-300 transition-colors"
+            <button
+              type="button"
+              onClick={async () => {
+                setOpen(false);
+                await logout();
+                router.push("/login");
+              }}
+              className="w-full flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 text-red-400 hover:text-red-300 transition-colors text-left cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Sign Out</span>
-            </Link>
+            </button>
           </div>
         </div>
       )}
