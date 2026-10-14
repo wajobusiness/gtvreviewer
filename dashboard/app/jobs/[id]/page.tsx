@@ -18,6 +18,8 @@ import {
   Sparkles,
   Layers,
   FileText,
+  Globe,
+  ExternalLink,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -122,6 +124,12 @@ export default function JobMonitorPage() {
                 Audit Execution Worker
               </span>
               <RiskBadge status={job.status} size="sm" />
+              {job.sourceType === "GOOGLE_DRIVE" && (
+                <span className="inline-flex items-center gap-1 text-[10px] font-mono font-medium px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                  <Globe className="w-3 h-3" />
+                  Public Google Drive Link
+                </span>
+              )}
             </div>
             <h1 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight mt-0.5">
               Live Audit: {job.candidateName}

@@ -30,6 +30,9 @@ export interface AuditJob {
   stages: JobStage[];
   logs: JobLogEntry[];
   resultRunId?: string;
+  sourceType?: "LOCAL_UPLOAD" | "GOOGLE_DRIVE";
+  googleDriveUrl?: string;
+  googleDriveFolderId?: string;
   finalScore?: number;
   finalStatus?: string;
   error?: string;

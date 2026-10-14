@@ -238,5 +238,20 @@ test("SaaS Product Pages & Public Routes: validates presence of essential commer
   }
 });
 
+test("Google Drive Ingestion: parses and validates public Google Drive folder links", async () => {
+  const { extractGoogleDriveId, isValidGoogleDriveUrl } = await import("../lib/drive.ts");
+
+  const folderUrl = "https://drive.google.com/drive/folders/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs?usp=sharing";
+  const fileUrl = "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs/view";
+
+  const folderResult = extractGoogleDriveId(folderUrl);
+  assert.equal(folderResult.type, "folder");
+  assert.equal(folderResult.id, "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs");
+
+  const fileResult = extractGoogleDriveId(fileUrl);
+  assert.equal(fileResult.type, "file");
+  assert.equal(fileResult.id, "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs");
+});
+
 
 

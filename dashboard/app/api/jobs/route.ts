@@ -7,8 +7,13 @@ export async function POST(request: NextRequest) {
     const projectId = body.projectId || "proj-001";
     const candidateName = body.candidateName || "Alex Taylor (Sample Candidate)";
     const visaRoute = body.visaRoute || "Exceptional Promise";
+    const sourceType = body.sourceType as "LOCAL_UPLOAD" | "GOOGLE_DRIVE" | undefined;
+    const googleDriveUrl = body.googleDriveUrl as string | undefined;
 
-    const job = jobManager.createJob(projectId, candidateName, visaRoute);
+    const job = jobManager.createJob(projectId, candidateName, visaRoute, {
+      sourceType,
+      googleDriveUrl,
+    });
 
     return NextResponse.json({
       success: true,
