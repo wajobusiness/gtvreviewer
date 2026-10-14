@@ -21,18 +21,21 @@ import {
   CreditCard,
   FileCheck2,
   ShieldCheck,
+  Settings,
+  Globe,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/context/AuthContext";
 
 const navigationItems = [
-  { name: "Executive Dashboard", href: "/", icon: LayoutDashboard },
+  { name: "Executive Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { name: "Executive Summary", href: "/summary", icon: ShieldAlert },
   { name: "Candidates & Portfolios", href: "/projects", icon: FolderKanban },
   { name: "Evidence Uploader", href: "/upload", icon: UploadCloud },
   { name: "Version Compare", href: "/compare", icon: GitCompare },
   { name: "Solicitor Bundle", href: "/export", icon: FileCheck2 },
   { name: "Billing & Plans", href: "/billing", icon: CreditCard },
+  { name: "Workspace Settings", href: "/settings", icon: Settings },
   { name: "Audit Reports", href: "/reports", icon: FileText },
   { name: "Evidence Matrix", href: "/evidence", icon: Table },
   { name: "Requirements Coverage", href: "/requirements", icon: BookOpen },
@@ -40,6 +43,7 @@ const navigationItems = [
   { name: "Consistency Check", href: "/consistency", icon: GitCompare },
   { name: "Panel Simulation", href: "/panel", icon: Users },
   { name: "Quantitative Analytics", href: "/analytics", icon: BarChart3 },
+  { name: "Public Homepage", href: "/", icon: Globe },
 ];
 
 export function Sidebar() {

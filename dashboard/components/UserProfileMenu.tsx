@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import Link from "next/link";
 import { useAuth } from "@/lib/context/AuthContext";
-import { User, Shield, Briefcase, UserCheck, ChevronDown, Check } from "lucide-react";
+import { User, Shield, Briefcase, UserCheck, ChevronDown, Check, Settings, CreditCard, LogOut } from "lucide-react";
 import { UserRole } from "@/types/auth";
 import { cn } from "@/lib/utils";
 
@@ -105,6 +106,33 @@ export function UserProfileMenu() {
                 </button>
               );
             })}
+          </div>
+
+          <div className="mt-2 pt-2 border-t border-slate-800 space-y-0.5">
+            <Link
+              href="/settings"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
+            >
+              <Settings className="w-3.5 h-3.5 text-slate-400" />
+              <span>Workspace Settings</span>
+            </Link>
+            <Link
+              href="/billing"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
+            >
+              <CreditCard className="w-3.5 h-3.5 text-emerald-400" />
+              <span>Subscription & Billing</span>
+            </Link>
+            <Link
+              href="/login"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 text-red-400 hover:text-red-300 transition-colors"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Sign Out</span>
+            </Link>
           </div>
         </div>
       )}

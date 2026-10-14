@@ -211,4 +211,32 @@ test("SaaS Billing Entitlements: enforces tier capabilities and limits", () => {
   assert.equal(tiers.FIRM_ENTERPRISE.seats, 10);
 });
 
+test("SaaS Product Pages & Public Routes: validates presence of essential commercial pages", () => {
+  const appDir = path.join(process.cwd(), "app");
+
+  const requiredRoutes = [
+    "page.tsx",             // Marketing Homepage
+    "dashboard/page.tsx",   // Executive Dashboard
+    "login/page.tsx",       // User Login
+    "register/page.tsx",    // User Registration
+    "settings/page.tsx",    // Account & Team Settings
+    "pricing/page.tsx",     // Public Pricing Matrix
+    "terms/page.tsx",       // Terms of Service
+    "privacy/page.tsx",     // Privacy & GDPR Policy
+    "compare/page.tsx",     // Audit Version Diff Engine
+    "export/page.tsx",      // Official Solicitor Dossier
+    "billing/page.tsx",     // Subscription Management
+    "upload/page.tsx",      // Ingestion Uploader
+    "projects/page.tsx",    // Portfolios
+  ];
+
+  for (const route of requiredRoutes) {
+    const fullPath = path.join(appDir, route);
+    assert.ok(fs.existsSync(fullPath), `SaaS Route file ${route} must exist`);
+    const content = fs.readFileSync(fullPath, "utf-8");
+    assert.ok(content.includes("export default"), `${route} must export default page component`);
+  }
+});
+
+
 

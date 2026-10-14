@@ -113,3 +113,4 @@ npm run start
 ## ⚖️ License & Privacy Notice
 
 This software is designed strictly for pre-submission compliance analysis and evidence structuring. It does not provide legal advice or guarantee visa endorsement. All candidate application evidence is processed with strict privacy controls; confidential applicant documents (`*.pdf`) are excluded from version control by default.
+
