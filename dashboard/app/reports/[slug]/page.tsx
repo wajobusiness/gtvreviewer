@@ -24,14 +24,24 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const reports = await Promise.resolve(getAllReports());
-  if (!Array.isArray(reports)) return [];
-  return reports.map((r) => ({ slug: r.slug }));
+  return [
+    { slug: "final-report" },
+    { slug: "evidence-matrix" },
+    { slug: "requirements" },
+    { slug: "letter-forensics" },
+    { slug: "consistency-check" },
+    { slug: "panel-simulation" },
+    { slug: "executive_audit_summary" },
+  ];
 }
 
 export default async function ReportAnalysisPage({ params }: PageProps) {
   const { slug } = await params;
-  const reportData = await Promise.resolve(getReportBySlug(slug));
+  let reportData = await Promise.resolve(getReportBySlug(slug));
+
+  if (!reportData) {
+    reportData = await Promise.resolve(getReportBySlug(slug, "sample-audit"));
+  }
 
   if (!reportData) {
     notFound();

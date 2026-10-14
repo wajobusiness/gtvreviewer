@@ -22,6 +22,8 @@ function createAuditRepository(): IAuditRepository {
 // Singleton repository instance
 export const auditRepository: IAuditRepository = createAuditRepository();
 
+import { createEmptyAuditData } from "@/lib/emptyAudit";
+
 /**
  * Backward-compatible helper functions matching existing lib/reports.ts API
  */
@@ -35,8 +37,14 @@ export function getAuditData(projectId?: string, runId?: string): AuditData {
     if (analysis) return analysis;
   }
 
-  const res = auditRepository.getAuditData(projectId, runId);
-  return res as AuditData;
+  // Explicit sample demonstration mode
+  if (projectId === "sample-audit" || runId === "sample" || process.env.STORAGE_DRIVER === "demo") {
+    const res = auditRepository.getAuditData(projectId, runId);
+    return res as AuditData;
+  }
+
+  // In production SaaS mode: default to the real, clean empty workspace
+  return createEmptyAuditData(projectId || "Candidate Application");
 }
 
 export function getAllReports(projectId?: string, runId?: string): ReportMeta[] {
@@ -66,8 +74,13 @@ export function getAllReports(projectId?: string, runId?: string): ReportMeta[] 
     });
   }
 
-  const res = auditRepository.getAllReports(projectId, runId);
-  return res as ReportMeta[];
+  if (projectId === "sample-audit" || runId === "sample" || process.env.STORAGE_DRIVER === "demo") {
+    const res = auditRepository.getAllReports(projectId, runId);
+    return res as ReportMeta[];
+  }
+
+  // Production SaaS mode: Return empty array so users see their real empty repository
+  return [];
 }
 
 export function getReportBySlug(

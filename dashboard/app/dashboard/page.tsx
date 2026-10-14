@@ -29,8 +29,14 @@ import {
   Check,
 } from "lucide-react";
 
-export default function ExecutiveDashboardPage() {
-  const audit = getAuditData();
+export default async function ExecutiveDashboardPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ sample?: string }>;
+}) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const isSample = resolvedParams.sample === "true";
+  const audit = getAuditData(isSample ? "sample-audit" : undefined);
   const { metadata, kpis, radarChart, complianceBreakdown, timeline, topRefusalRisks, reports = [] } = audit;
 
   const hasAnalysis = kpis.totalFilesAnalysed > 0 || kpis.overallScore > 0;
@@ -69,6 +75,12 @@ export default function ExecutiveDashboardPage() {
                 className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-sm transition-colors"
               >
                 <span>Add Candidate Project</span>
+              </Link>
+              <Link
+                href="/dashboard?sample=true"
+                className="text-xs text-blue-400 hover:text-blue-300 underline underline-offset-4 font-mono ml-auto"
+              >
+                Inspect Sample Audit Format &rarr;
               </Link>
             </div>
           </div>
@@ -137,6 +149,21 @@ export default function ExecutiveDashboardPage() {
   // Active Audit Dashboard View
   return (
     <div className="space-y-8">
+      {isSample && (
+        <div className="p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-2">
+            <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+            <span>You are viewing a demonstration sample report. This is not your real data.</span>
+          </div>
+          <Link
+            href="/dashboard"
+            className="px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 font-semibold transition-colors text-center shrink-0"
+          >
+            Return to My Clean Workspace
+          </Link>
+        </div>
+      )}
+
       {/* 1. Executive Banner */}
       <div className={`relative overflow-hidden rounded-2xl border ${kpis.overallScore >= 70 ? 'border-emerald-500/30 bg-gradient-to-r from-emerald-950/30' : 'border-red-500/30 bg-gradient-to-r from-red-950/30'} via-slate-900/60 to-slate-900/40 p-6 backdrop-blur-md shadow-xl`}>
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">

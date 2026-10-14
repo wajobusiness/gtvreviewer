@@ -146,7 +146,7 @@ export default function RegisterPage() {
                     required
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Sarah Jenkins"
+                    placeholder="Dr. Jane Doe"
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -163,7 +163,7 @@ export default function RegisterPage() {
                     required
                     value={orgName}
                     onChange={(e) => setOrgName(e.target.value)}
-                    placeholder={accountType === "SOLICITOR" ? "Tech Visa Legal Partners" : "CloudScale Labs Ltd"}
+                    placeholder={accountType === "SOLICITOR" ? "Lex Legal Partners LLP" : "Venture Labs Ltd"}
                     className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
                   />
                 </div>
@@ -181,7 +181,7 @@ export default function RegisterPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="sarah@legalchambers.co.uk"
+                  placeholder="solicitor@lawfirm.co.uk or applicant@domain.com"
                   className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-white placeholder-slate-600 focus:outline-none focus:border-blue-500"
                 />
               </div>

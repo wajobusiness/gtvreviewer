@@ -253,5 +253,46 @@ test("Google Drive Ingestion: parses and validates public Google Drive folder li
   assert.equal(fileResult.id, "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs");
 });
 
+test("Security & Auth Engine: validates PBKDF2 password hashing and session signature integrity", async () => {
+  const { hashPassword, verifyPassword } = await import("../lib/auth/password.ts");
+  const { signSession, verifySession } = await import("../lib/auth/session.ts");
+
+  // 1. Password hashing
+  const rawPass = "SuperSecret#2026";
+  const hash1 = hashPassword(rawPass);
+  const hash2 = hashPassword(rawPass);
+
+  // Unique salts produce different hashes for the same password
+  assert.notEqual(hash1, hash2, "Salts must be randomly generated per hash");
+  assert.ok(hash1.startsWith("pbkdf2:100000:"), "Must use PBKDF2 with 100,000 iterations");
+
+  // Verification matches valid password
+  assert.equal(verifyPassword(rawPass, hash1), true, "Valid password must verify against its hash");
+  assert.equal(verifyPassword("WrongPassword123", hash1), false, "Invalid password must be rejected");
+  assert.equal(verifyPassword("", hash1), false, "Empty password must be rejected");
+
+  // 2. Signed session tokens
+  const payload = {
+    userId: "usr-prod-999",
+    email: "partner@techvisalaw.co.uk",
+    fullName: "Partner Solicitor",
+    role: "SOLICITOR" as const,
+    organizationId: "org-prod-001",
+  };
+
+  const token = signSession(payload);
+  assert.ok(token.includes("."), "Session token must contain payload and signature segments");
+
+  const verified = verifySession(token);
+  assert.ok(verified, "Valid token must verify successfully");
+  assert.equal(verified?.email, payload.email);
+  assert.equal(verified?.role, "SOLICITOR");
+
+  // Tampered token must fail verification
+  const tamperedToken = token.slice(0, -4) + "XXXX";
+  assert.equal(verifySession(tamperedToken), null, "Tampered token must be rejected");
+});
+
+
 
 

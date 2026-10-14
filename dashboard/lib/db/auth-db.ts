@@ -63,6 +63,11 @@ export async function ensureAuthSchema() {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS password_hash VARCHAR(255);
     `;
 
+    // 4. Ensure legacy role constraint does not reject CANDIDATE / REVIEWER roles
+    await sql`
+      ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
+    `.catch(() => {});
+
     schemaChecked = true;
   } catch (err: any) {
     console.warn("[NeonDB:Auth] Schema check notice:", err?.message || err);

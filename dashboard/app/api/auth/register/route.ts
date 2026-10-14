@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
       passwordHash,
       fullName,
       role,
-      orgName: orgName || (role === "SOLICITOR" ? "Tech Visa Legal Partners" : `${fullName}'s Application`),
+      orgName: orgName || (role === "SOLICITOR" ? `${fullName}'s Legal Practice` : `${fullName}'s Application Workspace`),
     });
 
     // 5. Issue secure signed session cookie

@@ -6,8 +6,7 @@
  */
 
 import { createHmac, timingSafeEqual } from "node:crypto";
-import { cookies } from "next/headers";
-import { UserRole } from "@/types/auth";
+export type UserRole = "SOLICITOR" | "CANDIDATE" | "ADMIN" | "REVIEWER";
 
 export const SESSION_COOKIE_NAME = "gt_session";
 
@@ -89,14 +88,19 @@ export function verifySession(token: string | undefined | null): SessionPayload 
  * Set session cookie in Next.js 15 response.
  */
 export async function setSessionCookie(token: string) {
-  const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 7 * 24 * 3600, // 7 days
-  });
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    cookieStore.set(SESSION_COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      maxAge: 7 * 24 * 3600, // 7 days
+    });
+  } catch (err) {
+    console.warn("[Session] Could not set session cookie (non-request context):", err);
+  }
 }
 
 /**
@@ -104,6 +108,7 @@ export async function setSessionCookie(token: string) {
  */
 export async function getCurrentSession(): Promise<SessionPayload | null> {
   try {
+    const { cookies } = await import("next/headers");
     const cookieStore = await cookies();
     const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
     if (!token) return null;
@@ -117,7 +122,12 @@ export async function getCurrentSession(): Promise<SessionPayload | null> {
  * Clear session cookie on logout.
  */
 export async function clearSessionCookie() {
-  const cookieStore = await cookies();
-  cookieStore.delete(SESSION_COOKIE_NAME);
+  try {
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    cookieStore.delete(SESSION_COOKIE_NAME);
+  } catch (err) {
+    console.warn("[Session] Could not clear session cookie:", err);
+  }
 }
 
