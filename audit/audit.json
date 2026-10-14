@@ -1,0 +1,410 @@
+{
+  "metadata": {
+    "documentName": "UK Global Talent Visa Pre-Submission Audit",
+    "documentOwner": "Oluwafemi Wale Ogunniyi",
+    "auditDate": "2026-10-13",
+    "lastUpdated": "2026-10-14T08:42:00Z",
+    "endorsingBody": "Tech Nation (Digital Technology)",
+    "route": "Exceptional Talent / Exceptional Promise",
+    "applicantType": "Technical / Business (Founder & Executive)",
+    "targetField": "Digital Technology",
+    "version": "1.0.0"
+  },
+  "kpis": {
+    "overallScore": 32,
+    "currentStatus": "CRITICAL REFUSAL RISK",
+    "statusColor": "red",
+    "recommendation": "DO NOT SUBMIT - Critical False Representation & Deception Risk (Part 9 Grounds for Refusal)",
+    "estimatedVisaSuccess": 4,
+    "totalFilesAnalysed": 5,
+    "totalPages": 15,
+    "evidenceCount": 5,
+    "recommendationLetters": 0,
+    "recommendationLettersRequired": 3,
+    "newsArticles": 6,
+    "awards": 3,
+    "mediaEvidence": 8,
+    "criticalRisks": 6,
+    "minorRisks": 4,
+    "warnings": 7,
+    "passes": 1
+  },
+  "radarChart": [
+    { "category": "Qualification", "score": 45, "benchmark": 85 },
+    { "category": "Recommendation Letters", "score": 12, "benchmark": 90 },
+    { "category": "Media Evidence", "score": 48, "benchmark": 80 },
+    { "category": "Leadership", "score": 35, "benchmark": 88 },
+    { "category": "Innovation", "score": 28, "benchmark": 85 },
+    { "category": "Recognition", "score": 25, "benchmark": 82 }
+  ],
+  "complianceBreakdown": [
+    { "name": "Critical", "value": 6, "color": "#ef4444" },
+    { "name": "Missing", "value": 3, "color": "#f97316" },
+    { "name": "Needs Improvement", "value": 4, "color": "#f59e0b" },
+    { "name": "Passed", "value": 1, "color": "#10b981" }
+  ],
+  "timeline": [
+    { "step": "Files Loaded", "status": "completed", "timestamp": "2026-10-13 17:46", "details": "5 PDF documents (15 pages total) loaded and verified." },
+    { "step": "Evidence Parsed", "status": "completed", "timestamp": "2026-10-13 17:55", "details": "Full multimodal OCR transcription completed to audit/transcripts/." },
+    { "step": "Requirements Matched", "status": "completed", "timestamp": "2026-10-13 18:06", "details": "Official 2026 Tech Nation Guidelines & Immigration Rules matched." },
+    { "step": "Consistency Checked", "status": "completed", "timestamp": "2026-10-13 18:14", "details": "16 fatal numerical, identity, and template contradictions identified." },
+    { "step": "Panel Simulation", "status": "completed", "timestamp": "2026-10-13 18:15", "details": "5 expert assessors simulated; unanimous Refusal consensus." },
+    { "step": "Final Score Generated", "status": "completed", "timestamp": "2026-10-13 18:16", "details": "Overall Score: 32/100. Status: Critical Refusal Risk." },
+    { "step": "Completed", "status": "completed", "timestamp": "2026-10-13 18:17", "details": "Full forensic audit pack compiled in ./audit/ directory." }
+  ],
+  "criteriaScorecard": [
+    {
+      "id": "MC",
+      "name": "Mandatory Criterion: Leadership / Emerging Leadership",
+      "claimed": true,
+      "verdict": "NOT MET",
+      "score": 28,
+      "piecesCount": 3,
+      "minimumRequired": 2,
+      "primaryIssue": "Primary award certificate issued to a different person; cracked software used; self-asserted salary without FIRS tax proof; 1000x revenue gap."
+    },
+    {
+      "id": "OC1",
+      "name": "Optional Criterion 1: Innovation",
+      "claimed": false,
+      "verdict": "NOT CLAIMED",
+      "score": 0,
+      "piecesCount": 0,
+      "minimumRequired": 2,
+      "primaryIssue": "Not selected or claimed in application portfolio."
+    },
+    {
+      "id": "OC2",
+      "name": "Optional Criterion 2: Work Outside Immediate Occupation",
+      "claimed": true,
+      "verdict": "NOT MET",
+      "score": 40,
+      "piecesCount": 1,
+      "minimumRequired": 2,
+      "primaryIssue": "Only 1 document submitted (guidance requires minimum 2). Basic digital marketing/SEO training to NYSC corps members lacks technical depth. Books lack ISBN/distribution records."
+    },
+    {
+      "id": "OC3",
+      "name": "Optional Criterion 3: Commercial / Technical Impact",
+      "claimed": true,
+      "verdict": "NOT MET",
+      "score": 30,
+      "piecesCount": 1,
+      "minimumRequired": 2,
+      "primaryIssue": "Only 1 document submitted. Copy-pasted telemedicine metrics in AI chatbot table. Contradictory metrics ($1.24M vs N85M; 5k vs 32k users). No audited accounts."
+    },
+    {
+      "id": "OC4",
+      "name": "Optional Criterion 4: Academic Research",
+      "claimed": false,
+      "verdict": "NOT CLAIMED",
+      "score": 0,
+      "piecesCount": 0,
+      "minimumRequired": 2,
+      "primaryIssue": "Not selected or claimed in application portfolio."
+    }
+  ],
+  "topRefusalRisks": [
+    {
+      "rank": 1,
+      "severity": "CRITICAL",
+      "title": "Third-Party Identity on Primary Award Certificate",
+      "file": "MANDATORY CRITERIA 1 - NATIONALLY AND INTERNATIONALLY RECOGNISED AWARDS (1).pdf.pdf",
+      "page": "Page 1",
+      "rule": "UK Immigration Rules Part 9.7.1 (False Representations / Deception)",
+      "impact": "Certificate issued to CHIDIEBERE FELICITAS CHIAMAKA with female pronoun caption ('her contribution'). Triggers immediate refusal and potential 10-year UK entry ban.",
+      "quote": "This is to certify that CHIDIEBERE FELICITAS CHIAMAKA , participated successfully in our Digital Technology Winter Program... verifies her contribution..."
+    },
+    {
+      "rank": 2,
+      "severity": "CRITICAL",
+      "title": "1,000x Numerical Contradiction on Primary Revenue Evidence",
+      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - CREDVERIFY.APP.pdf.pdf",
+      "page": "Page 2",
+      "rule": "Tech Nation Evidence Verifiability & Truthfulness Standard",
+      "impact": "WHMCS dashboard displays ₦2,260,242.00 (₦2.26 million) all-time revenue, while narrative text asserts over ₦2.2 billion.",
+      "quote": "All Time: ₦2,260,242,00 vs. 'The platform has generated over ₦2.2 billion in all-time revenue...'"
+    },
+    {
+      "rank": 3,
+      "severity": "CRITICAL",
+      "title": "Core Technical Infrastructure Operated on Pirated Software",
+      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - CREDVERIFY.APP.pdf.pdf",
+      "page": "Page 2",
+      "rule": "Tech Nation Technical Leadership & Sector Integrity Standard",
+      "impact": "Production billing system displays 'Registered To: ShayanXtreme' with 2099 expiry, proving operation on cracked/nulled software.",
+      "quote": "Registered To: ShayanXtreme | License Type: WHMCS 9.0.5 | Expires: 31st December 2099"
+    },
+    {
+      "rank": 4,
+      "severity": "HIGH",
+      "title": "Template Contamination & Ghost Telemedicine Metrics",
+      "file": "OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - HEALTHSYN NG.pdf.pdf",
+      "page": "Page 1",
+      "rule": "Tech Nation Requirement for Personally-Authored Evidence",
+      "impact": "Row 7 of BotifyAI's marketing table literally claims 'Lower-cost care options, instant rural access', proving copy-paste from HealthSyn NG template.",
+      "quote": "Lower-cost care options, instant rural access"
+    },
+    {
+      "rank": 5,
+      "severity": "HIGH",
+      "title": "Pronoun & Identity Mismatch in Internal HR Letter",
+      "file": "MANDATORY CRITERIA 3 - COMMANDED HIGH SALARY REMURENATION AND CONTRIBUTIONS.pdf.pdf",
+      "page": "Page 3",
+      "rule": "Tech Nation Reference Letter Authenticity Standard",
+      "impact": "Internal HR manager refers to male applicant with female pronouns ('her nominated bank account', 'her authenticated payslips').",
+      "quote": "paid directly into her nominated bank account via bank transfer. Attached are her authenticated payslips..."
+    },
+    {
+      "rank": 6,
+      "severity": "HIGH",
+      "title": "Complete Absence of Mandatory Standalone Components",
+      "file": "Application Folder Root",
+      "page": "N/A",
+      "rule": "Appendix Global Talent Mandatory Filing Requirements",
+      "impact": "The 3 standalone letters of recommendation, 2-page CV, and 1,000-word Personal Statement are completely missing from the bundle.",
+      "quote": "CV: NOT FOUND, Personal Statement: NOT FOUND, 3 Letters: NOT FOUND"
+    },
+    {
+      "rank": 7,
+      "severity": "HIGH",
+      "title": "Structural Criterion Evidence Deficit",
+      "file": "Application Portfolio Structure",
+      "page": "N/A",
+      "rule": "Tech Nation Rule: Minimum 2 Distinct Pieces of Evidence Per Criterion",
+      "impact": "Only 1 document submitted for OC2 and 1 for OC3. Both optional criteria automatically fail the minimum document count rule.",
+      "quote": "OC2: 1 piece submitted; OC3: 1 piece submitted"
+    },
+    {
+      "rank": 8,
+      "severity": "HIGH",
+      "title": "Unverified Self-Generated Remuneration Without FIRS Tax Clearance",
+      "file": "MANDATORY CRITERIA 3 - COMMANDED HIGH SALARY REMURENATION AND CONTRIBUTIONS.pdf.pdf",
+      "page": "Pages 1-3",
+      "rule": "Tech Nation Remuneration Evidentiary Standards",
+      "impact": "Payslips issued by applicant's own company without FIRS tax certificates or personal bank statements carry zero evidentiary weight.",
+      "quote": "Monthly Gross ₦14,542,435, Net ₦10,200,000 supported only by internal payslips"
+    },
+    {
+      "rank": 9,
+      "severity": "MEDIUM",
+      "title": "Contradictory Corporate Registration Numbers",
+      "file": "OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - HEALTHSYN NG.pdf.pdf",
+      "page": "Page 1",
+      "rule": "Documentary Consistency Standard",
+      "impact": "Typed table claims RC1352306, while adjacent CAC incorporation certificate displays RC 1900387.",
+      "quote": "CAC Registration No.: RC1352306 vs. Certificate RC 1900387"
+    },
+    {
+      "rank": 10,
+      "severity": "MEDIUM",
+      "title": "Non-Qualifying Business Model (Web Hosting Reseller vs. Product-Led)",
+      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - CREDVERIFY.APP.pdf.pdf",
+      "page": "Pages 1-3",
+      "rule": "Tech Nation Definition of Product-Led Digital Technology",
+      "impact": "Shared hosting and domain registration reselling are classified as routine IT services and explicitly excluded from endorsement.",
+      "quote": "web hosting and domain registration company... shared hosting, VPS hosting..."
+    }
+  ],
+  "panelVotes": [
+    {
+      "reviewer": "Reviewer 1: Senior Global Talent Assessor",
+      "decision": "Reject",
+      "verdictColor": "red",
+      "confidence": 95,
+      "summary": "Severe evidentiary non-compliance: document count deficit on optional criteria, third-party award misattribution, and unverified salary records.",
+      "comments": "The applicant has submitted only one document each for OC2 and OC3, immediately failing the minimum threshold. MC is fatally compromised by the IESEG certificate issued to another individual."
+    },
+    {
+      "reviewer": "Reviewer 2: Senior Product-Led Tech Leader",
+      "decision": "Reject",
+      "verdictColor": "red",
+      "confidence": 90,
+      "summary": "FinxHost is a web hosting reseller running cracked WHMCS scripts; BotifyAI appears to be an affiliate marketing script launch, not defensible SaaS.",
+      "comments": "Running infrastructure on nulled ShayanXtreme software is an immediate disqualifier for a technology leader. The website team page still contains template lorem ipsum text."
+    },
+    {
+      "reviewer": "Reviewer 3: Industry Awards Specialist",
+      "decision": "Reject",
+      "verdictColor": "red",
+      "confidence": 92,
+      "summary": "International award certificate belongs to another person; EU-Africa recognition poster is unverified on official EU-Startups platform.",
+      "comments": "The international certificate literally bears another person's name. The EU-Startups 10 Leaders claim has zero presence on eu-startups.com and relies on dubious blog URLs."
+    },
+    {
+      "reviewer": "Reviewer 4: Immigration & Tech Lawyer",
+      "decision": "Reject",
+      "verdictColor": "red",
+      "confidence": 98,
+      "summary": "Submitting a third-party certificate and female pronoun HR records triggers acute deception risks under Immigration Rules Part 9.7.1.",
+      "comments": "Submitting another person's award certificate as your own is treated as documentary deception by the Home Office. This application must not be submitted in its present form."
+    },
+    {
+      "reviewer": "Reviewer 5: Devil's Advocate Assessor",
+      "decision": "Reject",
+      "verdictColor": "red",
+      "confidence": 99,
+      "summary": "Unanimous non-endorsement. Formal simulated refusal letter issued across Mandatory and both Optional criteria.",
+      "comments": "Every single criterion relied upon contains fatal evidentiary flaws, uncorroborated superlatives, or direct mathematical contradictions."
+    }
+  ],
+  "evidenceMatrix": [
+    {
+      "id": "MC1",
+      "file": "MANDATORY CRITERIA 1 - NATIONALLY AND INTERNATIONALLY RECOGNISED AWARDS (1).pdf.pdf",
+      "category": "Mandatory Criterion",
+      "requirement": "Awards & Industry Recognition",
+      "strength": "Critical Defect",
+      "confidence": "Low",
+      "source": "Purported Award Bodies",
+      "status": "Critical",
+      "attributable": false,
+      "insideWindow": true,
+      "metrics": "150 nominees; 32k users; $1.24M rev",
+      "risk": "High (Deception Risk)"
+    },
+    {
+      "id": "MC2",
+      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - CREDVERIFY.APP.pdf.pdf",
+      "category": "Mandatory Criterion",
+      "requirement": "Led Growth of Product-Led Company",
+      "strength": "Critical Defect",
+      "confidence": "Low",
+      "source": "Internal Dashboard & Client Letters",
+      "status": "Critical",
+      "attributable": true,
+      "insideWindow": true,
+      "metrics": "₦2.26M vs ₦2.2B; 32.94k visitors; $500M Wapi Pay",
+      "risk": "High (1000x Discrepancy & Pirated Script)"
+    },
+    {
+      "id": "MC3",
+      "file": "MANDATORY CRITERIA 3 - COMMANDED HIGH SALARY REMURENATION AND CONTRIBUTIONS.pdf.pdf",
+      "category": "Mandatory Criterion",
+      "requirement": "Commanded High Salary / Remuneration",
+      "strength": "Needs Improvement",
+      "confidence": "Low",
+      "source": "Internal Company Payslips & HR Letter",
+      "status": "Needs Improvement",
+      "attributable": true,
+      "insideWindow": true,
+      "metrics": "₦10.2M/mo net; ₦14.5M/mo gross; ₦5.3B rev claimed",
+      "risk": "High (Self-Asserted & Female Pronouns)"
+    },
+    {
+      "id": "OC2B",
+      "file": "OPTIONAL CRITERIA 2B - EVIDENCE OF CONTRIBUTION OUTSIDE MY EMPLOYMENT ADVANCING DIGITAL TECHNOLOGY SKILLS & ECOSYSTEM CAPACITY.pdf.pdf",
+      "category": "Optional Criterion 2",
+      "requirement": "Work Outside Immediate Occupation",
+      "strength": "Moderate",
+      "confidence": "Medium",
+      "source": "Tech Anchor Letter, YALI Invite, Book Covers",
+      "status": "Needs Improvement",
+      "attributable": true,
+      "insideWindow": true,
+      "metrics": "5,000 NYSC trained; 30k community reach",
+      "risk": "Medium (Deficient Count & No ISBN)"
+    },
+    {
+      "id": "OC3A",
+      "file": "OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - HEALTHSYN NG.pdf.pdf",
+      "category": "Optional Criterion 3",
+      "requirement": "Commercial / Technical Impact",
+      "strength": "Critical Defect",
+      "confidence": "Low",
+      "source": "BotifyAI Dashboard, JVZoo, MunchEye",
+      "status": "Critical",
+      "attributable": true,
+      "insideWindow": true,
+      "metrics": "$1.24M rev; $52.4k MRR; 32k users vs 5k users",
+      "risk": "High (Template Contamination & Deficient Count)"
+    }
+  ],
+  "reports": [
+    {
+      "slug": "final-report",
+      "title": "Final Pre-Submission Audit Report",
+      "filename": "FINAL-REPORT.md",
+      "description": "Comprehensive pre-submission scorecard, top 10 refusal risks, evidentiary gaps, and assessor questions.",
+      "status": "Critical",
+      "score": 32,
+      "category": "Executive",
+      "icon": "AlertTriangle",
+      "date": "2026-10-13",
+      "size": "14.2 KB"
+    },
+    {
+      "slug": "evidence-matrix",
+      "title": "Evidence Mapping Matrix",
+      "filename": "evidence-matrix.md",
+      "description": "Full tabular audit mapping each piece of evidence against criteria, attribution, and verification status.",
+      "status": "Critical",
+      "score": 35,
+      "category": "Audit Matrix",
+      "icon": "Table",
+      "date": "2026-10-13",
+      "size": "9.8 KB"
+    },
+    {
+      "slug": "requirements",
+      "title": "Official Requirements & Precedents",
+      "filename": "requirements.md",
+      "description": "Tech Nation 2026 criteria breakdown, legal evidence rules, product-led definitions, and refusal patterns.",
+      "status": "Informational",
+      "score": 100,
+      "category": "Reference",
+      "icon": "BookOpen",
+      "date": "2026-10-13",
+      "size": "11.5 KB"
+    },
+    {
+      "slug": "letter-forensics",
+      "title": "Recommendation Letter Forensics",
+      "filename": "letter-forensics.md",
+      "description": "Deep forensic inspection of embedded letters (Wapi Pay, UpSpeedHost, WAJO Ltd, Tech Anchor), cross-letter linguistic analysis.",
+      "status": "Warning",
+      "score": 25,
+      "category": "Forensics",
+      "icon": "FileCheck",
+      "date": "2026-10-13",
+      "size": "13.6 KB"
+    },
+    {
+      "slug": "consistency-check",
+      "title": "Consistency & Integrity Cross-Check",
+      "filename": "consistency-check.md",
+      "description": "Line-by-line cross-examination exposing 16 fatal contradictions, ghost projects, pronoun slips, and metric inflation.",
+      "status": "Critical",
+      "score": 20,
+      "category": "Integrity",
+      "icon": "GitCompare",
+      "date": "2026-10-13",
+      "size": "12.4 KB"
+    },
+    {
+      "slug": "panel-simulation",
+      "title": "5-Member Panel Simulation & Refusal Notice",
+      "filename": "panel-simulation.md",
+      "description": "Role-play evaluation by 5 distinct expert assessors with per-criterion verdicts and simulated Home Office refusal letter.",
+      "status": "Critical",
+      "score": 15,
+      "category": "Simulation",
+      "icon": "Users",
+      "date": "2026-10-13",
+      "size": "15.1 KB"
+    },
+    {
+      "slug": "executive_audit_summary",
+      "title": "Executive Audit Summary",
+      "filename": "executive_audit_summary.md",
+      "description": "High-level briefing on readiness status, fatal deception risks, and required remedial actions.",
+      "status": "Critical",
+      "score": 32,
+      "category": "Summary",
+      "icon": "ShieldAlert",
+      "date": "2026-10-13",
+      "size": "4.1 KB"
+    }
+  ]
+}
+

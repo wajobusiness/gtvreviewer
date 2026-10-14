@@ -1,0 +1,173 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserRole {
+  OWNER
+  ADMIN
+  MEMBER
+  SOLICITOR
+  VIEWER
+}
+
+enum SubscriptionTier {
+  STARTER
+  PROFESSIONAL
+  FIRM_ENTERPRISE
+}
+
+enum AuditRunStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum SeverityLevel {
+  CRITICAL
+  HIGH
+  MEDIUM
+  LOW
+}
+
+model Organization {
+  id               String           @id @default(uuid())
+  name             String
+  slug             String           @unique
+  tier             SubscriptionTier @default(STARTER)
+  stripeCustomerId String?          @map("stripe_customer_id")
+  createdAt        DateTime         @default(now()) @map("created_at")
+  updatedAt        DateTime         @updatedAt @map("updated_at")
+
+  users            User[]
+  projects         Project[]
+
+  @@map("organizations")
+}
+
+model User {
+  id             String       @id @default(uuid())
+  organizationId String       @map("organization_id")
+  email          String       @unique
+  fullName       String       @map("full_name")
+  role           UserRole     @default(MEMBER)
+  avatarUrl      String?      @map("avatar_url")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("users")
+}
+
+model Project {
+  id             String       @id @default(uuid())
+  organizationId String       @map("organization_id")
+  candidateName  String       @map("candidate_name")
+  visaRoute      String       @map("visa_route") // e.g. "Exceptional Talent" | "Exceptional Promise"
+  targetField    String       @map("target_field") // e.g. "Digital Technology"
+  applicantType  String       @map("applicant_type") // "Technical" | "Business" | "Both"
+  status         String       @default("draft") // "draft" | "auditing" | "action_required" | "ready_to_submit"
+  currentScore   Int?         @map("current_score")
+  latestRunId    String?      @map("latest_run_id")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  auditRuns      AuditRun[]
+
+  @@index([organizationId])
+  @@map("projects")
+}
+
+model AuditRun {
+  id                   String         @id @default(uuid())
+  projectId            String         @map("project_id")
+  versionNumber        Int            @map("version_number")
+  overallScore         Int            @map("overall_score")
+  currentStatus        String         @map("current_status")
+  recommendation       String
+  estimatedVisaSuccess Int            @map("estimated_visa_success")
+  durationMs           Int?           @map("duration_ms")
+  status               AuditRunStatus @default(COMPLETED)
+  rawAuditJson         Json           @map("raw_audit_json")
+  createdAt            DateTime       @default(now()) @map("created_at")
+
+  project              Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  evidenceItems        EvidenceItem[]
+  reportDocuments      ReportDocument[]
+  refusalRisks         RefusalRisk[]
+
+  @@unique([projectId, versionNumber])
+  @@index([projectId])
+  @@map("audit_runs")
+}
+
+model EvidenceItem {
+  id           String    @id @default(uuid())
+  auditRunId   String    @map("audit_run_id")
+  fileName     String    @map("file_name")
+  storageKey   String?   @map("storage_key")
+  category     String
+  requirement  String
+  strength     String
+  confidence   String    // "High" | "Medium" | "Low"
+  source       String
+  status       String    // "Critical" | "Needs Improvement" | "Passed" | "Missing"
+  attributable Boolean   @default(true)
+  insideWindow Boolean   @default(true) @map("inside_window")
+  metrics      String
+  risk         String
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  auditRun     AuditRun  @relation(fields: [auditRunId], references: [id], onDelete: Cascade)
+
+  @@index([auditRunId])
+  @@map("evidence_items")
+}
+
+model ReportDocument {
+  id          String   @id @default(uuid())
+  auditRunId  String   @map("audit_run_id")
+  slug        String
+  title       String
+  filename    String
+  description String
+  category    String
+  status      String   // "Critical" | "Warning" | "Passed" | "Informational"
+  score       Int?
+  content     String   @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  auditRun    AuditRun @relation(fields: [auditRunId], references: [id], onDelete: Cascade)
+
+  @@unique([auditRunId, slug])
+  @@index([auditRunId])
+  @@map("report_documents")
+}
+
+model RefusalRisk {
+  id         String        @id @default(uuid())
+  auditRunId String        @map("audit_run_id")
+  rank       Int
+  severity   SeverityLevel
+  title      String
+  file       String
+  page       String
+  rule       String
+  impact     String        @db.Text
+  quote      String        @db.Text
+  createdAt  DateTime      @default(now()) @map("created_at")
+
+  auditRun   AuditRun      @relation(fields: [auditRunId], references: [id], onDelete: Cascade)
+
+  @@index([auditRunId])
+  @@map("refusal_risks")
+}
+
