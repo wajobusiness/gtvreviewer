@@ -36,3 +36,4 @@ export function isValidGoogleDriveUrl(url: string): boolean {
   const parsed = extractGoogleDriveId(trimmed);
   return isDomainValid && parsed.id !== null;
 }
+

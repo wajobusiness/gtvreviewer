@@ -3,8 +3,9 @@ import { getAllReports } from "@/lib/reports";
 import { ReportCard } from "@/components/ReportCard";
 import { FileText, Sparkles, FolderSync } from "lucide-react";
 
-export default function ReportsIndexPage() {
-  const reports = getAllReports();
+export default async function ReportsIndexPage() {
+  const reportsData = await Promise.resolve(getAllReports());
+  const reports = Array.isArray(reportsData) ? reportsData : [];
 
   return (
     <div className="space-y-6">

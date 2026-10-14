@@ -9,7 +9,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ results: [] });
   }
 
-  const results = searchAllReports(q);
+  const results = await Promise.resolve(searchAllReports(q));
   return NextResponse.json({ results });
 }
 

@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string }> }
 ) {
   const { slug } = await params;
-  const report = getReportBySlug(slug);
+  const report = await Promise.resolve(getReportBySlug(slug));
 
   if (!report) {
     return new NextResponse("Report not found", { status: 404 });

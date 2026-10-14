@@ -19,7 +19,7 @@ export class DatabaseAuditRepository implements IAuditRepository {
     this.isConfigured = !!process.env.DATABASE_URL;
   }
 
-  public async getAuditData(projectId?: string, runId?: string): Promise<AuditData> {
+  public getAuditData(projectId?: string, runId?: string): AuditData {
     if (!this.isConfigured) {
       return this.fallbackRepo.getAuditData();
     }
@@ -27,7 +27,7 @@ export class DatabaseAuditRepository implements IAuditRepository {
     return this.fallbackRepo.getAuditData();
   }
 
-  public async getAllReports(projectId?: string, runId?: string): Promise<ReportMeta[]> {
+  public getAllReports(projectId?: string, runId?: string): ReportMeta[] {
     if (!this.isConfigured) {
       return this.fallbackRepo.getAllReports();
     }
@@ -35,11 +35,11 @@ export class DatabaseAuditRepository implements IAuditRepository {
     return this.fallbackRepo.getAllReports();
   }
 
-  public async getReportBySlug(
+  public getReportBySlug(
     slug: string,
     projectId?: string,
     runId?: string
-  ): Promise<{ meta: ReportMeta; content: string } | null> {
+  ): { meta: ReportMeta; content: string } | null {
     if (!this.isConfigured) {
       return this.fallbackRepo.getReportBySlug(slug);
     }
@@ -47,11 +47,11 @@ export class DatabaseAuditRepository implements IAuditRepository {
     return this.fallbackRepo.getReportBySlug(slug);
   }
 
-  public async searchAllReports(
+  public searchAllReports(
     query: string,
     projectId?: string,
     runId?: string
-  ): Promise<SearchResult[]> {
+  ): SearchResult[] {
     if (!this.isConfigured) {
       return this.fallbackRepo.searchAllReports(query);
     }
@@ -59,14 +59,14 @@ export class DatabaseAuditRepository implements IAuditRepository {
     return this.fallbackRepo.searchAllReports(query);
   }
 
-  public async listAuditRuns(projectId?: string): Promise<AuditRunSummary[]> {
+  public listAuditRuns(projectId?: string): AuditRunSummary[] {
     if (!this.isConfigured) {
       return this.fallbackRepo.listAuditRuns();
     }
     return this.fallbackRepo.listAuditRuns();
   }
 
-  public async getProject(projectId?: string): Promise<ProjectModel | null> {
+  public getProject(projectId?: string): ProjectModel | null {
     if (!this.isConfigured) {
       return this.fallbackRepo.getProject();
     }

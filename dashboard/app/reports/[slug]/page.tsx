@@ -24,13 +24,14 @@ interface PageProps {
 }
 
 export async function generateStaticParams() {
-  const reports = getAllReports();
+  const reports = await Promise.resolve(getAllReports());
+  if (!Array.isArray(reports)) return [];
   return reports.map((r) => ({ slug: r.slug }));
 }
 
 export default async function ReportAnalysisPage({ params }: PageProps) {
   const { slug } = await params;
-  const reportData = getReportBySlug(slug);
+  const reportData = await Promise.resolve(getReportBySlug(slug));
 
   if (!reportData) {
     notFound();
