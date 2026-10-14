@@ -32,7 +32,9 @@ export function Header({
           <div className="hidden xl:block">
             <AuditRunSwitcher />
           </div>
-          <RiskBadge status={currentStatus} size="sm" className="hidden lg:inline-flex" />
+          {currentStatus && currentStatus !== "NO_ANALYSIS" && (
+            <RiskBadge status={currentStatus} size="sm" className="hidden lg:inline-flex" />
+          )}
         </div>
 
         {/* Right: Actions, Search, Theme & Profile */}

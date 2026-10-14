@@ -10,102 +10,184 @@ import {
   FileText,
   AlertTriangle,
   Lightbulb,
-  ExternalLink,
+  Sparkles,
 } from "lucide-react";
 
 export default function RequirementsPage() {
   const audit = getAuditData();
-  const { criteriaScorecard, evidenceMatrix } = audit;
+  const { criteriaScorecard, evidenceMatrix, kpis, topRefusalRisks, isEmpty } = audit;
 
-  const getRequirementDetails = (id: string) => {
+  const isAuditEmpty = isEmpty || (kpis?.totalFilesAnalysed || 0) === 0;
+
+  if (isAuditEmpty) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h1 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2.5">
+              <BookOpen className="w-6 h-6 text-blue-400" />
+              UK Global Talent Requirements & Coverage
+            </h1>
+            <p className="text-xs text-muted-foreground mt-1">
+              Verification status against official Tech Nation Immigration Rules (Mandatory + 2 Optional Criteria).
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 p-12 text-center max-w-xl mx-auto my-8 space-y-4">
+          <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 mx-auto flex items-center justify-center">
+            <BookOpen className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-foreground">No Requirements Evaluated Yet</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Upload your candidate&apos;s evidentiary documents to benchmark your portfolio coverage across the Mandatory and Optional Criteria under the official Tech Nation guidelines.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/upload"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-500/20 transition-all"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Create New Analysis</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const getRequirementDetails = (criterion: typeof criteriaScorecard[0]) => {
+    const id = criterion.id;
+    const relatedRisks = topRefusalRisks.filter((r) =>
+      r.rule.toLowerCase().includes(id.toLowerCase()) ||
+      r.title.toLowerCase().includes(id.toLowerCase()) ||
+      (id === "MC" && (r.impact.toLowerCase().includes("mandatory") || r.file.toLowerCase().includes("mc"))) ||
+      (id === "OC1" && r.file.toLowerCase().includes("oc1")) ||
+      (id === "OC2" && r.file.toLowerCase().includes("oc2")) ||
+      (id === "OC3" && r.file.toLowerCase().includes("oc3")) ||
+      (id === "OC4" && r.file.toLowerCase().includes("oc4"))
+    );
+
+    const matched = evidenceMatrix.filter((e) =>
+      e.category.toLowerCase().includes(id.toLowerCase()) ||
+      (id === "MC" && e.category.toLowerCase().includes("mandatory")) ||
+      (id === "OC1" && e.category.toLowerCase().includes("optional criterion 1")) ||
+      (id === "OC2" && e.category.toLowerCase().includes("optional criterion 2")) ||
+      (id === "OC3" && e.category.toLowerCase().includes("optional criterion 3")) ||
+      (id === "OC4" && e.category.toLowerCase().includes("optional criterion 4"))
+    );
+
+    const coverage = criterion.score > 0
+      ? criterion.score
+      : criterion.verdict === "MET"
+      ? 100
+      : criterion.verdict === "BORDERLINE"
+      ? 60
+      : criterion.piecesCount > 0
+      ? Math.min(60, Math.round((criterion.piecesCount / Math.max(1, criterion.minimumRequired)) * 50))
+      : 0;
+
+    const confidenceLabel =
+      coverage >= 70
+        ? `High (${coverage}%)`
+        : coverage >= 40
+        ? `Moderate (${coverage}%)`
+        : `Deficient (${coverage}%)`;
+
     switch (id) {
       case "MC":
         return {
           guidance:
-            "Applicant must demonstrate that they are recognised as a leading talent or emerging talent in digital technology through exceptional product leadership, significant commercial impact, or recognized sector awards.",
-          matchedEvidence: evidenceMatrix.filter((e) => e.category.includes("Mandatory")),
-          coverage: 40,
-          confidence: "Low (28%)",
-          missingDocuments: [
-            "Official FIRS tax clearance certificates matching claimed ₦14.5M/mo salary",
-            "Personal award certificates directly in the applicant's name",
-            "Genuine, legitimate software license receipt for production billing system",
-            "Audited financial statements corroborating revenue metrics",
-          ],
-          suggestions: [
-            "Purge the IESEG Business School certificate (issued to a third party)",
-            "Replace self-asserted salary slips with bank-verified tax receipts",
-            "Re-align all revenue claims to exact bank statements",
-          ],
+            "Applicant must demonstrate that they are recognised as a leading talent (Exceptional Talent) or emerging talent (Exceptional Promise) in the digital technology sector through continuous track record of innovation, leadership, or significant commercial impact.",
+          matchedEvidence: matched,
+          coverage,
+          confidence: confidenceLabel,
+          missingDocuments: relatedRisks.length > 0
+            ? relatedRisks.map((r) => `${r.title} (${r.file})`)
+            : [
+                "Standalone reference letters from recognized C-level tech leaders",
+                "Audited revenue / commercial metrics or salary verification",
+                "Official recognition or sector awards in applicant's personal name",
+              ],
+          suggestions: criterion.primaryIssue
+            ? [criterion.primaryIssue, "Verify all evidence directly attributes to the applicant's personal achievements."]
+            : [
+                "Ensure every metric is corroborated by verifiable third-party documentation.",
+                "Verify referee standing and add independent corporate proofs.",
+              ],
         };
       case "OC1":
         return {
           guidance:
             "Applicant has a proven track record of innovation as a founder or senior executive of a product-led digital technology company, or as an employee working on a new digital field or concept.",
-          matchedEvidence: [],
-          coverage: 0,
-          confidence: "N/A (0%)",
-          missingDocuments: [
-            "Evidence of innovation (patents, groundbreaking algorithms, proprietary IP)",
-            "Independent code review, architecture diagrams, or GitHub repo audits",
-          ],
-          suggestions: [
-            "If claiming innovation in the future, provide documentation of proprietary code, architecture, or novel IP.",
-          ],
+          matchedEvidence: matched,
+          coverage,
+          confidence: confidenceLabel,
+          missingDocuments: relatedRisks.length > 0
+            ? relatedRisks.map((r) => `${r.title} (${r.file})`)
+            : [
+                "Evidence of proprietary IP, patents, or novel technical architectures",
+                "Independent repository audits, technical benchmarks, or architecture diagrams",
+              ],
+          suggestions: criterion.primaryIssue
+            ? [criterion.primaryIssue]
+            : ["Provide verifiable documentation of proprietary innovations and technological novelties."],
         };
       case "OC2":
         return {
           guidance:
             "Applicant has made significant technical, commercial, or entrepreneurial contributions outside of their immediate occupation that have advanced the digital technology sector.",
-          matchedEvidence: evidenceMatrix.filter((e) => e.category.includes("Optional Criterion 2")),
-          coverage: 50,
-          confidence: "Medium (40%)",
-          missingDocuments: [
-            "Second distinct qualifying document (currently only 1 document is submitted)",
-            "Official publisher contracts or ISBN registration for published programming books",
-            "Third-party attendee feedback and verifiable syllabus for youth training programs",
-          ],
-          suggestions: [
-            "Add a 2nd distinct piece of evidence (e.g. open-source contributions or national hackathon judging)",
-            "Provide ISBN / Amazon / publisher sales metrics for published tech books",
-          ],
+          matchedEvidence: matched,
+          coverage,
+          confidence: confidenceLabel,
+          missingDocuments: relatedRisks.length > 0
+            ? relatedRisks.map((r) => `${r.title} (${r.file})`)
+            : [
+                "Minimum 2 distinct qualifying pieces of evidence (mandatory threshold)",
+                "Documented open-source contributions, public technical talks, or community mentorship",
+              ],
+          suggestions: criterion.primaryIssue
+            ? [criterion.primaryIssue, "Ensure minimum 2 distinct documents are submitted for this criterion."]
+            : ["Submit at least 2 distinct qualifying pieces of evidence verifying sector impact."],
         };
       case "OC3":
         return {
           guidance:
             "Applicant has made significant commercial, technical, or entrepreneurial contributions to the digital technology sector as a founder or senior employee of a product-led digital technology company.",
-          matchedEvidence: evidenceMatrix.filter((e) => e.category.includes("Optional Criterion 3")),
-          coverage: 35,
-          confidence: "Low (30%)",
-          missingDocuments: [
-            "Second distinct qualifying document (guidance mandates minimum 2 distinct documents)",
-            "Audited accounting records verifying $1.24M revenue or $52.4k MRR",
-            "Legitimate CAC company incorporation certificate matching typed registration number",
-          ],
-          suggestions: [
-            "Submit a second distinct document to cure the document-count refusal trigger",
-            "Remove all copy-pasted telemedicine metrics from AI chatbot tables",
-            "Reconcile CAC incorporation number mismatch (RC1352306 vs RC1900387)",
-          ],
+          matchedEvidence: matched,
+          coverage,
+          confidence: confidenceLabel,
+          missingDocuments: relatedRisks.length > 0
+            ? relatedRisks.map((r) => `${r.title} (${r.file})`)
+            : [
+                "Minimum 2 distinct qualifying pieces of evidence (mandatory threshold)",
+                "Audited financial statements, billing records, or customer contract metrics",
+              ],
+          suggestions: criterion.primaryIssue
+            ? [criterion.primaryIssue, "Ensure all commercial metrics reconcile across consecutive documents."]
+            : ["Submit 2 distinct documents demonstrating measurable commercial or technical growth."],
         };
       case "OC4":
         return {
           guidance:
             "Applicant has made substantial academic contributions to digital technology through research published in peer-reviewed journals or presented at major conferences.",
-          matchedEvidence: [],
-          coverage: 0,
-          confidence: "N/A (0%)",
-          missingDocuments: [
-            "Peer-reviewed academic research papers in recognized IEEE / ACM / arXiv venues",
-          ],
+          matchedEvidence: matched,
+          coverage,
+          confidence: confidenceLabel,
+          missingDocuments: relatedRisks.length > 0
+            ? relatedRisks.map((r) => `${r.title} (${r.file})`)
+            : [
+                "Peer-reviewed research publications in recognized academic/industry venues",
+                "Citation metrics or conference presentation confirmation",
+              ],
           suggestions: ["Not applicable unless academic track is selected."],
         };
       default:
         return {
           guidance: "",
-          matchedEvidence: [],
-          coverage: 0,
-          confidence: "0%",
+          matchedEvidence: matched,
+          coverage,
+          confidence: confidenceLabel,
           missingDocuments: [],
           suggestions: [],
         };
@@ -138,7 +220,7 @@ export default function RequirementsPage() {
       {/* Requirement Cards */}
       <div className="space-y-6">
         {criteriaScorecard.map((criterion) => {
-          const details = getRequirementDetails(criterion.id);
+          const details = getRequirementDetails(criterion);
           const isClaimed = criterion.claimed;
 
           return (
@@ -279,4 +361,3 @@ export default function RequirementsPage() {
     </div>
   );
 }
-

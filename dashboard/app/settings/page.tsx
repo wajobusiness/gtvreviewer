@@ -33,10 +33,13 @@ export default function SettingsPage() {
 
   // Team members
   const [teamMembers, setTeamMembers] = useState([
-    { id: "1", name: "Sarah Jenkins", email: "sarah.jenkins@techvisalegal.co.uk", role: "Partner / Solicitor", status: "Active" },
-    { id: "2", name: "David Miller", email: "david.miller@techvisalegal.co.uk", role: "Associate Solicitor", status: "Active" },
-    { id: "3", name: "Elena Rostova", email: "elena.rostova@techvisalegal.co.uk", role: "Legal Caseworker", status: "Active" },
-    { id: "4", name: "Marcus Vance", email: "m.vance@techvisalegal.co.uk", role: "Technical Reviewer", status: "Invited" },
+    {
+      id: user.id || "1",
+      name: user.fullName || "Primary Account Owner",
+      email: user.email || "owner@workspace.local",
+      role: user.role === "SOLICITOR" ? "Lead Partner / Solicitor" : "Primary Account Owner",
+      status: "Active",
+    },
   ]);
 
   const [newMemberEmail, setNewMemberEmail] = useState("");

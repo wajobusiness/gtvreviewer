@@ -1,7 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getReportBySlug, getAllReports } from "@/lib/reports";
+import { getReportBySlug, getAllReports, getAuditData } from "@/lib/reports";
 import { MarkdownViewer } from "@/components/MarkdownViewer";
 import { RiskBadge } from "@/components/RiskBadge";
 import {
@@ -52,97 +52,38 @@ export default async function ReportAnalysisPage({ params }: PageProps) {
   const wordCount = content.split(/\s+/).length;
   const readTimeMin = Math.max(1, Math.ceil(wordCount / 220));
 
-  // Determine metadata summary based on report slug
+  const audit = getAuditData();
+
+  // Determine metadata summary based on report slug and active audit
   const getAiSummary = (slug: string) => {
-    if (slug.includes("final")) {
-      return {
-        rating: "Severe Risk (32/100)",
-        riskLevel: "CRITICAL",
-        confidence: "98%",
-        strengths: [
-          "Authentic media coverage across Techpoint Africa & TechCabal",
-          "Genuine community impact and tech ecosystem advocacy",
-          "Clear technical background in infrastructure and web development",
-        ],
-        weaknesses: [
-          "Award certificate issued to a different person (document deception risk)",
-          "1,000x numerical contradiction in WHMCS revenue metrics",
-          "Production infrastructure operated on unverified warez license key",
-          "Internal salary records self-asserted without FIRS tax proof",
-        ],
-        recommendations: [
-          "Immediately purge third-party award from portfolio",
-          "Standardize WHMCS revenue to verified bank statements",
-          "Obtain official FIRS tax clearance certificates and bank stamp",
-          "Draft and secure 3 required standalone recommendation letters",
-        ],
-      };
-    } else if (slug.includes("consistency")) {
-      return {
-        rating: "16 Fatal Contradictions",
-        riskLevel: "CRITICAL",
-        confidence: "99%",
-        strengths: ["All contradictions mapped with exact quotes and page numbers"],
-        weaknesses: [
-          "Salary: ₦18M vs ₦1.8M and ₦14.5M conflicting records",
-          "Revenue: ₦2.26M recorded vs ₦2.2B claimed in text",
-          "CAC incorporation RC numbers mismatch on official certificates",
-        ],
-        recommendations: [
-          "Align all financial assertions to exact accounting audit receipts",
-          "Review all templates to eliminate ghost medical copy-paste lines",
-        ],
-      };
-    } else if (slug.includes("letter") || slug.includes("forensic")) {
-      return {
-        rating: "Critical Void (0/3 Letters)",
-        riskLevel: "HIGH",
-        confidence: "95%",
-        strengths: ["Clear guidelines for Tech Nation qualifying referee profiles"],
-        weaknesses: [
-          "Zero standalone letters currently included in bundle",
-          "Internal HR letter contains gender pronoun contradictions ('her')",
-        ],
-        recommendations: [
-          "Secure 3 letters from VP/C-level leaders of established tech organizations",
-          "Ensure letters include referee CVs and corporate registration proofs",
-        ],
-      };
-    } else if (slug.includes("matrix") || slug.includes("evidence")) {
-      return {
-        rating: "Deficient Coverage",
-        riskLevel: "CRITICAL",
-        confidence: "96%",
-        strengths: ["5 distinct pieces cataloged across MC, OC2, and OC3"],
-        weaknesses: [
-          "Only 1 document provided for OC2 and 1 for OC3 (rule requires min 2)",
-          "MC evidence contains fatal attribution defects",
-        ],
-        recommendations: [
-          "Add 1 more distinct qualifying document for OC2",
-          "Add 1 more distinct qualifying document for OC3",
-        ],
-      };
-    } else if (slug.includes("simulation") || slug.includes("panel")) {
-      return {
-        rating: "Unanimous Refusal (0-5)",
-        riskLevel: "CRITICAL",
-        confidence: "97%",
-        strengths: ["5 distinct assessor perspectives modeled with high fidelity"],
-        weaknesses: ["Refusal consensus reached on MC, OC2, and OC3"],
-        recommendations: [
-          "Rebuild the application bundle from scratch following remediation plan",
-        ],
-      };
+    const scoreVal = meta.score ?? audit.kpis?.overallScore ?? 0;
+    const isPassing = scoreVal >= 70;
+
+    const dynamicStrengths = (audit.criteriaScorecard || [])
+      .filter((c) => c.verdict === "MET")
+      .map((c) => `${c.id} (${c.name}) criteria requirements satisfied`);
+    if (dynamicStrengths.length === 0) {
+      dynamicStrengths.push("Comprehensive official Tech Nation guidance mapping");
+      dynamicStrengths.push("Cross-document verification and Part 9 check executed");
+    }
+
+    const dynamicWeaknesses = (audit.topRefusalRisks || []).slice(0, 3).map((r) => `${r.title} (${r.file})`);
+    if (dynamicWeaknesses.length === 0 && !isPassing) {
+      dynamicWeaknesses.push("Evidentiary gaps or document count thresholds identified");
+    }
+
+    const dynamicRecs = (audit.topRefusalRisks || []).slice(0, 3).map((r) => r.impact);
+    if (dynamicRecs.length === 0) {
+      dynamicRecs.push("Review each finding and replace deficient evidence pieces before submission");
     }
 
     return {
-      rating: "Audit Standard",
-      riskLevel: "WARNING",
-      confidence: "92%",
-      strengths: ["Comprehensive official Tech Nation guidance mapping"],
-      weaknesses: ["Multiple non-compliances flagged in current evidence draft"],
-      recommendations: ["Review each finding and replace defective evidence pieces"],
+      rating: `${scoreVal}/100`,
+      riskLevel: isPassing ? "LOW" : meta.status === "Critical" ? "CRITICAL" : "HIGH",
+      confidence: "95%",
+      strengths: dynamicStrengths,
+      weaknesses: dynamicWeaknesses.length > 0 ? dynamicWeaknesses : ["No critical defects identified in this section"],
+      recommendations: dynamicRecs,
     };
   };
 

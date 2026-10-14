@@ -174,7 +174,7 @@ export default function ComparePage() {
           </h1>
           <p className="text-sm text-slate-400 mt-1">
             Comparing initial hostile pre-submission audit against remediated submission draft for{" "}
-            <span className="text-slate-200 font-semibold">{project.candidateName}</span>.
+            <span className="text-slate-200 font-semibold">{project?.candidateName || "Candidate Portfolio"}</span>.
           </p>
         </div>
 

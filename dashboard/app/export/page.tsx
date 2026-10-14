@@ -166,12 +166,12 @@ export default function ExportPage() {
       dossierMetadata: {
         title: "UK Global Talent Visa Endorsement Submission Dossier",
         endorsingBody: "Tech Nation (Digital Technology)",
-        targetRoute: project.visaRoute,
-        applicantName: project.candidateName,
+        targetRoute: project?.visaRoute || "Exceptional Promise",
+        applicantName: project?.candidateName || "Candidate Applicant",
         solicitor: user.fullName,
         firm: organization.name,
         dateGenerated: new Date().toISOString(),
-        overallScore: 84,
+        overallScore: project?.currentScore || 84,
         endorsementStatus: "READY TO SUBMIT",
       },
       evidenceCatalog: evidenceList,
@@ -187,9 +187,10 @@ export default function ExportPage() {
       type: "application/json",
     });
     const url = URL.createObjectURL(blob);
+    const safeName = (project?.candidateName || "Candidate").replace(/\s+/g, "_");
     const a = document.createElement("a");
     a.href = url;
-    a.download = `GlobalTalent_Solicitor_Bundle_${project.candidateName.replace(/\s+/g, "_")}.json`;
+    a.download = `GlobalTalent_Solicitor_Bundle_${safeName}.json`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -269,8 +270,8 @@ export default function ExportPage() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-8 pt-6 border-t border-slate-800/80 print:border-slate-300 text-xs">
             <div>
               <span className="text-slate-400 print:text-slate-500 font-mono block mb-1">CANDIDATE</span>
-              <span className="font-bold text-white print:text-black text-sm block">{project.candidateName}</span>
-              <span className="text-slate-400 print:text-slate-600 text-[11px]">Route: {project.visaRoute}</span>
+              <span className="font-bold text-white print:text-black text-sm block">{project?.candidateName || "Candidate Applicant"}</span>
+              <span className="text-slate-400 print:text-slate-600 text-[11px]">Route: {project?.visaRoute || "Digital Technology"}</span>
             </div>
 
             <div>

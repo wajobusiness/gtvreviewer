@@ -13,10 +13,12 @@ interface AuthContextType {
   user: UserSession;
   organization: OrganizationSession;
   organizations: OrganizationSession[];
-  project: ProjectSession;
+  project: ProjectSession | null;
   projects: ProjectSession[];
   auditRuns: AuditRunItem[];
   activeRunId: string;
+  login: (email: string, fullName?: string, role?: UserRole) => void;
+  logout: () => void;
   switchOrganization: (orgId: string) => void;
   switchOrganizationTier: (tier: "STARTER" | "PROFESSIONAL" | "FIRM_ENTERPRISE") => void;
   switchProject: (projectId: string) => void;
@@ -28,167 +30,101 @@ interface AuthContextType {
     targetField: "Digital Technology" | "Arts and Culture" | "Research and Academia";
     applicantType: "Technical" | "Business" | "Both";
   }) => ProjectSession;
+  deleteProject: (projectId: string) => void;
+  updateProjectScore: (
+    projectId: string,
+    score: number,
+    status?: ProjectSession["status"],
+    runId?: string
+  ) => void;
 }
 
-const defaultOrganizations: OrganizationSession[] = [
-  {
-    id: "org-001",
-    name: "Tech Visa Legal Partners LLP",
-    slug: "tech-visa-legal",
-    tier: "FIRM_ENTERPRISE",
-    seatsUsed: 4,
-    seatsMax: 10,
-  },
-  {
-    id: "org-002",
-    name: "Apex Global Talent Advisors",
-    slug: "apex-talent",
-    tier: "PROFESSIONAL",
-    seatsUsed: 1,
-    seatsMax: 3,
-  },
-];
+const defaultOrganization: OrganizationSession = {
+  id: "org-primary",
+  name: "Immigration Practice Workspace",
+  slug: "practice-workspace",
+  tier: "PROFESSIONAL",
+  seatsUsed: 1,
+  seatsMax: 5,
+};
 
-const defaultProjects: ProjectSession[] = [
-  {
-    id: "proj-001",
-    candidateName: "Alex Taylor (Sample Candidate)",
-    visaRoute: "Exceptional Promise",
-    targetField: "Digital Technology",
-    applicantType: "Both",
-    status: "ready_to_submit",
-    currentScore: 84,
-    totalRuns: 2,
-    activeRunId: "run-002",
-  },
-  {
-    id: "proj-002",
-    candidateName: "Dr. Amara Okafor",
-    visaRoute: "Exceptional Talent",
-    targetField: "Digital Technology",
-    applicantType: "Technical",
-    status: "ready_to_submit",
-    currentScore: 78,
-    totalRuns: 3,
-    activeRunId: "run-003",
-  },
-  {
-    id: "proj-003",
-    candidateName: "Tariq Al-Mansoor",
-    visaRoute: "Exceptional Promise",
-    targetField: "Digital Technology",
-    applicantType: "Business",
-    status: "auditing",
-    currentScore: 54,
-    totalRuns: 2,
-    activeRunId: "run-002",
-  },
-];
-
-const defaultAuditRuns: Record<string, AuditRunItem[]> = {
-  "proj-001": [
-    {
-      id: "run-002",
-      versionNumber: 2,
-      overallScore: 84,
-      currentStatus: "READY TO SUBMIT (Remediated Draft)",
-      createdAt: "14 Oct 2026",
-      isLatest: true,
-    },
-    {
-      id: "run-001",
-      versionNumber: 1,
-      overallScore: 32,
-      currentStatus: "CRITICAL REFUSAL RISK (Pre-Audit)",
-      createdAt: "13 Oct 2026",
-      isLatest: false,
-    },
-  ],
-  "proj-002": [
-    {
-      id: "run-003",
-      versionNumber: 3,
-      overallScore: 78,
-      currentStatus: "READY TO SUBMIT",
-      createdAt: "12 Oct 2026",
-      isLatest: true,
-    },
-    {
-      id: "run-002",
-      versionNumber: 2,
-      overallScore: 61,
-      currentStatus: "BORDERLINE",
-      createdAt: "04 Oct 2026",
-      isLatest: false,
-    },
-    {
-      id: "run-001",
-      versionNumber: 1,
-      overallScore: 42,
-      currentStatus: "CRITICAL DEFICITS",
-      createdAt: "28 Sep 2026",
-      isLatest: false,
-    },
-  ],
-  "proj-003": [
-    {
-      id: "run-002",
-      versionNumber: 2,
-      overallScore: 54,
-      currentStatus: "BORDERLINE RISK",
-      createdAt: "11 Oct 2026",
-      isLatest: true,
-    },
-    {
-      id: "run-001",
-      versionNumber: 1,
-      overallScore: 38,
-      currentStatus: "CRITICAL DEFICITS",
-      createdAt: "01 Oct 2026",
-      isLatest: false,
-    },
-  ],
+const defaultUser: UserSession = {
+  id: "usr-primary",
+  email: "solicitor@gtvreviewer.com",
+  fullName: "Lead Immigration Advisor",
+  role: "SOLICITOR",
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [organizations, setOrganizations] = useState<OrganizationSession[]>(defaultOrganizations);
-  const [currentOrgId, setCurrentOrgId] = useState<string>("org-001");
+  const [organizations, setOrganizations] = useState<OrganizationSession[]>([defaultOrganization]);
+  const [currentOrgId, setCurrentOrgId] = useState<string>("org-primary");
 
-  const [projects, setProjects] = useState<ProjectSession[]>(defaultProjects);
-  const [currentProjectId, setCurrentProjectId] = useState<string>("proj-001");
+  // Production clean state: Projects start empty unless loaded from user localStorage
+  const [projects, setProjects] = useState<ProjectSession[]>([]);
+  const [currentProjectId, setCurrentProjectId] = useState<string>("");
 
-  const [activeRunId, setActiveRunId] = useState<string>("run-002");
+  const [auditRunsByProject, setAuditRunsByProject] = useState<Record<string, AuditRunItem[]>>({});
+  const [activeRunId, setActiveRunId] = useState<string>("");
 
-  const [user, setUser] = useState<UserSession>({
-    id: "usr-001",
-    email: "sarah.jenkins@techvisalegal.co.uk",
-    fullName: "Sarah Jenkins, Solicitor",
-    role: "SOLICITOR",
-  });
+  const [user, setUser] = useState<UserSession>(defaultUser);
 
-  // Load preferences from localStorage on mount
+  // Load persisted user session and projects from localStorage on mount
   useEffect(() => {
     try {
-      const savedOrg = localStorage.getItem("gt_active_org");
-      if (savedOrg && organizations.some((o) => o.id === savedOrg)) {
-        setCurrentOrgId(savedOrg);
+      const savedUser = localStorage.getItem("gt_user_session");
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
       }
-      const savedProj = localStorage.getItem("gt_active_proj");
-      if (savedProj && projects.some((p) => p.id === savedProj)) {
-        setCurrentProjectId(savedProj);
+
+      const savedProjects = localStorage.getItem("gt_user_projects");
+      if (savedProjects) {
+        const parsed = JSON.parse(savedProjects) as ProjectSession[];
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setProjects(parsed);
+          const savedActiveProj = localStorage.getItem("gt_active_proj");
+          const target = parsed.find((p) => p.id === savedActiveProj) || parsed[0];
+          setCurrentProjectId(target.id);
+        }
+      }
+
+      const savedRuns = localStorage.getItem("gt_user_runs");
+      if (savedRuns) {
+        setAuditRunsByProject(JSON.parse(savedRuns));
       }
     } catch {
-      // Ignore localStorage errors
+      // Ignore localStorage read errors
     }
-  }, [organizations, projects]);
+  }, []);
+
+  const login = (email: string, fullName?: string, role: UserRole = "SOLICITOR") => {
+    const updated: UserSession = {
+      id: `usr-${Date.now()}`,
+      email,
+      fullName: fullName || email.split("@")[0],
+      role,
+    };
+    setUser(updated);
+    try {
+      localStorage.setItem("gt_user_session", JSON.stringify(updated));
+    } catch {}
+  };
+
+  const logout = () => {
+    setUser({
+      id: "usr-guest",
+      email: "",
+      fullName: "Guest User",
+      role: "CANDIDATE",
+    });
+    try {
+      localStorage.removeItem("gt_user_session");
+    } catch {}
+  };
 
   const switchOrganization = (orgId: string) => {
     setCurrentOrgId(orgId);
-    try {
-      localStorage.setItem("gt_active_org", orgId);
-    } catch {}
   };
 
   const switchOrganizationTier = (tier: "STARTER" | "PROFESSIONAL" | "FIRM_ENTERPRISE") => {
@@ -199,9 +135,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const switchProject = (projectId: string) => {
     setCurrentProjectId(projectId);
-    const runs = defaultAuditRuns[projectId] || [];
+    const runs = auditRunsByProject[projectId] || [];
     if (runs.length > 0) {
       setActiveRunId(runs[0].id);
+    } else {
+      setActiveRunId("");
     }
     try {
       localStorage.setItem("gt_active_proj", projectId);
@@ -213,16 +151,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const switchUserRole = (role: UserRole) => {
-    setUser((prev) => ({
-      ...prev,
-      role,
-      fullName:
-        role === "SOLICITOR"
-          ? "Sarah Jenkins, Solicitor"
-          : role === "CANDIDATE"
-          ? "Alex Taylor (Sample Applicant)"
-          : "System Administrator",
-    }));
+    setUser((prev) => {
+      const updated = { ...prev, role };
+      try {
+        localStorage.setItem("gt_user_session", JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
   };
 
   const addProject = (newProjectData: {
@@ -241,7 +176,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       activeRunId: "",
     };
 
-    setProjects((prev) => [newProject, ...prev]);
+    setProjects((prev) => {
+      const updated = [newProject, ...prev];
+      try {
+        localStorage.setItem("gt_user_projects", JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
     setCurrentProjectId(newId);
     try {
       localStorage.setItem("gt_active_proj", newId);
@@ -250,11 +192,84 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return newProject;
   };
 
+  const deleteProject = (projectId: string) => {
+    setProjects((prev) => {
+      const updated = prev.filter((p) => p.id !== projectId);
+      try {
+        localStorage.setItem("gt_user_projects", JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    if (currentProjectId === projectId) {
+      const remaining = projects.filter((p) => p.id !== projectId);
+      if (remaining.length > 0) {
+        setCurrentProjectId(remaining[0].id);
+      } else {
+        setCurrentProjectId("");
+      }
+    }
+  };
+
+  const updateProjectScore = (
+    projectId: string,
+    score: number,
+    status: ProjectSession["status"] = "ready_to_submit",
+    runId?: string
+  ) => {
+    const effectiveRunId = runId || `run-${Date.now()}`;
+
+    setProjects((prev) => {
+      const updated = prev.map((p) => {
+        if (p.id === projectId) {
+          return {
+            ...p,
+            currentScore: score,
+            status,
+            totalRuns: (p.totalRuns || 0) + 1,
+            activeRunId: effectiveRunId,
+          };
+        }
+        return p;
+      });
+      try {
+        localStorage.setItem("gt_user_projects", JSON.stringify(updated));
+      } catch {}
+      return updated;
+    });
+
+    // Record new audit run in runs history
+    setAuditRunsByProject((prev) => {
+      const existing = prev[projectId] || [];
+      const newRun: AuditRunItem = {
+        id: effectiveRunId,
+        versionNumber: existing.length + 1,
+        overallScore: score,
+        currentStatus: score >= 70 ? "READY TO SUBMIT" : score >= 50 ? "BORDERLINE" : "CRITICAL REFUSAL RISK",
+        createdAt: new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }),
+        isLatest: true,
+      };
+
+      const updatedRuns = [
+        newRun,
+        ...existing.map((r) => ({ ...r, isLatest: false })),
+      ];
+
+      const updatedMap = { ...prev, [projectId]: updatedRuns };
+      try {
+        localStorage.setItem("gt_user_runs", JSON.stringify(updatedMap));
+      } catch {}
+      return updatedMap;
+    });
+
+    setActiveRunId(effectiveRunId);
+  };
+
   const currentOrg =
     organizations.find((o) => o.id === currentOrgId) || organizations[0];
   const currentProject =
-    projects.find((p) => p.id === currentProjectId) || projects[0];
-  const currentAuditRuns = defaultAuditRuns[currentProject.id] || [];
+    projects.find((p) => p.id === currentProjectId) || (projects.length > 0 ? projects[0] : null);
+  const currentAuditRuns = currentProject ? auditRunsByProject[currentProject.id] || [] : [];
 
   return (
     <AuthContext.Provider
@@ -266,12 +281,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         projects,
         auditRuns: currentAuditRuns,
         activeRunId,
+        login,
+        logout,
         switchOrganization,
         switchOrganizationTier,
         switchProject,
         switchAuditRun,
         switchUserRole,
         addProject,
+        deleteProject,
+        updateProjectScore,
       }}
     >
       {children}
@@ -286,4 +305,3 @@ export function useAuth() {
   }
   return context;
 }
-

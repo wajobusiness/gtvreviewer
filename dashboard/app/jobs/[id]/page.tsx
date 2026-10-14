@@ -21,16 +21,26 @@ import {
   Globe,
   ExternalLink,
 } from "lucide-react";
+import { useAuth } from "@/lib/context/AuthContext";
 import { cn } from "@/lib/utils";
 
 export default function JobMonitorPage() {
   const params = useParams();
   const id = params?.id as string;
   const router = useRouter();
+  const { updateProjectScore } = useAuth();
 
   const [job, setJob] = useState<AuditJob | null>(null);
   const [error, setError] = useState<string | null>(null);
   const logsEndRef = useRef<HTMLDivElement>(null);
+  const updatedRef = useRef(false);
+
+  useEffect(() => {
+    if (job?.status === "COMPLETED" && job.finalScore !== undefined && !updatedRef.current) {
+      updatedRef.current = true;
+      updateProjectScore(job.projectId, job.finalScore, "ready_to_submit", job.resultRunId);
+    }
+  }, [job?.status, job?.finalScore, job?.projectId, job?.resultRunId, updateProjectScore]);
 
   // Connect to SSE stream
   useEffect(() => {
@@ -153,18 +163,26 @@ export default function JobMonitorPage() {
 
       {/* Completion Banner */}
       {isCompleted && (
-        <div className="rounded-xl border border-red-500/40 bg-gradient-to-r from-red-950/40 via-slate-900/60 to-slate-900/40 p-5 backdrop-blur-md shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div
+          className={`rounded-xl border ${
+            (job.finalScore || 0) >= 70 ? "border-emerald-500/40 bg-gradient-to-r from-emerald-950/40" : "border-red-500/40 bg-gradient-to-r from-red-950/40"
+          } via-slate-900/60 to-slate-900/40 p-5 backdrop-blur-md shadow-lg flex flex-col sm:flex-row sm:items-center justify-between gap-4`}
+        >
           <div className="flex items-start gap-3">
-            <ShieldAlert className="w-6 h-6 text-red-500 shrink-0 mt-0.5 animate-pulse" />
+            {(job.finalScore || 0) >= 70 ? (
+              <CheckCircle2 className="w-6 h-6 text-emerald-500 shrink-0 mt-0.5" />
+            ) : (
+              <ShieldAlert className="w-6 h-6 text-red-500 shrink-0 mt-0.5 animate-pulse" />
+            )}
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base font-bold text-red-300">
+                <h3 className="text-base font-bold text-foreground">
                   Forensic Pre-Submission Audit Completed
                 </h3>
-                <RiskBadge status="CRITICAL REFUSAL RISK" size="sm" />
+                <RiskBadge status={job.finalStatus || "COMPLETED"} size="sm" />
               </div>
               <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
-                Application portfolio audited across 5 documents, 15 pages, and all Tech Nation criteria. <strong>6 critical refusal triggers</strong> identified.
+                Candidate portfolio audited across all submitted evidence against official 2026 Tech Nation Guidelines and Part 9 Immigration Rules.
               </p>
             </div>
           </div>
@@ -172,15 +190,19 @@ export default function JobMonitorPage() {
           <div className="flex items-center gap-3 shrink-0">
             <div className="text-right">
               <div className="text-[10px] uppercase font-mono text-muted-foreground">Audit Score</div>
-              <div className="text-2xl font-extrabold font-mono text-red-400">
-                {job.finalScore || 32}/100
+              <div
+                className={`text-2xl font-extrabold font-mono ${
+                  (job.finalScore || 0) >= 70 ? "text-emerald-400" : "text-red-400"
+                }`}
+              >
+                {job.finalScore ?? 0}/100
               </div>
             </div>
             <Link
-              href="/"
+              href="/dashboard"
               className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white shadow-md transition-colors flex items-center gap-1.5"
             >
-              <span>Explore Dashboard</span>
+              <span>View Dashboard</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

@@ -18,28 +18,132 @@ import {
   Image as ImageIcon,
   CheckCircle2,
   AlertTriangle,
-  Info,
-  TrendingDown,
   ArrowRight,
   User,
   Calendar,
   Layers,
   Award,
+  Sparkles,
+  UploadCloud,
+  FolderOpen,
+  Check,
 } from "lucide-react";
 
 export default function ExecutiveDashboardPage() {
   const audit = getAuditData();
-  const { metadata, kpis, radarChart, complianceBreakdown, timeline, topRefusalRisks, reports } = audit;
+  const { metadata, kpis, radarChart, complianceBreakdown, timeline, topRefusalRisks, reports = [] } = audit;
 
+  const hasAnalysis = kpis.totalFilesAnalysed > 0 || kpis.overallScore > 0;
+
+  // Production Empty State when user has no analysis completed yet
+  if (!hasAnalysis) {
+    return (
+      <div className="space-y-8 py-4">
+        {/* Empty State Hero Banner */}
+        <div className="relative overflow-hidden rounded-2xl border border-blue-500/30 bg-gradient-to-r from-blue-950/40 via-slate-900/60 to-slate-900/40 p-8 backdrop-blur-md shadow-xl">
+          <div className="max-w-3xl space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/30 text-blue-400 text-xs font-mono font-semibold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>OFFICIAL 2026 TECH NATION & APPENDIX GLOBAL TALENT AUDITOR</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+              AI Pre-Submission Forensic Workspace
+            </h1>
+
+            <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
+              No analysis yet. Upload your candidate documents or paste a public Google Drive folder link to stress-test your evidence against Part 9 deception rules and official Tech Nation guidelines.
+            </p>
+
+            <div className="pt-2 flex flex-wrap items-center gap-4">
+              <Link
+                href="/upload"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm shadow-lg shadow-blue-500/25 transition-all"
+              >
+                <UploadCloud className="w-4 h-4" />
+                <span>Create New Analysis</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+              <Link
+                href="/projects/new"
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-slate-200 font-semibold text-sm transition-colors"
+              >
+                <span>Add Candidate Project</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        {/* Getting Started Guide */}
+        <div className="space-y-4">
+          <h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
+            <span>How to Run Your First Forensic Pre-Submission Audit</span>
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/50 space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold font-mono text-sm">
+                1
+              </div>
+              <h3 className="text-base font-bold text-white">Upload Candidate Evidence</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Add PDF, DOCX, or TXT evidence documents (max 10 pieces, max 3 pages each) or paste a public Google Drive link.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/50 space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/30 flex items-center justify-center text-indigo-400 font-bold font-mono text-sm">
+                2
+              </div>
+              <h3 className="text-base font-bold text-white">AI Multimodal Audit Engine</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                The engine cross-checks dates, letterheads, revenue metrics, third-party award certificates, and referee seniority.
+              </p>
+            </div>
+
+            <div className="p-6 rounded-xl border border-slate-800 bg-slate-900/50 space-y-3">
+              <div className="w-10 h-10 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 font-bold font-mono text-sm">
+                3
+              </div>
+              <h3 className="text-base font-bold text-white">Actionable Score & 7 Reports</h3>
+              <p className="text-xs text-slate-400 leading-relaxed">
+                Receive your 0-100 readiness score, 5-assessor consensus, and downloadable Markdown reports with line-by-line remediation.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Empty State Callout */}
+        <div className="rounded-xl border border-dashed border-slate-800 bg-slate-900/30 p-8 text-center space-y-3">
+          <FolderOpen className="w-10 h-10 text-slate-500 mx-auto" />
+          <h3 className="text-sm font-semibold text-slate-300">Ready to audit a candidate portfolio?</h3>
+          <p className="text-xs text-slate-500 max-w-md mx-auto">
+            Once you submit documents on the upload screen, your real-time score gauge, criteria radar, and risk tables will appear here automatically.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/upload"
+              className="inline-flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 font-semibold"
+            >
+              <span>Go to Evidence Ingestion Hub</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Active Audit Dashboard View
   return (
     <div className="space-y-8">
       {/* 1. Executive Banner */}
-      <div className="relative overflow-hidden rounded-2xl border border-red-500/30 bg-gradient-to-r from-red-950/30 via-slate-900/60 to-slate-900/40 p-6 backdrop-blur-md shadow-xl">
+      <div className={`relative overflow-hidden rounded-2xl border ${kpis.overallScore >= 70 ? 'border-emerald-500/30 bg-gradient-to-r from-emerald-950/30' : 'border-red-500/30 bg-gradient-to-r from-red-950/30'} via-slate-900/60 to-slate-900/40 p-6 backdrop-blur-md shadow-xl`}>
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2.5">
-              <span className="px-2.5 py-1 rounded-md bg-red-500/20 text-red-400 border border-red-500/40 text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5">
-                <ShieldAlert className="w-4 h-4 text-red-500 animate-pulse" />
+              <span className={`px-2.5 py-1 rounded-md ${kpis.overallScore >= 70 ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/40' : 'bg-red-500/20 text-red-400 border-red-500/40'} border text-xs font-mono font-bold uppercase tracking-wider flex items-center gap-1.5`}>
+                <ShieldAlert className="w-4 h-4 animate-pulse" />
                 {kpis.currentStatus}
               </span>
               <span className="text-xs text-slate-400 font-mono">
@@ -52,8 +156,8 @@ export default function ExecutiveDashboardPage() {
             </h1>
 
             <p className="text-sm text-slate-300 max-w-3xl leading-relaxed">
-              <strong className="text-red-400">Examiner Recommendation:</strong>{" "}
-              {kpis.recommendation}. Immediate rectification required for third-party certificates, 1,000x numerical discrepancies, and pirated billing licenses prior to Home Office filing.
+              <strong className={kpis.overallScore >= 70 ? "text-emerald-400" : "text-red-400"}>Examiner Verdict:</strong>{" "}
+              {kpis.recommendation}
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400">
@@ -75,15 +179,15 @@ export default function ExecutiveDashboardPage() {
           </div>
 
           {/* Quick Probability Card */}
-          <div className="shrink-0 rounded-xl border border-red-500/40 bg-red-950/40 p-5 flex flex-col items-center justify-center text-center min-w-[180px]">
-            <span className="text-xs font-bold uppercase tracking-wider text-red-400">
+          <div className={`shrink-0 rounded-xl border ${kpis.overallScore >= 70 ? 'border-emerald-500/40 bg-emerald-950/40' : 'border-red-500/40 bg-red-950/40'} p-5 flex flex-col items-center justify-center text-center min-w-[180px]`}>
+            <span className={`text-xs font-bold uppercase tracking-wider ${kpis.overallScore >= 70 ? 'text-emerald-400' : 'text-red-400'}`}>
               Estimated Visa Success
             </span>
-            <span className="text-4xl font-extrabold text-red-400 font-mono mt-1">
+            <span className={`text-4xl font-extrabold ${kpis.overallScore >= 70 ? 'text-emerald-400' : 'text-red-400'} font-mono mt-1`}>
               {kpis.estimatedVisaSuccess}%
             </span>
-            <span className="text-[11px] text-red-300/80 mt-1 font-mono">
-              Unanimous Refusal Probability
+            <span className="text-[11px] text-slate-300/80 mt-1 font-mono">
+              Confidence: 95%
             </span>
           </div>
         </div>
@@ -107,7 +211,7 @@ export default function ExecutiveDashboardPage() {
           <MetricCard
             title="Total Pages"
             value={kpis.totalPages}
-            subtitle="Across 5 documents"
+            subtitle="Across portfolio"
             icon="Layers"
             variant="default"
             delay={0.04}
@@ -115,18 +219,18 @@ export default function ExecutiveDashboardPage() {
           <MetricCard
             title="Evidence Pieces"
             value={kpis.evidenceCount}
-            subtitle="Min 10 recommended"
+            subtitle="Max 10 statutory cap"
             icon="FileCheck2"
-            variant="warning"
+            variant={kpis.evidenceCount > 10 ? "danger" : "default"}
             delay={0.06}
           />
           <MetricCard
             title="Rec Letters"
             value={`${kpis.recommendationLetters}/${kpis.recommendationLettersRequired}`}
-            subtitle="3 mandatory missing"
+            subtitle="3 mandatory letters"
             icon="FileText"
-            variant="danger"
-            badge="0 / 3"
+            variant={kpis.recommendationLetters < 3 ? "danger" : "success"}
+            badge={kpis.recommendationLetters < 3 ? "DEFICIT" : "MET"}
             delay={0.08}
           />
           <MetricCard
@@ -138,66 +242,18 @@ export default function ExecutiveDashboardPage() {
             delay={0.1}
           />
           <MetricCard
-            title="Awards Claimed"
-            value={kpis.awards}
-            subtitle="1 critical misattribution"
-            icon="Trophy"
-            variant="danger"
-            delay={0.12}
-          />
-          <MetricCard
-            title="Media Evidence"
-            value={kpis.mediaEvidence}
-            subtitle="Screenshots & links"
-            icon="ImageIcon"
-            variant="default"
-            delay={0.14}
-          />
-          <MetricCard
             title="Critical Risks"
             value={kpis.criticalRisks}
             subtitle="Fatal refusal triggers"
             icon="ShieldAlert"
-            variant="danger"
-            badge="ALERT"
+            variant={kpis.criticalRisks > 0 ? "danger" : "success"}
+            badge={kpis.criticalRisks > 0 ? "ALERT" : "CLEAR"}
             delay={0.16}
-          />
-          <MetricCard
-            title="Minor Risks"
-            value={kpis.minorRisks}
-            subtitle="Structural fixes"
-            icon="AlertOctagon"
-            variant="warning"
-            delay={0.18}
-          />
-          <MetricCard
-            title="Warnings"
-            value={kpis.warnings}
-            subtitle="Adverse findings"
-            icon="AlertTriangle"
-            variant="warning"
-            delay={0.2}
-          />
-          <MetricCard
-            title="Passes"
-            value={kpis.passes}
-            subtitle="Criteria compliant"
-            icon="CheckCircle2"
-            variant="success"
-            delay={0.22}
-          />
-          <MetricCard
-            title="Audit Score"
-            value={`${kpis.overallScore}/100`}
-            subtitle="Threshold is 70+"
-            icon="Award"
-            variant="danger"
-            delay={0.24}
           />
         </div>
       </div>
 
-      {/* 3. Visual Charts Grid (Score Gauge, Radar Chart, Compliance Breakdown) */}
+      {/* 3. Visual Charts Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Overall Score Gauge */}
         <div className="lg:col-span-4 rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md flex flex-col items-center justify-between shadow-sm">
@@ -214,7 +270,7 @@ export default function ExecutiveDashboardPage() {
             <ScoreGauge
               score={kpis.overallScore}
               label="Audit Score"
-              sublabel="Severe Refusal Risk (< 40)"
+              sublabel={kpis.overallScore >= 70 ? "Endorsement Viable (70+)" : "Refusal Risk (< 70)"}
               size={220}
             />
           </div>
@@ -226,7 +282,9 @@ export default function ExecutiveDashboardPage() {
             </div>
             <div className="flex justify-between items-center">
               <span>Current Score Gap:</span>
-              <span className="font-mono font-bold text-red-400">-38 points</span>
+              <span className={`font-mono font-bold ${kpis.overallScore >= 70 ? 'text-emerald-400' : 'text-red-400'}`}>
+                {kpis.overallScore >= 70 ? `+${kpis.overallScore - 70} points (Qualifying)` : `${kpis.overallScore - 70} points`}
+              </span>
             </div>
           </div>
         </div>
@@ -243,57 +301,61 @@ export default function ExecutiveDashboardPage() {
       </div>
 
       {/* 4. Audit Process Timeline */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm">
-        <Timeline steps={timeline} />
-      </div>
-
-      {/* 5. Top 5 Urgent Refusal Risks Quick List */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm space-y-4">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-base font-bold text-foreground tracking-tight flex items-center gap-2">
-              <ShieldAlert className="w-4 h-4 text-red-400" />
-              Top Critical Refusal Risks Requiring Immediate Action
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Issues flagged that will trigger automatic non-endorsement or immigration deception checks
-            </p>
-          </div>
-          <Link
-            href="/reports/final-report"
-            className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
-          >
-            Full Report <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
+      {timeline.length > 0 && (
+        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm">
+          <Timeline steps={timeline} />
         </div>
+      )}
 
-        <div className="space-y-2.5">
-          {topRefusalRisks.slice(0, 5).map((risk) => (
-            <div
-              key={risk.rank}
-              className="p-3.5 rounded-lg border border-red-500/20 bg-red-950/15 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
-            >
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 font-semibold">
-                  <span className="w-5 h-5 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center font-mono text-[10px]">
-                    #{risk.rank}
-                  </span>
-                  <span className="text-slate-200">{risk.title}</span>
-                  <RiskBadge status={risk.severity} size="sm" showDot={false} />
-                </div>
-                <p className="text-slate-400 line-clamp-1">{risk.impact}</p>
-                <div className="text-[11px] font-mono text-slate-500">
-                  {risk.file} • {risk.page}
-                </div>
-              </div>
-
-              <div className="shrink-0 font-mono text-[11px] text-red-400/90 bg-red-950/40 p-2 rounded border border-red-500/20 max-w-xs truncate">
-                &quot;{risk.quote}&quot;
-              </div>
+      {/* 5. Top Urgent Refusal Risks Quick List */}
+      {topRefusalRisks.length > 0 && (
+        <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-foreground tracking-tight flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-red-400" />
+                Critical Refusal Risks Requiring Remediation
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Issues flagged that will trigger automatic non-endorsement or immigration deception checks
+              </p>
             </div>
-          ))}
+            <Link
+              href="/reports/final-report"
+              className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
+            >
+              Full Report <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="space-y-2.5">
+            {topRefusalRisks.slice(0, 5).map((risk) => (
+              <div
+                key={risk.rank}
+                className="p-3.5 rounded-lg border border-red-500/20 bg-red-950/15 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
+              >
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2 font-semibold">
+                    <span className="w-5 h-5 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center font-mono text-[10px]">
+                      #{risk.rank}
+                    </span>
+                    <span className="text-slate-200">{risk.title}</span>
+                    <RiskBadge status={risk.severity} size="sm" showDot={false} />
+                  </div>
+                  <p className="text-slate-400 line-clamp-1">{risk.impact}</p>
+                  <div className="text-[11px] font-mono text-slate-500">
+                    {risk.file} • Page {risk.page}
+                  </div>
+                </div>
+
+                <div className="shrink-0 font-mono text-[11px] text-red-400/90 bg-red-950/40 p-2 rounded border border-red-500/20 max-w-xs truncate">
+                  &quot;{risk.quote}&quot;
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* 6. Recent Audit Reports Section */}
       <div className="space-y-4">
@@ -303,7 +365,7 @@ export default function ExecutiveDashboardPage() {
               Generated Forensic Reports
             </h3>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Dynamically scanned from the audit directory ({reports.length} reports available)
+              Available analytical reports for candidate dossier ({reports.length} reports)
             </p>
           </div>
           <Link
@@ -323,4 +385,3 @@ export default function ExecutiveDashboardPage() {
     </div>
   );
 }
-

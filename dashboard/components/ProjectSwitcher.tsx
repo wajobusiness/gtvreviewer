@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useAuth } from "@/lib/context/AuthContext";
 import { UserCheck, ChevronDown, Check, Plus, FolderKanban } from "lucide-react";
-import { RiskBadge } from "./RiskBadge";
 import { cn } from "@/lib/utils";
 
 export function ProjectSwitcher() {
@@ -31,11 +30,13 @@ export function ProjectSwitcher() {
       >
         <UserCheck className="w-3.5 h-3.5 text-blue-400" />
         <span className="font-semibold max-w-[120px] sm:max-w-[170px] truncate">
-          {project.candidateName}
+          {project ? project.candidateName : "No Active Portfolio"}
         </span>
-        <span className="hidden sm:inline-block font-mono text-[10px] text-slate-400">
-          ({project.currentScore}/100)
-        </span>
+        {project && (
+          <span className="hidden sm:inline-block font-mono text-[10px] text-slate-400">
+            ({project.currentScore}/100)
+          </span>
+        )}
         <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
       </button>
 
@@ -50,51 +51,57 @@ export function ProjectSwitcher() {
               onClick={() => setOpen(false)}
               className="text-[10px] text-blue-400 hover:text-blue-300 font-semibold"
             >
-              View All
+              View All ({projects.length})
             </Link>
           </div>
 
           <div className="max-h-60 overflow-y-auto divide-y divide-slate-800/40 my-1">
-            {projects.map((p) => {
-              const isSelected = p.id === project.id;
-              return (
-                <button
-                  key={p.id}
-                  onClick={() => {
-                    switchProject(p.id);
-                    setOpen(false);
-                  }}
-                  className={cn(
-                    "w-full flex items-center justify-between p-2 rounded-lg text-left transition-colors",
-                    isSelected
-                      ? "bg-blue-600/15 text-blue-300 font-medium"
-                      : "hover:bg-slate-800 text-slate-300"
-                  )}
-                >
-                  <div className="truncate mr-2">
-                    <div className="font-semibold truncate">{p.candidateName}</div>
-                    <div className="text-[10px] text-muted-foreground font-mono truncate">
-                      {p.visaRoute} • {p.totalRuns} Run{p.totalRuns !== 1 ? "s" : ""}
+            {projects.length === 0 ? (
+              <div className="p-4 text-center text-slate-400 text-[11px]">
+                No portfolios created yet.
+              </div>
+            ) : (
+              projects.map((p) => {
+                const isSelected = project?.id === p.id;
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => {
+                      switchProject(p.id);
+                      setOpen(false);
+                    }}
+                    className={cn(
+                      "w-full flex items-center justify-between p-2 rounded-lg text-left transition-colors",
+                      isSelected
+                        ? "bg-blue-600/15 text-blue-300 font-medium"
+                        : "hover:bg-slate-800 text-slate-300"
+                    )}
+                  >
+                    <div className="truncate mr-2">
+                      <div className="font-semibold truncate">{p.candidateName}</div>
+                      <div className="text-[10px] text-muted-foreground font-mono truncate">
+                        {p.visaRoute} • {p.totalRuns} Run{p.totalRuns !== 1 ? "s" : ""}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-1.5 shrink-0">
-                    <span
-                      className={cn(
-                        "text-[10px] font-mono font-bold px-1.5 py-0.5 rounded",
-                        p.currentScore >= 70
-                          ? "bg-emerald-500/15 text-emerald-400"
-                          : p.currentScore >= 50
-                          ? "bg-amber-500/15 text-amber-400"
-                          : "bg-red-500/15 text-red-400"
-                      )}
-                    >
-                      {p.currentScore}/100
-                    </span>
-                    {isSelected && <Check className="w-3.5 h-3.5 text-blue-400" />}
-                  </div>
-                </button>
-              );
-            })}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      <span
+                        className={cn(
+                          "text-[10px] font-mono font-bold px-1.5 py-0.5 rounded",
+                          p.currentScore >= 70
+                            ? "bg-emerald-500/15 text-emerald-400"
+                            : p.currentScore >= 50
+                            ? "bg-amber-500/15 text-amber-400"
+                            : "bg-red-500/15 text-red-400"
+                        )}
+                      >
+                        {p.currentScore}/100
+                      </span>
+                      {isSelected && <Check className="w-3.5 h-3.5 text-blue-400" />}
+                    </div>
+                  </button>
+                );
+              })
+            )}
           </div>
 
           <div className="pt-1.5 border-t border-slate-800">
@@ -112,4 +119,3 @@ export function ProjectSwitcher() {
     </div>
   );
 }
-

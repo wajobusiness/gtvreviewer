@@ -18,7 +18,7 @@ import {
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { switchUserRole } = useAuth();
+  const { login } = useAuth();
   const [accountType, setAccountType] = useState<"SOLICITOR" | "CANDIDATE">("SOLICITOR");
   const [fullName, setFullName] = useState("");
   const [orgName, setOrgName] = useState("");
@@ -30,13 +30,14 @@ export default function RegisterPage() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!email || !fullName) return;
     setLoading(true);
-    switchUserRole(accountType);
+    login(email, fullName, accountType);
 
     setTimeout(() => {
       setLoading(false);
       router.push("/dashboard");
-    }, 600);
+    }, 400);
   };
 
   return (

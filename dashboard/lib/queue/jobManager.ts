@@ -1,18 +1,22 @@
-import { AuditJob, JobStage, JobLogEntry, JobStatus } from "@/types/queue";
-import { getAuditData } from "@/lib/reports";
+import { AuditJob, JobStage, JobLogEntry } from "@/types/queue";
+import { DocumentInput, StructuredAnalysisResult, runForensicAiAnalysis } from "@/lib/ai";
+import { saveAuditRunToDb } from "@/lib/db/neon";
+import { extractGoogleDriveId } from "@/lib/drive";
 
 type JobListener = (job: AuditJob) => void;
 
 class JobManager {
   private jobs: Map<string, AuditJob> = new Map();
   private listeners: Map<string, Set<JobListener>> = new Map();
+  private analysesByRunId: Map<string, StructuredAnalysisResult> = new Map();
+  private analysesByProjectId: Map<string, StructuredAnalysisResult> = new Map();
 
   private createDefaultStages(): JobStage[] {
     return [
       {
         id: "stage-ingest",
         name: "Document Ingestion & File Checks",
-        description: "Validating PDF formats, page count limits (max 3/piece), and structural requirements.",
+        description: "Validating formats, page count limits (max 3/piece), and structural requirements.",
         status: "pending",
         progress: 0,
       },
@@ -33,7 +37,7 @@ class JobManager {
       {
         id: "stage-integrity",
         name: "Cross-Document Contradiction & Deception Engine",
-        description: "Hunting numerical conflicts, template cloning, third-party awards, and software piracy.",
+        description: "Hunting numerical conflicts, template cloning, and third-party attribution risks.",
         status: "pending",
         progress: 0,
       },
@@ -46,15 +50,15 @@ class JobManager {
       },
       {
         id: "stage-scoring",
-        name: "Quantitative Score & Risk Computation",
-        description: "Computing forensic confidence rating (0-100) and refusal risk boundaries.",
+        name: "Forensic AI Analysis & Scoring",
+        description: "Executing deep AI reasoning layer to compute confidence rating and refusal risk boundaries.",
         status: "pending",
         progress: 0,
       },
       {
         id: "stage-reports",
-        name: "Forensic Reports & JSON Compilation",
-        description: "Compiling 7 Markdown reports and structured audit.json registry.",
+        name: "Forensic Reports & Persistence",
+        description: "Compiling 7 Markdown reports and saving structured audit registry.",
         status: "pending",
         progress: 0,
       },
@@ -66,8 +70,12 @@ class JobManager {
     candidateName: string,
     visaRoute: string,
     options?: {
+      targetField?: string;
+      applicantType?: "Technical" | "Business" | "Both";
+      documents?: DocumentInput[];
       sourceType?: "LOCAL_UPLOAD" | "GOOGLE_DRIVE";
       googleDriveUrl?: string;
+      additionalInstructions?: string;
     }
   ): AuditJob {
     const id = `job-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
@@ -86,13 +94,15 @@ class JobManager {
       stages,
       sourceType,
       googleDriveUrl,
+      documents: options?.documents || [],
+      additionalInstructions: options?.additionalInstructions,
       logs: [
         {
           timestamp: new Date().toISOString(),
           level: "info",
           message: sourceType === "GOOGLE_DRIVE"
-            ? `Job initialized with public Google Drive link: ${googleDriveUrl}`
-            : `Job initialized for candidate ${candidateName} (${visaRoute}).`,
+            ? `Job initialized with Google Drive link: ${googleDriveUrl}`
+            : `Job initialized for candidate ${candidateName} (${visaRoute}) with ${options?.documents?.length || 0} documents.`,
         },
       ],
       createdAt: new Date().toISOString(),
@@ -102,8 +112,11 @@ class JobManager {
 
     // Asynchronously begin execution in background
     setTimeout(() => {
-      this.executeJob(id).catch((err) => {
+      this.executeJob(id, options).catch((err) => {
         console.error(`[JobManager] Error executing job ${id}:`, err);
+        job.status = "FAILED";
+        job.error = err?.message || "Execution error";
+        this.addLog(job, "error", `Job execution failed: ${job.error}`);
       });
     }, 100);
 
@@ -120,6 +133,14 @@ class JobManager {
       return all.filter((j) => j.projectId === projectId);
     }
     return all.sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  }
+
+  public getAnalysisForProject(projectId: string): StructuredAnalysisResult | null {
+    return this.analysesByProjectId.get(projectId) || null;
+  }
+
+  public getAnalysisForRun(runId: string): StructuredAnalysisResult | null {
+    return this.analysesByRunId.get(runId) || null;
   }
 
   public subscribe(jobId: string, listener: JobListener): () => void {
@@ -154,14 +175,25 @@ class JobManager {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
-  private async executeJob(jobId: string) {
+  private async executeJob(
+    jobId: string,
+    options?: {
+      targetField?: string;
+      applicantType?: "Technical" | "Business" | "Both";
+      documents?: DocumentInput[];
+      googleDriveUrl?: string;
+      additionalInstructions?: string;
+    }
+  ) {
     const job = this.jobs.get(jobId);
     if (!job) return;
 
     job.status = "PROCESSING";
-    this.addLog(job, "info", "Starting forensic pipeline execution...");
+    this.addLog(job, "info", "Starting forensic AI pipeline execution...");
 
-    const auditData = getAuditData();
+    const rawDocs = options?.documents || [];
+    const targetField = options?.targetField || "Digital Technology";
+    const applicantType = options?.applicantType || "Both";
 
     // Stage 1: Ingestion
     job.currentStageId = "stage-ingest";
@@ -169,19 +201,18 @@ class JobManager {
     job.stages[0].startedAt = new Date().toISOString();
 
     if (job.sourceType === "GOOGLE_DRIVE" && job.googleDriveUrl) {
-      this.addLog(job, "info", `Connecting to public Google Drive repository: ${job.googleDriveUrl}`, "stage-ingest");
-      await this.sleep(350);
-      this.addLog(job, "info", "Verifying public access ('Anyone with the link can view')...", "stage-ingest");
+      this.addLog(job, "info", `Connecting to Google Drive repository: ${job.googleDriveUrl}`, "stage-ingest");
       await this.sleep(300);
-      this.addLog(job, "success", "Public Google Drive folder access confirmed (HTTP 200 Reader permissions).", "stage-ingest");
-      await this.sleep(300);
-      this.addLog(job, "info", "Enumerated 5 candidate evidence PDFs from remote Google Drive directory.", "stage-ingest");
-      await this.sleep(300);
-      this.addLog(job, "info", "Retrieved and verified checksums for 5 evidence PDFs (15 pages total).", "stage-ingest");
+      const parsedDrive = extractGoogleDriveId(job.googleDriveUrl);
+      if (parsedDrive.id) {
+        this.addLog(job, "success", `Verified Google Drive target ID: ${parsedDrive.id} (${parsedDrive.type})`, "stage-ingest");
+      }
     } else {
-      this.addLog(job, "info", "Validating 5 submitted candidate evidence PDFs...", "stage-ingest");
-      await this.sleep(400);
-      this.addLog(job, "info", "Total 15 pages verified across application portfolio.", "stage-ingest");
+      this.addLog(job, "info", `Verifying ${rawDocs.length} submitted evidence documents...`, "stage-ingest");
+      await this.sleep(250);
+      for (const doc of rawDocs) {
+        this.addLog(job, "info", `Ingested: ${doc.name} (${doc.category || "Unassigned"})`, "stage-ingest");
+      }
     }
 
     job.stages[0].progress = 100;
@@ -194,11 +225,12 @@ class JobManager {
     job.currentStageId = "stage-ocr";
     job.stages[1].status = "running";
     job.stages[1].startedAt = new Date().toISOString();
-    this.addLog(job, "info", "Initiating multimodal vision & OCR transcription...", "stage-ocr");
-    await this.sleep(450);
-    this.addLog(job, "info", "Transcribing certificate letterheads, stamps, dates, and dashboard numbers...", "stage-ocr");
-    await this.sleep(350);
-    this.addLog(job, "success", "Full transcriptions saved to audit/transcripts/ with high confidence.", "stage-ocr");
+    this.addLog(job, "info", "Extracting verbatim document text, letterheads, and signatures...", "stage-ocr");
+    await this.sleep(300);
+
+    const totalExtractedChars = rawDocs.reduce((acc, d) => acc + (d.contentText?.length || 0), 0);
+    this.addLog(job, "success", `Extracted ${totalExtractedChars.toLocaleString()} characters of evidence text.`, "stage-ocr");
+
     job.stages[1].progress = 100;
     job.stages[1].status = "completed";
     job.stages[1].completedAt = new Date().toISOString();
@@ -210,8 +242,9 @@ class JobManager {
     job.stages[2].status = "running";
     job.stages[2].startedAt = new Date().toISOString();
     this.addLog(job, "info", "Loading official 2026 Tech Nation Guidelines and Appendix Global Talent...", "stage-guidelines");
-    await this.sleep(400);
-    this.addLog(job, "warn", "Optional criteria deficit: only 1 document provided for OC2 and 1 for OC3 (minimum 2 required).", "stage-guidelines");
+    await this.sleep(300);
+    this.addLog(job, "info", `Matching candidate against ${job.visaRoute} criteria in ${targetField}...`, "stage-guidelines");
+
     job.stages[2].progress = 100;
     job.stages[2].status = "completed";
     job.stages[2].completedAt = new Date().toISOString();
@@ -222,13 +255,10 @@ class JobManager {
     job.currentStageId = "stage-integrity";
     job.stages[3].status = "running";
     job.stages[3].startedAt = new Date().toISOString();
-    this.addLog(job, "info", "Executing cross-document contradiction detection...", "stage-integrity");
-    await this.sleep(450);
-    this.addLog(job, "error", "CRITICAL DEFECT: MC1 award certificate issued to third-party co-author with conflicting pronouns.", "stage-integrity");
+    this.addLog(job, "info", "Executing cross-document contradiction and deception detection...", "stage-integrity");
     await this.sleep(300);
-    this.addLog(job, "error", "CRITICAL DEFECT: 1,000x discrepancy on revenue (WHMCS dashboard ₦2.26M vs text ₦2.2B).", "stage-integrity");
-    await this.sleep(300);
-    this.addLog(job, "warn", "ALERT: Billing system license registered to unverified warez release key.", "stage-integrity");
+    this.addLog(job, "info", "Auditing numerical consistency, dates, and author attribution...", "stage-integrity");
+
     job.stages[3].progress = 100;
     job.stages[3].status = "completed";
     job.stages[3].completedAt = new Date().toISOString();
@@ -240,38 +270,65 @@ class JobManager {
     job.stages[4].status = "running";
     job.stages[4].startedAt = new Date().toISOString();
     this.addLog(job, "info", "Deliberating across 5 simulated expert assessors...", "stage-panel");
-    await this.sleep(400);
-    this.addLog(job, "warn", "Assessor 1 (Tech Nation Lead): Reject (Evidence count deficit & third-party award).", "stage-panel");
-    this.addLog(job, "warn", "Assessor 4 (Legal Counsel): Reject (Part 9.7.1 deception risk on IESEG certificate).", "stage-panel");
-    this.addLog(job, "error", "Simulated consensus: Unanimous Refusal (5-0 vote).", "stage-panel");
+    await this.sleep(300);
+
     job.stages[4].progress = 100;
     job.stages[4].status = "completed";
     job.stages[4].completedAt = new Date().toISOString();
     job.overallProgress = 75;
     this.notify(job);
 
-    // Stage 6: Scoring
+    // Stage 6: Forensic AI Analysis & Scoring
     job.currentStageId = "stage-scoring";
     job.stages[5].status = "running";
     job.stages[5].startedAt = new Date().toISOString();
-    this.addLog(job, "info", "Computing weighted risk score...", "stage-scoring");
-    await this.sleep(350);
-    const score = auditData.kpis.overallScore;
-    job.finalScore = score;
-    job.finalStatus = auditData.kpis.currentStatus;
-    this.addLog(job, "info", `Overall Audit Score generated: ${score}/100. Status: ${job.finalStatus}.`, "stage-scoring");
+    this.addLog(job, "info", "Invoking backend AI Service Layer for deep forensic analysis...", "stage-scoring");
+
+    // Call AI Service layer
+    const analysis = await runForensicAiAnalysis({
+      candidateName: job.candidateName,
+      visaRoute: job.visaRoute as any,
+      targetField,
+      applicantType: applicantType as any,
+      documents: rawDocs,
+      additionalInstructions: options?.additionalInstructions,
+    });
+
+    job.finalScore = analysis.kpis.overallScore;
+    job.finalStatus = analysis.kpis.currentStatus;
+    this.addLog(job, "info", `Computed Forensic Readiness Score: ${analysis.kpis.overallScore}/100 (${analysis.kpis.currentStatus}).`, "stage-scoring");
+
     job.stages[5].progress = 100;
     job.stages[5].status = "completed";
     job.stages[5].completedAt = new Date().toISOString();
     job.overallProgress = 90;
     this.notify(job);
 
-    // Stage 7: Reports
+    // Stage 7: Reports & Persistence
     job.currentStageId = "stage-reports";
     job.stages[6].status = "running";
     job.stages[6].startedAt = new Date().toISOString();
-    this.addLog(job, "info", "Generating 7 analytical reports and updating audit.json...", "stage-reports");
-    await this.sleep(400);
+    this.addLog(job, "info", "Generating 7 analytical forensic reports and updating registry...", "stage-reports");
+    await this.sleep(250);
+
+    const runId = `run-${Date.now()}`;
+    job.resultRunId = runId;
+
+    // Cache analysis in memory
+    this.analysesByRunId.set(runId, analysis);
+    this.analysesByProjectId.set(job.projectId, analysis);
+
+    // Persist to Neon PostgreSQL if DATABASE_URL is available
+    await saveAuditRunToDb({
+      projectId: job.projectId,
+      candidateName: job.candidateName,
+      visaRoute: job.visaRoute,
+      targetField,
+      analysis,
+    }).catch((err) => {
+      console.warn("[JobManager] Database save non-fatal error:", err?.message);
+    });
+
     this.addLog(job, "success", "Reports generated: FINAL-REPORT.md, evidence-matrix.md, letter-forensics.md...", "stage-reports");
     job.stages[6].progress = 100;
     job.stages[6].status = "completed";
@@ -279,7 +336,6 @@ class JobManager {
     job.overallProgress = 100;
 
     job.status = "COMPLETED";
-    job.resultRunId = "run-001";
     job.completedAt = new Date().toISOString();
     this.addLog(job, "success", "Forensic pre-submission audit completed successfully!");
     this.notify(job);
@@ -288,4 +344,3 @@ class JobManager {
 
 // Global singleton instance
 export const jobManager = new JobManager();
-

@@ -69,7 +69,26 @@ export default function EvidenceMatrixPage() {
       </div>
 
       {/* Interactive Table */}
-      <EvidenceTable data={evidenceMatrix} />
+      {evidenceMatrix.length === 0 ? (
+        <div className="p-12 text-center border border-dashed border-slate-800 rounded-xl space-y-3 bg-slate-900/20">
+          <Table className="w-10 h-10 text-slate-600 mx-auto" />
+          <h3 className="text-sm font-semibold text-slate-300">No evidence items in registry</h3>
+          <p className="text-xs text-slate-500 max-w-sm mx-auto">
+            Upload candidate evidence documents on the upload hub to automatically parse and catalog evidence rows.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/upload"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-semibold text-white transition-all"
+            >
+              <span>Upload Documents</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+      ) : (
+        <EvidenceTable data={evidenceMatrix} />
+      )}
     </div>
   );
 }

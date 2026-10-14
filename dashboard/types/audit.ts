@@ -1,6 +1,7 @@
 export interface AuditMetadata {
   documentName: string;
   documentOwner: string;
+  candidateName?: string;
   auditDate: string;
   lastUpdated: string;
   endorsingBody: string;
@@ -13,7 +14,7 @@ export interface AuditMetadata {
 export interface AuditKPIs {
   overallScore: number;
   currentStatus: string;
-  statusColor: "red" | "amber" | "green" | "blue";
+  statusColor: "red" | "amber" | "green" | "blue" | string;
   recommendation: string;
   estimatedVisaSuccess: number;
   totalFilesAnalysed: number;
@@ -83,6 +84,7 @@ export interface PanelVote {
 export interface EvidenceRow {
   id: string;
   file: string;
+  fileName?: string;
   category: string;
   requirement: string;
   strength: string;
@@ -119,6 +121,7 @@ export interface AuditData {
   topRefusalRisks: RefusalRisk[];
   panelVotes: PanelVote[];
   evidenceMatrix: EvidenceRow[];
-  reports: ReportMeta[];
+  reports?: ReportMeta[];
+  isEmpty?: boolean;
 }
 

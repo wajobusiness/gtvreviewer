@@ -1,73 +1,83 @@
-"use client";
-
 import React from "react";
-import {
-  ResponsiveContainer,
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  LineChart,
-  Line,
-  CartesianGrid,
-  PieChart,
-  Pie,
-  Cell,
-} from "recharts";
+import Link from "next/link";
+import { getAuditData } from "@/lib/reports";
 import { MetricCard } from "@/components/MetricCard";
+import { AnalyticsCharts } from "@/components/AnalyticsCharts";
 import {
   BarChart3,
   TrendingDown,
+  TrendingUp,
   Activity,
-  Layers,
   ShieldAlert,
   FileText,
+  Sparkles,
 } from "lucide-react";
 
 export default function AnalyticsPage() {
-  const categoryScores = [
-    { name: "Qualification", score: 45, benchmark: 85 },
-    { name: "Rec Letters", score: 12, benchmark: 90 },
-    { name: "Media Evidence", score: 48, benchmark: 80 },
-    { name: "Leadership", score: 35, benchmark: 88 },
-    { name: "Innovation", score: 28, benchmark: 85 },
-    { name: "Recognition", score: 25, benchmark: 82 },
-  ];
+  const audit = getAuditData();
+  const { kpis, radarChart, complianceBreakdown, panelVotes, isEmpty } = audit;
 
-  const evidenceDistribution = [
-    { name: "Mandatory Criterion", value: 3, color: "#3b82f6" },
-    { name: "Optional Criterion 2", value: 1, color: "#8b5cf6" },
-    { name: "Optional Criterion 3", value: 1, color: "#ec4899" },
-    { name: "Rec Letters (Missing)", value: 3, color: "#ef4444" },
-    { name: "Core CV / Statement", value: 2, color: "#f97316" },
-  ];
+  const isAuditEmpty = isEmpty || (kpis?.totalFilesAnalysed || 0) === 0;
 
-  const panelConfidence = [
-    { reviewer: "R1: Senior Assessor", confidence: 95, decision: "Reject" },
-    { reviewer: "R2: Tech Leader", confidence: 90, decision: "Reject" },
-    { reviewer: "R3: Awards Specialist", confidence: 92, decision: "Reject" },
-    { reviewer: "R4: Legal Counsel", confidence: 98, decision: "Reject" },
-    { reviewer: "R5: Devil's Advocate", confidence: 99, decision: "Reject" },
-  ];
+  if (isAuditEmpty) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h1 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2.5">
+              <BarChart3 className="w-6 h-6 text-blue-400" />
+              Audit Analytics & Quantitative Intelligence
+            </h1>
+            <p className="text-xs text-muted-foreground mt-1">
+              Statistical breakdown of application metrics, benchmark deviations, assessor confidence ratings, and report densities.
+            </p>
+          </div>
+        </div>
 
-  const reportWordCounts = [
-    { report: "FINAL REPORT", words: 4320 },
-    { report: "Forensics", words: 3120 },
-    { report: "Requirements", words: 2840 },
-    { report: "Consistency", words: 2450 },
-    { report: "Simulation", words: 2980 },
-    { report: "Evidence Matrix", words: 1850 },
-  ];
+        <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 p-12 text-center max-w-xl mx-auto my-8 space-y-4">
+          <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 mx-auto flex items-center justify-center">
+            <BarChart3 className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-foreground">No Analytics Generated Yet</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Upload candidate evidence documents to generate quantitative intelligence dashboards, criterion benchmarks, and assessor confidence curves.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/upload"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-500/20 transition-all"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Create New Analysis</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-  const scoreHistory = [
-    { stage: "Initial Screening", score: 62 },
-    { stage: "OCR Transcription", score: 55 },
-    { stage: "Attribution Check", score: 41 },
-    { stage: "Numerical Validation", score: 34 },
-    { stage: "Panel Deliberation", score: 32 },
-  ];
+  const categoryScores = radarChart && radarChart.length > 0
+    ? radarChart.map((r) => ({ name: r.category, score: r.score, benchmark: r.benchmark }))
+    : [
+        { name: "Mandatory Criterion", score: kpis.overallScore, benchmark: 80 },
+        { name: "Optional Criterion 2", score: Math.max(0, kpis.overallScore - 10), benchmark: 75 },
+        { name: "Optional Criterion 3", score: Math.max(0, kpis.overallScore - 5), benchmark: 75 },
+        { name: "Letters of Rec", score: kpis.recommendationLetters >= 3 ? 90 : 20, benchmark: 85 },
+      ];
+
+  const evidenceDistribution = complianceBreakdown && complianceBreakdown.length > 0
+    ? complianceBreakdown
+    : [
+        { name: "Passed Verifications", value: Math.max(1, kpis.passes), color: "#10b981" },
+        { name: "Critical Deficits", value: Math.max(0, kpis.criticalRisks), color: "#ef4444" },
+        { name: "Warnings / Gaps", value: Math.max(0, kpis.warnings), color: "#f59e0b" },
+      ];
+
+  const panelConfidence = panelVotes && panelVotes.length > 0
+    ? panelVotes.map((v) => ({ reviewer: v.reviewer, confidence: v.confidence, decision: v.decision }))
+    : [];
+
+  const isPassing = kpis.overallScore >= 70;
 
   return (
     <div className="space-y-8">
@@ -88,224 +98,41 @@ export default function AnalyticsPage() {
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <MetricCard
           title="Overall Audit Score"
-          value="32 / 100"
+          value={`${kpis.overallScore} / 100`}
           subtitle="Target: 70+"
           icon="Activity"
-          variant="danger"
+          variant={isPassing ? "success" : "danger"}
+          badge={isPassing ? "PASSING" : "AT RISK"}
         />
         <MetricCard
           title="Endorsement Probability"
-          value="4.0%"
-          subtitle="Unanimous refusal risk"
-          icon="TrendingDown"
-          variant="danger"
+          value={`${kpis.estimatedVisaSuccess}%`}
+          subtitle={isPassing ? "Strong alignment" : "Refusal risk"}
+          icon={isPassing ? "TrendingUp" : "TrendingDown"}
+          variant={isPassing ? "success" : "danger"}
         />
         <MetricCard
-          title="Average Panel Confidence"
-          value="94.8%"
-          subtitle="Assessor certainty"
-          icon="ShieldAlert"
-          variant="default"
-        />
-        <MetricCard
-          title="Total Audited Words"
-          value="17,560"
-          subtitle="Across 7 reports"
+          title="Documents Analysed"
+          value={kpis.totalFilesAnalysed}
+          subtitle="Total verified files"
           icon="FileText"
           variant="default"
         />
+        <MetricCard
+          title="Critical Risk Flags"
+          value={kpis.criticalRisks}
+          subtitle="Refusal triggers"
+          icon="ShieldAlert"
+          variant={kpis.criticalRisks > 0 ? "danger" : "default"}
+        />
       </div>
 
-      {/* Charts Grid Row 1: Category Scores vs Benchmark & Evidence Distribution */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Category Scores Bar Chart */}
-        <div className="lg:col-span-8 rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm">
-          <div className="mb-4">
-            <h3 className="text-base font-semibold text-foreground tracking-tight">
-              Evidence Category Performance vs. Endorsement Benchmark
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Candidate audited scores compared against the threshold required for successful Tech Nation endorsement.
-            </p>
-          </div>
-
-          <div className="w-full h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={categoryScores} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="name" stroke="#64748b" tick={{ fill: "#94a3b8", fontSize: 11 }} />
-                <YAxis domain={[0, 100]} stroke="#64748b" tick={{ fill: "#64748b", fontSize: 11 }} />
-                <Tooltip
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <div className="rounded-lg border border-slate-700 bg-slate-900/95 p-3 shadow-xl backdrop-blur-md text-xs">
-                          <div className="font-semibold text-slate-200 mb-1 border-b border-slate-800 pb-1">
-                            {label}
-                          </div>
-                          <div className="flex justify-between gap-4 py-0.5 text-red-400">
-                            <span>Candidate Score:</span>
-                            <span className="font-mono font-bold">{payload[0].value}%</span>
-                          </div>
-                          <div className="flex justify-between gap-4 py-0.5 text-blue-400">
-                            <span>Benchmark:</span>
-                            <span className="font-mono font-bold">{payload[1].value}%</span>
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Legend
-                  wrapperStyle={{ paddingTop: "10px", fontSize: "12px" }}
-                  formatter={(val) => <span className="text-slate-300 text-xs">{val}</span>}
-                />
-                <Bar name="Candidate Score" dataKey="score" fill="#ef4444" radius={[4, 4, 0, 0]} />
-                <Bar name="Tech Nation Benchmark" dataKey="benchmark" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Evidence Distribution Pie Chart */}
-        <div className="lg:col-span-4 rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm">
-          <div className="mb-4">
-            <h3 className="text-base font-semibold text-foreground tracking-tight">
-              Evidence Allocation
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Breakdown of submitted vs. missing portfolio pieces
-            </p>
-          </div>
-
-          <div className="w-full h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={evidenceDistribution}
-                  cx="50%"
-                  cy="50%"
-                  outerRadius={80}
-                  innerRadius={45}
-                  paddingAngle={3}
-                  dataKey="value"
-                  stroke="#0f172a"
-                  strokeWidth={2}
-                >
-                  {evidenceDistribution.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  content={({ active, payload }) => {
-                    if (active && payload && payload.length) {
-                      const item = payload[0].payload;
-                      return (
-                        <div className="rounded-lg border border-slate-700 bg-slate-900/95 p-2 text-xs">
-                          <span className="font-semibold text-slate-200">{item.name}</span>:{" "}
-                          <span className="font-mono font-bold text-blue-400">{item.value} pieces</span>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Legend
-                  wrapperStyle={{ fontSize: "11px" }}
-                  formatter={(value) => <span className="text-slate-300 text-xs">{value}</span>}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-
-      {/* Charts Grid Row 2: Score Decay Line Chart & Assessor Confidence */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-        {/* Score History Decay */}
-        <div className="lg:col-span-6 rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm">
-          <div className="mb-4">
-            <h3 className="text-base font-semibold text-foreground tracking-tight">
-              Forensic Audit Score Decay by Verification Phase
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Score drop as attribution defects, piracy indicators, and numerical discrepancies were uncovered.
-            </p>
-          </div>
-
-          <div className="w-full h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={scoreHistory} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="stage" stroke="#64748b" tick={{ fill: "#94a3b8", fontSize: 10 }} />
-                <YAxis domain={[0, 100]} stroke="#64748b" tick={{ fill: "#64748b", fontSize: 11 }} />
-                <Tooltip
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <div className="rounded-lg border border-slate-700 bg-slate-900/95 p-2.5 text-xs">
-                          <div className="font-semibold text-slate-200">{label}</div>
-                          <div className="font-mono font-bold text-red-400 mt-0.5">
-                            Audit Score: {payload[0].value}/100
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Line
-                  type="monotone"
-                  dataKey="score"
-                  stroke="#ef4444"
-                  strokeWidth={3}
-                  dot={{ r: 5, fill: "#ef4444" }}
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Panel Reviewer Confidence */}
-        <div className="lg:col-span-6 rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm">
-          <div className="mb-4">
-            <h3 className="text-base font-semibold text-foreground tracking-tight">
-              Assessor Deliberation Certainty Rating
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Statistical certainty rating across simulated panel members rejecting endorsement.
-            </p>
-          </div>
-
-          <div className="w-full h-72">
-            <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={panelConfidence} margin={{ top: 10, right: 10, left: -20, bottom: 20 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" />
-                <XAxis dataKey="reviewer" stroke="#64748b" tick={{ fill: "#94a3b8", fontSize: 10 }} />
-                <YAxis domain={[70, 100]} stroke="#64748b" tick={{ fill: "#64748b", fontSize: 11 }} />
-                <Tooltip
-                  content={({ active, payload, label }) => {
-                    if (active && payload && payload.length) {
-                      return (
-                        <div className="rounded-lg border border-slate-700 bg-slate-900/95 p-2.5 text-xs">
-                          <div className="font-semibold text-slate-200">{label}</div>
-                          <div className="font-mono font-bold text-red-400 mt-0.5">
-                            Refusal Certainty: {payload[0].value}%
-                          </div>
-                        </div>
-                      );
-                    }
-                    return null;
-                  }}
-                />
-                <Bar dataKey="confidence" fill="#ef4444" radius={[4, 4, 0, 0]} />
-              </BarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
+      {/* Delegated Client Component for Recharts */}
+      <AnalyticsCharts
+        categoryScores={categoryScores}
+        evidenceDistribution={evidenceDistribution}
+        panelConfidence={panelConfidence}
+      />
     </div>
   );
 }
-

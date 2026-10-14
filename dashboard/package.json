@@ -10,12 +10,14 @@
     "test": "node --experimental-strip-types --test tests/audit.test.ts"
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "framer-motion": "^12.4.7",
     "gray-matter": "^4.0.3",
     "lucide-react": "^0.475.0",
     "next": "^15.1.7",
+    "pdf-parse": "^2.4.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-markdown": "^9.0.3",
@@ -36,4 +38,3 @@
     "typescript": "^5.7.3"
   }
 }
-

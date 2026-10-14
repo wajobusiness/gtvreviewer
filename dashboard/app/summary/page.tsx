@@ -1,28 +1,66 @@
-"use client";
-
 import React from "react";
 import Link from "next/link";
+import { getAuditData } from "@/lib/reports";
 import { ScoreGauge } from "@/components/ScoreGauge";
 import { RiskBadge } from "@/components/RiskBadge";
+import { PrintButton } from "@/components/PrintButton";
 import {
-  Printer,
   Download,
   ShieldAlert,
+  ShieldCheck,
   CheckCircle,
   AlertTriangle,
   Lightbulb,
-  FileText,
-  User,
-  Calendar,
-  Layers,
-  ArrowRight,
-  ExternalLink,
+  Sparkles,
 } from "lucide-react";
 
 export default function ExecutiveSummaryPage() {
-  const handlePrint = () => {
-    window.print();
-  };
+  const auditData = getAuditData();
+
+  const isAuditEmpty = !auditData || auditData.isEmpty || (auditData.kpis?.totalFilesAnalysed || 0) === 0;
+
+  if (isAuditEmpty) {
+    return (
+      <div className="space-y-6 max-w-5xl mx-auto">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h1 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2.5">
+              <ShieldAlert className="w-6 h-6 text-blue-400" />
+              Executive Pre-Submission Audit Summary
+            </h1>
+            <p className="text-xs text-muted-foreground mt-1">
+              Official forensic pre-submission assessment report for UK Global Talent visa endorsement application.
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 p-12 text-center max-w-xl mx-auto my-8 space-y-4">
+          <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 mx-auto flex items-center justify-center">
+            <ShieldAlert className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-foreground">No Executive Summary Available</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Upload your candidate&apos;s evidentiary documents to generate an executive-level pre-submission audit summary complete with benchmark scoring, risk matrices, and a strategic remediation roadmap.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/upload"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-500/20 transition-all"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Create New Analysis</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const { metadata, kpis, topRefusalRisks, criteriaScorecard } = auditData;
+  const isPassing = kpis.overallScore >= 70;
+
+  const passedCriteria = criteriaScorecard.filter((c) => c.verdict === "MET");
+  const failedCriteria = criteriaScorecard.filter((c) => c.claimed && c.verdict === "NOT MET");
 
   return (
     <div className="space-y-8 max-w-5xl mx-auto print:max-w-none print:p-0">
@@ -39,13 +77,7 @@ export default function ExecutiveSummaryPage() {
         </div>
 
         <div className="flex items-center gap-2.5">
-          <button
-            onClick={handlePrint}
-            className="flex items-center gap-1.5 px-3.5 py-2 rounded-lg border border-slate-700 bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white transition-colors shadow-sm"
-          >
-            <Printer className="w-4 h-4" />
-            <span>Print / Export PDF</span>
-          </button>
+          <PrintButton />
 
           <a
             href="/api/download/executive_audit_summary"
@@ -64,42 +96,58 @@ export default function ExecutiveSummaryPage() {
         <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-6 pb-6 border-b border-slate-800">
           <div className="space-y-2">
             <div className="flex items-center gap-2.5">
-              <RiskBadge status="NOT READY - CRITICAL DECEPTION RISK" size="md" />
+              <RiskBadge status={kpis.currentStatus} size="md" />
               <span className="text-xs font-mono text-slate-400">
-                Endorsing Body: Tech Nation
+                Endorsing Body: {metadata.endorsingBody || "Tech Nation"}
               </span>
             </div>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
               UK Global Talent Visa Endorsement Audit
             </h2>
             <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400 pt-1">
-              <span>Candidate: <strong>Alex Taylor (Sample Candidate)</strong></span>
+              <span>Candidate: <strong>{metadata.documentOwner || metadata.candidateName || "Applicant"}</strong></span>
               <span>•</span>
-              <span>Field: <strong>Digital Technology</strong></span>
+              <span>Field: <strong>{metadata.targetField || "Digital Technology"}</strong></span>
               <span>•</span>
-              <span>Route: <strong>Exceptional Talent / Promise</strong></span>
+              <span>Route: <strong>{metadata.route || "Exceptional Talent / Promise"}</strong></span>
               <span>•</span>
-              <span>Date: <strong>13 October 2026</strong></span>
+              <span>Date: <strong>{metadata.auditDate || new Date().toLocaleDateString()}</strong></span>
             </div>
           </div>
 
           <div className="shrink-0 flex items-center justify-center p-3 rounded-xl bg-slate-900/90 border border-slate-800 print:hidden">
-            <ScoreGauge score={32} size={150} strokeWidth={10} label="Audit Score" />
+            <ScoreGauge score={kpis.overallScore} size={150} strokeWidth={10} label="Audit Score" />
           </div>
         </div>
 
         {/* Executive Verdict Callout */}
-        <div className="p-4 rounded-xl border border-red-500/30 bg-red-950/20 text-xs leading-relaxed space-y-2">
-          <div className="flex items-center gap-2 text-sm font-bold text-red-300 uppercase tracking-wide">
-            <ShieldAlert className="w-4 h-4 text-red-400 animate-pulse" />
-            Definitive Recommendation: DO NOT SUBMIT IN PRESENT FORM
+        <div
+          className={`p-4 rounded-xl border text-xs leading-relaxed space-y-2 ${
+            isPassing
+              ? "border-emerald-500/30 bg-emerald-950/20"
+              : "border-red-500/30 bg-red-950/20"
+          }`}
+        >
+          <div
+            className={`flex items-center gap-2 text-sm font-bold uppercase tracking-wide ${
+              isPassing ? "text-emerald-300" : "text-red-300"
+            }`}
+          >
+            {isPassing ? (
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            ) : (
+              <ShieldAlert className="w-4 h-4 text-red-400 animate-pulse" />
+            )}
+            Definitive Recommendation: {kpis.recommendation}
           </div>
           <p className="text-slate-300">
-            The application portfolio in its current state contains <strong>six (6) critical refusal risks</strong>, including the submission of an international award certificate issued to another person, a 1,000x numerical contradiction in revenue records, production infrastructure operating on pirated billing software, and zero standalone recommendation letters. Submitting without remedying these defects carries acute risk of non-endorsement and an administrative deception review under UK Immigration Rules Part 9.7.1.
+            {isPassing
+              ? `The portfolio demonstrates robust evidentiary alignment with the UK Global Talent criteria. Current score stands at ${kpis.overallScore}/100 with strong corroboration across claimed criteria.`
+              : `The application portfolio in its current state contains ${topRefusalRisks.length} identified refusal risks. Submitting without remedying these evidentiary deficiencies carries acute risk of non-endorsement under the official Tech Nation guidelines.`}
           </p>
         </div>
 
-        {/* Top Strengths vs Weakest Areas */}
+        {/* Strengths vs Weakest Areas */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
           {/* Top Strengths */}
           <div className="rounded-xl border border-slate-800 bg-slate-950/50 p-5 space-y-3">
@@ -108,18 +156,18 @@ export default function ExecutiveSummaryPage() {
               Core Portfolio Strengths
             </div>
             <ul className="space-y-2 text-slate-300 pl-4 list-disc leading-relaxed">
-              <li>
-                <strong>Verifiable Public Media:</strong> Genuine press citations across Techpoint Africa, TechCabal, and regional media validating software launches and ecosystem participation.
-              </li>
-              <li>
-                <strong>Ecosystem Capacity & Mentorship:</strong> Documented leadership in community training workshops for over 5,000 youth and NYSC corps members.
-              </li>
-              <li>
-                <strong>Clear Domain Expertise:</strong> Real-world technical capabilities in web hosting infrastructure, DNS routing, and automation scripting.
-              </li>
-              <li>
-                <strong>Corporate Foundation:</strong> Valid corporate incorporation proof for CloudScale Technologies Ltd, establishing an active corporate vehicle.
-              </li>
+              {passedCriteria.length > 0 ? (
+                passedCriteria.map((c) => (
+                  <li key={c.id}>
+                    <strong>{c.id} ({c.name}):</strong> Satisfies Tech Nation evidentiary criteria with {c.piecesCount} qualifying piece(s).
+                  </li>
+                ))
+              ) : (
+                <>
+                  <li><strong>Technical Discipline:</strong> Active technical specialization aligned to the UK digital technology sector.</li>
+                  <li><strong>Document Submission:</strong> {kpis.totalFilesAnalysed} evidence piece(s) cataloged and verified by automated OCR extraction.</li>
+                </>
+              )}
             </ul>
           </div>
 
@@ -130,79 +178,50 @@ export default function ExecutiveSummaryPage() {
               Primary Evidentiary Deficits
             </div>
             <ul className="space-y-2 text-slate-300 pl-4 list-disc leading-relaxed">
-              <li>
-                <strong>Attribution & Identity:</strong> Primary award certificate issued to third party (co-author name) with conflicting pronoun captions.
-              </li>
-              <li>
-                <strong>Numerical Credibility:</strong> Billing dashboard displays ₦2.26M revenue vs. self-asserted claims of over ₦2.2B and ₦5.3B.
-              </li>
-              <li>
-                <strong>Software Piracy:</strong> Production billing system displays license registered to international warez group &quot;Unverified Crack Key&quot; expiring in 2099.
-              </li>
-              <li>
-                <strong>Document Count Shortfall:</strong> Only 1 document submitted for OC2 and 1 for OC3 (Tech Nation guidance mandates a minimum of 2 distinct documents per criterion).
-              </li>
+              {topRefusalRisks.length > 0 ? (
+                topRefusalRisks.slice(0, 4).map((risk) => (
+                  <li key={risk.rank}>
+                    <strong>{risk.title}:</strong> {risk.impact}
+                  </li>
+                ))
+              ) : (
+                <li>No critical deficits identified in the current evidence bundle.</li>
+              )}
             </ul>
           </div>
         </div>
 
-        {/* 6 Critical Findings Table */}
-        <div className="space-y-3">
-          <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">
-            Summary of Critical Findings & Remediation Roadmap
-          </h3>
+        {/* Critical Findings Table */}
+        {topRefusalRisks.length > 0 && (
+          <div className="space-y-3">
+            <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">
+              Summary of Critical Findings & Remediation Roadmap
+            </h3>
 
-          <div className="rounded-xl border border-slate-800 overflow-hidden text-xs">
-            <table className="w-full text-left border-collapse">
-              <thead>
-                <tr className="bg-slate-900/90 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-slate-800">
-                  <th className="py-2.5 px-4 font-semibold">Defect</th>
-                  <th className="py-2.5 px-4 font-semibold">Document Location</th>
-                  <th className="py-2.5 px-4 font-semibold">Rule Violated</th>
-                  <th className="py-2.5 px-4 font-semibold">Required Remediation</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-800/60 font-sans">
-                <tr className="hover:bg-slate-800/30">
-                  <td className="py-2.5 px-4 font-bold text-red-400">Third-Party Certificate</td>
-                  <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400">MC1, Page 1</td>
-                  <td className="py-2.5 px-4 text-slate-300">Immigration Rules Part 9.7.1 (Deception)</td>
-                  <td className="py-2.5 px-4 text-emerald-400">Purge immediately; replace with personal award.</td>
-                </tr>
-                <tr className="hover:bg-slate-800/30">
-                  <td className="py-2.5 px-4 font-bold text-red-400">1,000x Revenue Gap</td>
-                  <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400">MC2, Page 2</td>
-                  <td className="py-2.5 px-4 text-slate-300">Evidence Verifiability Standard</td>
-                  <td className="py-2.5 px-4 text-emerald-400">Standardize text to audited bank accounts.</td>
-                </tr>
-                <tr className="hover:bg-slate-800/30">
-                  <td className="py-2.5 px-4 font-bold text-red-400">Cracked Billing License</td>
-                  <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400">MC2, Page 2</td>
-                  <td className="py-2.5 px-4 text-slate-300">Technical Leadership Standard</td>
-                  <td className="py-2.5 px-4 text-emerald-400">Purchase genuine WHMCS license receipt.</td>
-                </tr>
-                <tr className="hover:bg-slate-800/30">
-                  <td className="py-2.5 px-4 font-bold text-amber-400">Template Contamination</td>
-                  <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400">OC3A, Page 1</td>
-                  <td className="py-2.5 px-4 text-slate-300">Personally-Authored Evidence</td>
-                  <td className="py-2.5 px-4 text-emerald-400">Scrub all telemedicine copy from AI table.</td>
-                </tr>
-                <tr className="hover:bg-slate-800/30">
-                  <td className="py-2.5 px-4 font-bold text-amber-400">Document Count Shortfall</td>
-                  <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400">OC2 & OC3</td>
-                  <td className="py-2.5 px-4 text-slate-300">Min 2 Pieces Per Criterion</td>
-                  <td className="py-2.5 px-4 text-emerald-400">Add 1 more distinct document for OC2 and OC3.</td>
-                </tr>
-                <tr className="hover:bg-slate-800/30">
-                  <td className="py-2.5 px-4 font-bold text-red-400">Missing Mandatory Files</td>
-                  <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400">Folder Root</td>
-                  <td className="py-2.5 px-4 text-slate-300">Appendix Global Talent Filing Rule</td>
-                  <td className="py-2.5 px-4 text-emerald-400">Draft 3 letters, 2-page CV, & Personal Statement.</td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="rounded-xl border border-slate-800 overflow-hidden text-xs">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-900/90 text-muted-foreground uppercase text-[10px] tracking-wider border-b border-slate-800">
+                    <th className="py-2.5 px-4 font-semibold">Defect</th>
+                    <th className="py-2.5 px-4 font-semibold">Document Location</th>
+                    <th className="py-2.5 px-4 font-semibold">Rule Violated</th>
+                    <th className="py-2.5 px-4 font-semibold">Impact Assessment</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800/60 font-sans">
+                  {topRefusalRisks.map((risk) => (
+                    <tr key={risk.rank} className="hover:bg-slate-800/30">
+                      <td className="py-2.5 px-4 font-bold text-red-400">{risk.title}</td>
+                      <td className="py-2.5 px-4 font-mono text-[11px] text-slate-400">{risk.file}</td>
+                      <td className="py-2.5 px-4 text-slate-300">{risk.rule}</td>
+                      <td className="py-2.5 px-4 text-slate-400 text-[11px]">{risk.impact}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Action Strategy */}
         <div className="p-5 rounded-xl border border-slate-800 bg-slate-950/60 space-y-3 text-xs">
@@ -212,19 +231,16 @@ export default function ExecutiveSummaryPage() {
           </div>
           <ol className="list-decimal pl-5 space-y-1.5 text-slate-300 leading-relaxed">
             <li>
-              <strong>Document Purge:</strong> Immediately remove the IESEG Business School certificate and all associated narrative referring to female pronouns.
+              <strong>Evidentiary Attribution:</strong> Verify that every award, certificate, publication, and press feature explicitly names the applicant as the primary beneficiary or contributor.
             </li>
             <li>
-              <strong>Financial Reconciliation:</strong> Engage an independent chartered accountant to prepare an official compilation report matching bank deposits to invoices for CloudScale Technologies Ltd.
+              <strong>Document Count Verification:</strong> Ensure a minimum of 2 distinct qualifying pieces of evidence are submitted for each claimed Optional Criterion.
             </li>
             <li>
-              <strong>Regulatory Corroboration:</strong> Obtain certified FIRS tax receipts for the applicant&apos;s personal executive remuneration.
+              <strong>Financial & Metric Corroboration:</strong> Reconcile all revenue, commercial metrics, and compensation figures with third-party verifiable proofs (audited statements, tax receipts, bank letters).
             </li>
             <li>
-              <strong>Infrastructure Legitimacy:</strong> License all operational hosting and billing modules officially and provide legitimate vendor receipts.
-            </li>
-            <li>
-              <strong>Standalone Letters:</strong> Commission three independent letters of recommendation from recognized C-suite tech leaders who have no financial or subordinate ties to the applicant.
+              <strong>Qualifying Recommendation Letters:</strong> Ensure three standalone recommendation letters from recognized C-level digital technology leaders are included with referee credentials.
             </li>
           </ol>
         </div>
@@ -232,4 +248,3 @@ export default function ExecutiveSummaryPage() {
     </div>
   );
 }
-

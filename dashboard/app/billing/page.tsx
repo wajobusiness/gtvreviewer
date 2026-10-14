@@ -101,27 +101,13 @@ export default function BillingPage() {
     },
   ];
 
-  const invoices = [
+  const invoices = organization.tier === "STARTER" ? [] : [
     {
-      id: "INV-2026-0091",
-      date: "01 Oct 2026",
-      amount: "£399.00",
+      id: "INV-" + new Date().getFullYear() + "-0001",
+      date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
+      amount: organization.tier === "FIRM_ENTERPRISE" ? "£399.00" : "£79.00",
       status: "Paid",
-      plan: "Law Firm Enterprise (Annual)",
-    },
-    {
-      id: "INV-2026-0042",
-      date: "01 Sep 2026",
-      amount: "£399.00",
-      status: "Paid",
-      plan: "Law Firm Enterprise (Annual)",
-    },
-    {
-      id: "INV-2026-0018",
-      date: "01 Aug 2026",
-      amount: "£399.00",
-      status: "Paid",
-      plan: "Law Firm Enterprise (Annual)",
+      plan: organization.tier === "FIRM_ENTERPRISE" ? "Law Firm Enterprise (Active)" : "Pro Applicant (Active)",
     },
   ];
 
@@ -350,24 +336,32 @@ export default function BillingPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-800">
-              {invoices.map((inv) => (
-                <tr key={inv.id} className="hover:bg-slate-800/30">
-                  <td className="p-3 font-mono font-semibold text-white">{inv.id}</td>
-                  <td className="p-3 text-slate-400">{inv.date}</td>
-                  <td className="p-3 text-slate-300">{inv.plan}</td>
-                  <td className="p-3 font-mono font-bold text-white">{inv.amount}</td>
-                  <td className="p-3">
-                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                      <Check className="w-3 h-3" /> {inv.status}
-                    </span>
-                  </td>
-                  <td className="p-3 text-right">
-                    <button className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 font-medium">
-                      <Download className="w-3 h-3" /> PDF
-                    </button>
+              {invoices.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="p-8 text-center text-slate-500 font-sans">
+                    No billing statements or invoices yet. Invoices will automatically generate when your subscription renews.
                   </td>
                 </tr>
-              ))}
+              ) : (
+                invoices.map((inv) => (
+                  <tr key={inv.id} className="hover:bg-slate-800/30">
+                    <td className="p-3 font-mono font-semibold text-white">{inv.id}</td>
+                    <td className="p-3 text-slate-400">{inv.date}</td>
+                    <td className="p-3 text-slate-300">{inv.plan}</td>
+                    <td className="p-3 font-mono font-bold text-white">{inv.amount}</td>
+                    <td className="p-3">
+                      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        <Check className="w-3 h-3" /> {inv.status}
+                      </span>
+                    </td>
+                    <td className="p-3 text-right">
+                      <button className="inline-flex items-center gap-1 text-blue-400 hover:text-blue-300 font-medium">
+                        <Download className="w-3 h-3" /> PDF
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

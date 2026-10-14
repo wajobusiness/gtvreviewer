@@ -1,131 +1,65 @@
 import React from "react";
 import Link from "next/link";
+import { getAuditData } from "@/lib/reports";
 import { MetricCard } from "@/components/MetricCard";
 import { RiskBadge } from "@/components/RiskBadge";
 import {
   GitCompare,
   ShieldAlert,
+  ShieldCheck,
   AlertOctagon,
   ArrowRight,
-  TrendingDown,
-  Layers,
-  CopyX,
   FileSpreadsheet,
+  FileText,
+  Sparkles,
 } from "lucide-react";
 
 export default function ConsistencyCheckPage() {
-  const contradictions = [
-    {
-      id: "C1",
-      severity: "CRITICAL",
-      title: "Third-Party Identity on Primary Award Certificate",
-      category: "Document Authenticity & Deception Risk",
-      docA: "MANDATORY CRITERIA 1, Page 1",
-      quoteA: "Top 5 African Digital Technology Entrepreneurs... issued to Dr. Morgan Vance... verifies her contribution",
-      docB: "Application Passport & Bundle Identity",
-      quoteB: "Applicant identity: Alex Taylor (Sample Applicant)",
-      discrepancy: "Fatal identity mismatch. Certificate belongs to another individual with conflicting pronouns. Triggers UK Immigration Rules Part 9.7.1 deception refusal and potential 10-year UK entry ban.",
-    },
-    {
-      id: "C2",
-      severity: "CRITICAL",
-      title: "1,000x Discrepancy on Primary Business Revenue",
-      category: "Numerical Contradiction",
-      docA: "MANDATORY CRITERIA 2, Page 2 (WHMCS Live Dashboard)",
-      quoteA: "All Time: ₦2,260,242,00 (₦2.26 million total all-time revenue)",
-      docB: "MANDATORY CRITERIA 2, Page 2 (Narrative Caption)",
-      quoteB: "The platform has generated over ₦2.2 billion in all-time revenue...",
-      discrepancy: "1,000x numerical gap between dashboard screenshot and self-written narrative text. ₦2.26M vs ₦2.2B.",
-    },
-    {
-      id: "C3",
-      severity: "CRITICAL",
-      title: "Production Billing Run on Cracked 'Warez' Software",
-      category: "Technical Credibility & Piracy",
-      docA: "MANDATORY CRITERIA 2, Page 2 (Admin Screenshot)",
-      quoteA: "Registered To: Unverified Crack Key | License Type: WHMCS 9.0.5 | Expires: 31st December 2099",
-      docB: "Claimed Tech Leadership & Sector Standing",
-      quoteB: "National cloud infrastructure leader securing enterprise transactions",
-      discrepancy: "Production billing is operating on an unverified nulled/cracked software license expiring in 2099.",
-    },
-    {
-      id: "C4",
-      severity: "CRITICAL",
-      title: "Third Revenue Contradiction in Internal HR Letter",
-      category: "Numerical Contradiction",
-      docA: "MANDATORY CRITERIA 3, Page 3 (HR Letter)",
-      quoteA: "CloudScale Labs has achieved ₦5.3bn+ in total revenue...",
-      docB: "MANDATORY CRITERIA 2, Page 2",
-      quoteB: "Platform has generated over ₦2.2 billion in all-time revenue...",
-      discrepancy: "Conflicting revenue claims across consecutive documents: ₦5.3B vs ₦2.2B vs ₦2.26M actual dashboard total.",
-    },
-    {
-      id: "C5",
-      severity: "HIGH",
-      title: "Smoking-Gun Template Cloning: Telemedicine in Chatbot Table",
-      category: "Template Contamination",
-      docA: "OPTIONAL CRITERIA 3A (BotifyAI), Page 1 Table (Row 7)",
-      quoteA: "Leadership Action: 'Lower-cost care options, instant rural access' -> Impact: '35% improvement in conversion rates for AI automation'",
-      docB: "Product Domain (BotifyAI Chatbot)",
-      quoteB: "AI WhatsApp/Telegram marketing automation chatbot platform",
-      discrepancy: "Telemedicine copy copied from ApexHealth portal left in marketing table, indisputably proving copy-paste fabrication.",
-    },
-    {
-      id: "C6",
-      severity: "HIGH",
-      title: "Gender Pronoun Contamination in Remuneration Verification",
-      category: "Document Integrity",
-      docA: "MANDATORY CRITERIA 3, Page 3 (Corporate HR Letter)",
-      quoteA: "...paid directly into her nominated bank account via bank transfer. Attached are her authenticated payslips...",
-      docB: "Applicant Identity",
-      quoteB: "Alex Taylor (Sample Applicant)",
-      discrepancy: "HR letter repeatedly alternates between 'her' and 'his', proving text was lifted from an existing template.",
-    },
-    {
-      id: "C7",
-      severity: "HIGH",
-      title: "Ghost Companies & App Names in Document Headings",
-      category: "Cross-Application Confusion",
-      docA: "MANDATORY CRITERIA 3, Page 1 Subtitle",
-      quoteA: "Proof of high salary and contribution to SaaSMetrics and ApexHealth under Alpha Global Media Ltd.",
-      docB: "Body of Document & Company Structure",
-      quoteB: "As Founder & CEO of CloudScale Labs and BotifyAI under CloudScale Technologies Ltd...",
-      discrepancy: "Subtitle names two ghost apps and a foreign parent company (Alpha Global Media Ltd.) never mentioned elsewhere.",
-    },
-    {
-      id: "C8",
-      severity: "MEDIUM",
-      title: "Conflicting Corporate Incorporation Numbers",
-      category: "Regulatory Verification",
-      docA: "OPTIONAL CRITERIA 3A, Page 1 Table",
-      quoteA: "CAC Registration No.: RC1352306",
-      docB: "Attached CAC Certificate (Page 3)",
-      quoteB: "Certificate of Incorporation: RC 1900387",
-      discrepancy: "Typed RC number differs from official corporate seal and certificate number.",
-    },
-    {
-      id: "C9",
-      severity: "MEDIUM",
-      title: "Quiety Theme Lorem Ipsum Left on Production Website",
-      category: "Commercial Substance",
-      docA: "MANDATORY CRITERIA 2, Page 2 Screenshot",
-      quoteA: "Intrinsicly strategize cutting-edge functionalities before interoperable applications. Synergistically incubate extensive...",
-      docB: "Enterprise Hosting Claims",
-      quoteB: "Hosting infrastructure trusted by 500,000 businesses across Africa and Asia",
-      discrepancy: "Live team page contains default lorem ipsum marketing filler from ThemeForest template 'Quiety'.",
-    },
-    {
-      id: "C10",
-      severity: "MEDIUM",
-      title: "Salary Math Discrepancy Across Payslips",
-      category: "Remuneration Accounting",
-      docA: "MANDATORY CRITERIA 3, Page 1 Text",
-      quoteA: "Monthly gross of ₦14,500,000 (net ₦10,200,000)",
-      docB: "Historical Tax & Prior Year Payslips",
-      quoteB: "Annual salary previously stated as ₦18,000,000 (₦1.5M/month)",
-      discrepancy: "Uncorroborated 10x sudden jump in executive compensation without FIRS tax remittances.",
-    },
-  ];
+  const audit = getAuditData();
+  const { topRefusalRisks, kpis, isEmpty } = audit;
+
+  const isAuditEmpty = isEmpty || (kpis?.totalFilesAnalysed || 0) === 0;
+
+  if (isAuditEmpty) {
+    return (
+      <div className="space-y-6">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+          <div>
+            <h1 className="text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2.5">
+              <GitCompare className="w-6 h-6 text-blue-400" />
+              Consistency & Integrity Cross-Verification
+            </h1>
+            <p className="text-xs text-muted-foreground mt-1">
+              Automated cross-document contradiction detection, template contamination tracing, and numerical integrity checks.
+            </p>
+          </div>
+        </div>
+
+        <div className="rounded-2xl border border-dashed border-slate-800 bg-slate-900/30 p-12 text-center max-w-xl mx-auto my-8 space-y-4">
+          <div className="w-12 h-12 rounded-full bg-blue-500/10 text-blue-400 mx-auto flex items-center justify-center">
+            <GitCompare className="w-6 h-6" />
+          </div>
+          <h3 className="text-base font-bold text-foreground">No Consistency Checks Run Yet</h3>
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            Upload your application documents to run an automated cross-document audit checking for date mismatches, conflicting numerical claims, mismatched company entities, and template copy-paste errors.
+          </p>
+          <div className="pt-2">
+            <Link
+              href="/upload"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-lg shadow-blue-500/20 transition-all"
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>Create New Analysis</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const criticalRisks = topRefusalRisks.filter((r) => r.severity === "CRITICAL").length;
+  const highRisks = topRefusalRisks.filter((r) => r.severity === "HIGH").length;
+  const mediumRisks = topRefusalRisks.filter((r) => r.severity === "MEDIUM" || r.severity === "LOW").length;
 
   return (
     <div className="space-y-6">
@@ -153,128 +87,113 @@ export default function ConsistencyCheckPage() {
       {/* Overview Metrics */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <MetricCard
-          title="Total Contradictions"
-          value="16"
-          subtitle="Cross-document conflicts"
+          title="Total Findings"
+          value={topRefusalRisks.length}
+          subtitle="Identified risks"
           icon="GitCompare"
-          variant="danger"
-          badge="16 DEFECTS"
+          variant={topRefusalRisks.length > 0 ? "danger" : "default"}
+          badge={topRefusalRisks.length > 0 ? `${topRefusalRisks.length} FINDINGS` : "0 DEFECTS"}
         />
         <MetricCard
-          title="Critical Violations"
-          value="6"
-          subtitle="Deception & Identity risks"
+          title="Critical Risks"
+          value={criticalRisks}
+          subtitle="High refusal grounds"
           icon="ShieldAlert"
-          variant="danger"
+          variant={criticalRisks > 0 ? "danger" : "default"}
         />
         <MetricCard
-          title="Numerical Mismatches"
-          value="5"
-          subtitle="Salary & Revenue gaps"
+          title="High Concerns"
+          value={highRisks}
+          subtitle="Verifiability gaps"
           icon="FileSpreadsheet"
-          variant="warning"
+          variant={highRisks > 0 ? "warning" : "default"}
         />
         <MetricCard
-          title="Template Clones"
-          value="3"
-          subtitle="Copy-paste artifacts"
-          icon="CopyX"
-          variant="warning"
+          title="Medium / Low"
+          value={mediumRisks}
+          subtitle="Secondary items"
+          icon="AlertOctagon"
+          variant="default"
         />
       </div>
 
-      {/* Entity Relationship Conflict Banner */}
-      <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5 backdrop-blur-sm">
-        <h3 className="text-sm font-bold text-foreground uppercase tracking-wider flex items-center gap-2 mb-2">
-          <Layers className="w-4 h-4 text-blue-400" />
-          Entity & Project Confusion Matrix
-        </h3>
-        <p className="text-xs text-slate-400 mb-4 leading-relaxed">
-          The application portfolio cross-references conflicting company entities and app names across file headers, metadata, and body text:
-        </p>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
-          <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800">
-            <div className="text-muted-foreground text-[10px] uppercase font-semibold">Stated Core Entity</div>
-            <div className="text-blue-400 font-bold mt-1">CloudScale Technologies Ltd</div>
-            <div className="text-slate-400 text-[11px] mt-0.5">Parent company of CloudScale Labs & BotifyAI</div>
-          </div>
-          <div className="p-3 rounded-lg bg-slate-950/60 border border-red-500/20">
-            <div className="text-red-400 text-[10px] uppercase font-semibold">Ghost Entity In Subtitles</div>
-            <div className="text-red-300 font-bold mt-1">Alpha Global Media Ltd.</div>
-            <div className="text-slate-400 text-[11px] mt-0.5">Named in MC3 Page 1 salary subtitle</div>
-          </div>
-          <div className="p-3 rounded-lg bg-slate-950/60 border border-amber-500/20">
-            <div className="text-amber-400 text-[10px] uppercase font-semibold">Conflicting Products</div>
-            <div className="text-amber-300 font-bold mt-1">ApexHealth & SaaSMetrics</div>
-            <div className="text-slate-400 text-[11px] mt-0.5">Named in File 2 & 5 filenames/subtitles</div>
-          </div>
-        </div>
-      </div>
-
-      {/* Contradiction Matrix Table */}
+      {/* Findings Matrix */}
       <div className="space-y-4">
         <h2 className="text-base font-bold text-foreground">
-          Forensic Conflict Matrix: Direct Quotes & Discrepancies
+          Forensic Integrity Findings & Evidence Locations
         </h2>
 
-        <div className="space-y-3">
-          {contradictions.map((c, idx) => (
-            <div
-              key={c.id}
-              className={`rounded-xl border p-4 sm:p-5 backdrop-blur-sm text-xs transition-all ${
-                c.severity === "CRITICAL"
-                  ? "bg-red-950/15 border-red-500/25 hover:border-red-500/40"
-                  : "bg-slate-900/50 border-slate-800 hover:border-slate-700"
-              }`}
-            >
-              {/* Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-6 h-6 rounded-md bg-slate-800 border border-slate-700 text-slate-300 font-mono font-bold flex items-center justify-center text-[11px]">
-                    {c.id}
-                  </span>
-                  <h3 className="text-sm font-bold text-foreground">
-                    {c.title}
-                  </h3>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-[11px] font-mono text-muted-foreground">{c.category}</span>
-                  <RiskBadge status={c.severity} size="sm" />
-                </div>
-              </div>
-
-              {/* Comparison Grid */}
-              <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-[11px]">
-                {/* Document A */}
-                <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 space-y-1">
-                  <div className="text-muted-foreground uppercase text-[10px] font-semibold">
-                    Document Source A: {c.docA}
+        {topRefusalRisks.length === 0 ? (
+          <div className="rounded-xl border border-emerald-500/30 bg-emerald-950/20 p-6 text-center space-y-2">
+            <ShieldCheck className="w-8 h-8 text-emerald-400 mx-auto" />
+            <h3 className="text-sm font-bold text-emerald-300">
+              No Material Contradictions or Critical Defects Flagged
+            </h3>
+            <p className="text-xs text-slate-300 max-w-lg mx-auto">
+              The automated cross-document audit did not detect conflicting figures, entity discrepancies, or document integrity risks in the current submission bundle.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-3">
+            {topRefusalRisks.map((risk) => (
+              <div
+                key={risk.rank}
+                className={`rounded-xl border p-4 sm:p-5 backdrop-blur-sm text-xs transition-all ${
+                  risk.severity === "CRITICAL"
+                    ? "bg-red-950/15 border-red-500/25 hover:border-red-500/40"
+                    : risk.severity === "HIGH"
+                    ? "bg-amber-950/15 border-amber-500/25 hover:border-amber-500/40"
+                    : "bg-slate-900/50 border-slate-800 hover:border-slate-700"
+                }`}
+              >
+                {/* Header */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-slate-800/80">
+                  <div className="flex items-center gap-2.5">
+                    <span className="w-6 h-6 rounded-md bg-slate-800 border border-slate-700 text-slate-300 font-mono font-bold flex items-center justify-center text-[11px]">
+                      #{risk.rank}
+                    </span>
+                    <h3 className="text-sm font-bold text-foreground">
+                      {risk.title}
+                    </h3>
                   </div>
-                  <div className="text-red-300/90">&quot;{c.quoteA}&quot;</div>
-                </div>
 
-                {/* Document B */}
-                <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 space-y-1">
-                  <div className="text-muted-foreground uppercase text-[10px] font-semibold">
-                    Document Source B: {c.docB}
+                  <div className="flex items-center gap-2">
+                    <span className="text-[11px] font-mono text-muted-foreground">{risk.rule}</span>
+                    <RiskBadge status={risk.severity} size="sm" />
                   </div>
-                  <div className="text-blue-300/90">&quot;{c.quoteB}&quot;</div>
                 </div>
-              </div>
 
-              {/* Impact / Discrepancy */}
-              <div className="mt-3 p-2.5 rounded-lg bg-red-950/20 border border-red-500/20 text-slate-300 flex items-start gap-2 leading-relaxed">
-                <ShieldAlert className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
-                <div>
-                  <strong className="text-red-400">Examiner Impact:</strong> {c.discrepancy}
+                {/* Details Grid */}
+                <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 space-y-1">
+                    <span className="text-[10px] font-mono uppercase text-muted-foreground font-semibold flex items-center gap-1.5">
+                      <FileText className="w-3 h-3 text-blue-400" />
+                      Document Source & Location
+                    </span>
+                    <div className="font-mono text-slate-200 text-[11px]">{risk.file}</div>
+                    <div className="text-slate-400 text-[11px]">Page / Section: {risk.page}</div>
+                  </div>
+
+                  <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800/80 space-y-1">
+                    <span className="text-[10px] font-mono uppercase text-muted-foreground font-semibold flex items-center gap-1.5">
+                      <ShieldAlert className="w-3 h-3 text-red-400" />
+                      Caseworker Impact Assessment
+                    </span>
+                    <div className="text-slate-300 text-[11px] leading-relaxed">{risk.impact}</div>
+                  </div>
                 </div>
+
+                {/* Excerpt */}
+                {risk.quote && (
+                  <div className="mt-3 p-3 rounded-lg bg-slate-950/40 border border-slate-800/60 text-[11px] font-mono text-slate-400 italic">
+                    &quot;{risk.quote}&quot;
+                  </div>
+                )}
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
-

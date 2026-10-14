@@ -33,6 +33,8 @@ export interface AuditJob {
   sourceType?: "LOCAL_UPLOAD" | "GOOGLE_DRIVE";
   googleDriveUrl?: string;
   googleDriveFolderId?: string;
+  documents?: any[];
+  additionalInstructions?: string;
   finalScore?: number;
   finalStatus?: string;
   error?: string;

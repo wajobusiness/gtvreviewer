@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { extractTextFromBuffer } from "@/lib/extractor/textExtractor";
+
+const ALLOWED_EXTENSIONS = ["pdf", "docx", "doc", "txt", "md", "png", "jpg", "jpeg"];
 
 export async function POST(request: NextRequest) {
   try {
@@ -11,16 +14,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
     }
 
-    // Validate PDF
-    if (!file.name.toLowerCase().endsWith(".pdf")) {
+    const ext = file.name.split(".").pop()?.toLowerCase() || "";
+    if (!ALLOWED_EXTENSIONS.includes(ext)) {
       return NextResponse.json(
-        { error: "Invalid file type. Tech Nation requires PDF format only." },
+        {
+          error: `Unsupported file format (.${ext}). Supported formats: PDF, DOCX, TXT, PNG, JPG.`,
+        },
         { status: 400 }
       );
     }
 
-    // File metadata mock upload confirmation
-    const fileId = `doc-${Date.now()}`;
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const extracted = await extractTextFromBuffer(buffer, file.name);
+
+    const fileId = `doc-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`;
     const fileSizeKb = Math.round(file.size / 1024);
 
     return NextResponse.json({
@@ -28,15 +36,18 @@ export async function POST(request: NextRequest) {
       fileId,
       fileName: file.name,
       fileSizeKb,
-      category: category || "Mandatory Criterion",
-      projectId: projectId || "proj-001",
+      pageCount: extracted.pageCount,
+      wordCount: extracted.wordCount,
+      category: category || "Mandatory Criterion (Leadership / Recognition)",
+      projectId: projectId || "proj-default",
+      contentText: extracted.text,
       uploadedAt: new Date().toISOString(),
     });
   } catch (err: any) {
+    console.error("[UploadAPI] Error parsing file:", err);
     return NextResponse.json(
-      { error: err.message || "Upload failed" },
+      { error: err.message || "Upload and text extraction failed" },
       { status: 500 }
     );
   }
 }
-
