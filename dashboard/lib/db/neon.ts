@@ -154,3 +154,183 @@ export async function getLatestAuditRunFromDb(projectId: string): Promise<Struct
   }
 }
 
+let auditJobsTableChecked = false;
+
+export async function ensureAuditJobsTable() {
+  if (auditJobsTableChecked) return;
+  const sql = getDb();
+  if (!sql) return;
+
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS audit_jobs (
+        id VARCHAR(100) PRIMARY KEY,
+        project_id VARCHAR(100) NOT NULL,
+        candidate_name VARCHAR(255) NOT NULL,
+        visa_route VARCHAR(100) NOT NULL,
+        status VARCHAR(50) DEFAULT 'PENDING',
+        overall_progress INTEGER DEFAULT 0,
+        current_stage_id VARCHAR(50) DEFAULT 'stage-ingest',
+        stages JSONB NOT NULL,
+        logs JSONB NOT NULL,
+        source_type VARCHAR(50) DEFAULT 'LOCAL_UPLOAD',
+        google_drive_url TEXT,
+        documents JSONB,
+        final_score INTEGER,
+        final_status VARCHAR(100),
+        result_run_id VARCHAR(100),
+        error_message TEXT,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+    `;
+    auditJobsTableChecked = true;
+  } catch (e: any) {
+    console.warn("[NeonDB] Error ensuring audit_jobs table:", e?.message);
+  }
+}
+
+export async function saveJobToDb(job: any): Promise<boolean> {
+  const sql = getDb();
+  if (!sql) return false;
+
+  await ensureAuditJobsTable();
+
+  try {
+    await sql`
+      INSERT INTO audit_jobs (
+        id,
+        project_id,
+        candidate_name,
+        visa_route,
+        status,
+        overall_progress,
+        current_stage_id,
+        stages,
+        logs,
+        source_type,
+        google_drive_url,
+        documents,
+        final_score,
+        final_status,
+        result_run_id,
+        error_message,
+        updated_at
+      ) VALUES (
+        ${job.id},
+        ${job.projectId},
+        ${job.candidateName},
+        ${job.visaRoute},
+        ${job.status},
+        ${job.overallProgress},
+        ${job.currentStageId},
+        ${JSON.stringify(job.stages)},
+        ${JSON.stringify(job.logs)},
+        ${job.sourceType || "LOCAL_UPLOAD"},
+        ${job.googleDriveUrl || null},
+        ${JSON.stringify(job.documents || [])},
+        ${job.finalScore || null},
+        ${job.finalStatus || null},
+        ${job.resultRunId || null},
+        ${job.error || null},
+        CURRENT_TIMESTAMP
+      )
+      ON CONFLICT (id) DO UPDATE SET
+        status = EXCLUDED.status,
+        overall_progress = EXCLUDED.overall_progress,
+        current_stage_id = EXCLUDED.current_stage_id,
+        stages = EXCLUDED.stages,
+        logs = EXCLUDED.logs,
+        final_score = EXCLUDED.final_score,
+        final_status = EXCLUDED.final_status,
+        result_run_id = EXCLUDED.result_run_id,
+        error_message = EXCLUDED.error_message,
+        updated_at = CURRENT_TIMESTAMP;
+    `;
+    return true;
+  } catch (err: any) {
+    console.warn("[NeonDB] saveJobToDb warning:", err?.message || err);
+    return false;
+  }
+}
+
+export async function getJobFromDb(jobId: string): Promise<any | null> {
+  const sql = getDb();
+  if (!sql) return null;
+
+  await ensureAuditJobsTable();
+
+  try {
+    const rows = await sql`
+      SELECT * FROM audit_jobs WHERE id = ${jobId} LIMIT 1;
+    `;
+    if (!rows || rows.length === 0) return null;
+    const r = rows[0];
+    return {
+      id: r.id,
+      projectId: r.project_id,
+      candidateName: r.candidate_name,
+      visaRoute: r.visa_route,
+      status: r.status,
+      overallProgress: r.overall_progress,
+      currentStageId: r.current_stage_id,
+      stages: typeof r.stages === "string" ? JSON.parse(r.stages) : r.stages,
+      logs: typeof r.logs === "string" ? JSON.parse(r.logs) : r.logs,
+      sourceType: r.source_type,
+      googleDriveUrl: r.google_drive_url,
+      documents: typeof r.documents === "string" ? JSON.parse(r.documents) : r.documents,
+      finalScore: r.final_score,
+      finalStatus: r.final_status,
+      resultRunId: r.result_run_id,
+      error: r.error_message,
+      createdAt: r.created_at,
+    };
+  } catch (err: any) {
+    console.warn("[NeonDB] getJobFromDb warning:", err?.message || err);
+    return null;
+  }
+}
+
+export async function listJobsFromDb(projectId?: string): Promise<any[]> {
+  const sql = getDb();
+  if (!sql) return [];
+
+  await ensureAuditJobsTable();
+
+  try {
+    let rows;
+    if (projectId) {
+      rows = await sql`
+        SELECT * FROM audit_jobs WHERE project_id = ${projectId} ORDER BY created_at DESC;
+      `;
+    } else {
+      rows = await sql`
+        SELECT * FROM audit_jobs ORDER BY created_at DESC LIMIT 50;
+      `;
+    }
+
+    return (rows || []).map((r: any) => ({
+      id: r.id,
+      projectId: r.project_id,
+      candidateName: r.candidate_name,
+      visaRoute: r.visa_route,
+      status: r.status,
+      overallProgress: r.overall_progress,
+      currentStageId: r.current_stage_id,
+      stages: typeof r.stages === "string" ? JSON.parse(r.stages) : r.stages,
+      logs: typeof r.logs === "string" ? JSON.parse(r.logs) : r.logs,
+      sourceType: r.source_type,
+      googleDriveUrl: r.google_drive_url,
+      finalScore: r.final_score,
+      finalStatus: r.final_status,
+      resultRunId: r.result_run_id,
+      error: r.error_message,
+      createdAt: r.created_at,
+    }));
+  } catch (err: any) {
+    console.warn("[NeonDB] listJobsFromDb warning:", err?.message || err);
+    return [];
+  }
+}
+
+

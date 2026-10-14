@@ -119,3 +119,27 @@ CREATE TABLE IF NOT EXISTS refusal_risks (
 );
 CREATE INDEX IF NOT EXISTS idx_refusal_risks_run ON refusal_risks(audit_run_id);
 
+-- 8. Audit Jobs (Persistent Background Processing Queue)
+CREATE TABLE IF NOT EXISTS audit_jobs (
+    id VARCHAR(100) PRIMARY KEY,
+    project_id VARCHAR(100) NOT NULL,
+    candidate_name VARCHAR(255) NOT NULL,
+    visa_route VARCHAR(100) NOT NULL,
+    status VARCHAR(50) DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED')),
+    overall_progress INTEGER DEFAULT 0,
+    current_stage_id VARCHAR(50) DEFAULT 'stage-ingest',
+    stages JSONB NOT NULL,
+    logs JSONB NOT NULL,
+    source_type VARCHAR(50) DEFAULT 'LOCAL_UPLOAD',
+    google_drive_url TEXT,
+    documents JSONB,
+    final_score INTEGER,
+    final_status VARCHAR(100),
+    result_run_id VARCHAR(100),
+    error_message TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_audit_jobs_project ON audit_jobs(project_id);
+CREATE INDEX IF NOT EXISTS idx_audit_jobs_status ON audit_jobs(status);
+

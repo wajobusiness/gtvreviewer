@@ -49,8 +49,22 @@ const navigationItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { activeRunId } = useAuth();
+  const { user, activeRunId } = useAuth();
   const isRun2 = activeRunId === "run-002";
+
+  const isCandidate = user.role === "CANDIDATE";
+  const isAdmin = user.role === "ADMIN";
+
+  const visibleItems = navigationItems.filter((item) => {
+    if (isCandidate && (item.href === "/export" || item.href === "/billing")) {
+      return false;
+    }
+    return true;
+  });
+
+  const finalItems = isAdmin
+    ? [{ name: "Admin Telemetry", href: "/admin", icon: ShieldCheck }, ...visibleItems]
+    : visibleItems;
 
   return (
     <>
@@ -109,7 +123,7 @@ export function Sidebar() {
             <div className="px-3 py-2 text-[10px] font-mono uppercase tracking-wider text-slate-500 font-semibold">
               Platform Navigation
             </div>
-            {navigationItems.map((item) => {
+            {finalItems.map((item) => {
               const isActive =
                 item.href === "/"
                   ? pathname === "/"

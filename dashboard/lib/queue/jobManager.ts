@@ -1,6 +1,6 @@
 import { AuditJob, JobStage, JobLogEntry } from "@/types/queue";
 import { DocumentInput, StructuredAnalysisResult, runForensicAiAnalysis } from "@/lib/ai";
-import { saveAuditRunToDb } from "@/lib/db/neon";
+import { saveAuditRunToDb, saveJobToDb } from "@/lib/db/neon";
 import { extractGoogleDriveId } from "@/lib/drive";
 
 type JobListener = (job: AuditJob) => void;
@@ -109,6 +109,7 @@ class JobManager {
     };
 
     this.jobs.set(id, job);
+    saveJobToDb(job).catch(() => {});
 
     // Asynchronously begin execution in background
     setTimeout(() => {
@@ -155,6 +156,7 @@ class JobManager {
   }
 
   private notify(job: AuditJob) {
+    saveJobToDb(job).catch(() => {});
     const jobListeners = this.listeners.get(job.id);
     if (jobListeners) {
       jobListeners.forEach((fn) => fn({ ...job }));

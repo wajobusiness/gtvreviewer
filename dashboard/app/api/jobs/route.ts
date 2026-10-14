@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jobManager } from "@/lib/queue/jobManager";
+import { listJobsFromDb } from "@/lib/db/neon";
 
 export async function POST(request: NextRequest) {
   try {
@@ -38,6 +39,9 @@ export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const projectId = searchParams.get("projectId") || undefined;
 
-  const jobs = jobManager.listJobs(projectId);
+  let jobs = jobManager.listJobs(projectId);
+  if (!jobs || jobs.length === 0) {
+    jobs = await listJobsFromDb(projectId);
+  }
   return NextResponse.json({ jobs });
 }
