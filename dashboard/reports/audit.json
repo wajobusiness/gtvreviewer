@@ -1,7 +1,7 @@
 {
   "metadata": {
     "documentName": "UK Global Talent Visa Pre-Submission Audit",
-    "documentOwner": "Oluwafemi Wale Ogunniyi",
+    "documentOwner": "Alex Taylor",
     "auditDate": "2026-10-13",
     "lastUpdated": "2026-10-14T08:42:00Z",
     "endorsingBody": "Tech Nation (Digital Technology)",
@@ -109,17 +109,17 @@
       "rank": 1,
       "severity": "CRITICAL",
       "title": "Third-Party Identity on Primary Award Certificate",
-      "file": "MANDATORY CRITERIA 1 - NATIONALLY AND INTERNATIONALLY RECOGNISED AWARDS (1).pdf.pdf",
+      "file": "Sample_Evidence_MC1_TechLeadershipAward.pdf",
       "page": "Page 1",
       "rule": "UK Immigration Rules Part 9.7.1 (False Representations / Deception)",
-      "impact": "Certificate issued to CHIDIEBERE FELICITAS CHIAMAKA with female pronoun caption ('her contribution'). Triggers immediate refusal and potential 10-year UK entry ban.",
-      "quote": "This is to certify that CHIDIEBERE FELICITAS CHIAMAKA , participated successfully in our Digital Technology Winter Program... verifies her contribution..."
+      "impact": "Certificate issued to DR. MORGAN VANCE with female pronoun caption ('her contribution'). Triggers immediate refusal and potential 10-year UK entry ban.",
+      "quote": "This is to certify that DR. MORGAN VANCE , participated successfully in our Digital Technology Winter Program... verifies her contribution..."
     },
     {
       "rank": 2,
       "severity": "CRITICAL",
       "title": "1,000x Numerical Contradiction on Primary Revenue Evidence",
-      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - CREDVERIFY.APP.pdf.pdf",
+      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - SAASMETRICS.IO.pdf.pdf",
       "page": "Page 2",
       "rule": "Tech Nation Evidence Verifiability & Truthfulness Standard",
       "impact": "WHMCS dashboard displays ₦2,260,242.00 (₦2.26 million) all-time revenue, while narrative text asserts over ₦2.2 billion.",
@@ -129,27 +129,27 @@
       "rank": 3,
       "severity": "CRITICAL",
       "title": "Core Technical Infrastructure Operated on Pirated Software",
-      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - CREDVERIFY.APP.pdf.pdf",
+      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - SAASMETRICS.IO.pdf.pdf",
       "page": "Page 2",
       "rule": "Tech Nation Technical Leadership & Sector Integrity Standard",
-      "impact": "Production billing system displays 'Registered To: ShayanXtreme' with 2099 expiry, proving operation on cracked/nulled software.",
-      "quote": "Registered To: ShayanXtreme | License Type: WHMCS 9.0.5 | Expires: 31st December 2099"
+      "impact": "Production billing system displays 'Registered To: Unverified Crack Key' with 2099 expiry, proving operation on cracked/nulled software.",
+      "quote": "Registered To: Unverified Crack Key | License Type: WHMCS 9.0.5 | Expires: 31st December 2099"
     },
     {
       "rank": 4,
       "severity": "HIGH",
       "title": "Template Contamination & Ghost Telemedicine Metrics",
-      "file": "OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - HEALTHSYN NG.pdf.pdf",
+      "file": "OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - APEXHEALTH NG.pdf.pdf",
       "page": "Page 1",
       "rule": "Tech Nation Requirement for Personally-Authored Evidence",
-      "impact": "Row 7 of BotifyAI's marketing table literally claims 'Lower-cost care options, instant rural access', proving copy-paste from HealthSyn NG template.",
+      "impact": "Row 7 of BotifyAI's marketing table literally claims 'Lower-cost care options, instant rural access', proving copy-paste from ApexHealth NG template.",
       "quote": "Lower-cost care options, instant rural access"
     },
     {
       "rank": 5,
       "severity": "HIGH",
       "title": "Pronoun & Identity Mismatch in Internal HR Letter",
-      "file": "MANDATORY CRITERIA 3 - COMMANDED HIGH SALARY REMURENATION AND CONTRIBUTIONS.pdf.pdf",
+      "file": "Sample_Evidence_MC3_HighSalaryRemuneration.pdf",
       "page": "Page 3",
       "rule": "Tech Nation Reference Letter Authenticity Standard",
       "impact": "Internal HR manager refers to male applicant with female pronouns ('her nominated bank account', 'her authenticated payslips').",
@@ -179,7 +179,7 @@
       "rank": 8,
       "severity": "HIGH",
       "title": "Unverified Self-Generated Remuneration Without FIRS Tax Clearance",
-      "file": "MANDATORY CRITERIA 3 - COMMANDED HIGH SALARY REMURENATION AND CONTRIBUTIONS.pdf.pdf",
+      "file": "Sample_Evidence_MC3_HighSalaryRemuneration.pdf",
       "page": "Pages 1-3",
       "rule": "Tech Nation Remuneration Evidentiary Standards",
       "impact": "Payslips issued by applicant's own company without FIRS tax certificates or personal bank statements carry zero evidentiary weight.",
@@ -189,7 +189,7 @@
       "rank": 9,
       "severity": "MEDIUM",
       "title": "Contradictory Corporate Registration Numbers",
-      "file": "OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - HEALTHSYN NG.pdf.pdf",
+      "file": "OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - APEXHEALTH NG.pdf.pdf",
       "page": "Page 1",
       "rule": "Documentary Consistency Standard",
       "impact": "Typed table claims RC1352306, while adjacent CAC incorporation certificate displays RC 1900387.",
@@ -199,7 +199,7 @@
       "rank": 10,
       "severity": "MEDIUM",
       "title": "Non-Qualifying Business Model (Web Hosting Reseller vs. Product-Led)",
-      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - CREDVERIFY.APP.pdf.pdf",
+      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - SAASMETRICS.IO.pdf.pdf",
       "page": "Pages 1-3",
       "rule": "Tech Nation Definition of Product-Led Digital Technology",
       "impact": "Shared hosting and domain registration reselling are classified as routine IT services and explicitly excluded from endorsement.",
@@ -220,8 +220,8 @@
       "decision": "Reject",
       "verdictColor": "red",
       "confidence": 90,
-      "summary": "FinxHost is a web hosting reseller running cracked WHMCS scripts; BotifyAI appears to be an affiliate marketing script launch, not defensible SaaS.",
-      "comments": "Running infrastructure on nulled ShayanXtreme software is an immediate disqualifier for a technology leader. The website team page still contains template lorem ipsum text."
+      "summary": "CloudScale Labs is a web hosting reseller running cracked WHMCS scripts; BotifyAI appears to be an affiliate marketing script launch, not defensible SaaS.",
+      "comments": "Running infrastructure on nulled Unverified Crack Key software is an immediate disqualifier for a technology leader. The website team page still contains template lorem ipsum text."
     },
     {
       "reviewer": "Reviewer 3: Industry Awards Specialist",
@@ -251,7 +251,7 @@
   "evidenceMatrix": [
     {
       "id": "MC1",
-      "file": "MANDATORY CRITERIA 1 - NATIONALLY AND INTERNATIONALLY RECOGNISED AWARDS (1).pdf.pdf",
+      "file": "Sample_Evidence_MC1_TechLeadershipAward.pdf",
       "category": "Mandatory Criterion",
       "requirement": "Awards & Industry Recognition",
       "strength": "Critical Defect",
@@ -265,7 +265,7 @@
     },
     {
       "id": "MC2",
-      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - CREDVERIFY.APP.pdf.pdf",
+      "file": "MANDATORY CRITERIA 2 - LED GROWTH OF A PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - SAASMETRICS.IO.pdf.pdf",
       "category": "Mandatory Criterion",
       "requirement": "Led Growth of Product-Led Company",
       "strength": "Critical Defect",
@@ -274,12 +274,12 @@
       "status": "Critical",
       "attributable": true,
       "insideWindow": true,
-      "metrics": "₦2.26M vs ₦2.2B; 32.94k visitors; $500M Wapi Pay",
+      "metrics": "₦2.26M vs ₦2.2B; 32.94k visitors; $500M SwiftPay Global",
       "risk": "High (1000x Discrepancy & Pirated Script)"
     },
     {
       "id": "MC3",
-      "file": "MANDATORY CRITERIA 3 - COMMANDED HIGH SALARY REMURENATION AND CONTRIBUTIONS.pdf.pdf",
+      "file": "Sample_Evidence_MC3_HighSalaryRemuneration.pdf",
       "category": "Mandatory Criterion",
       "requirement": "Commanded High Salary / Remuneration",
       "strength": "Needs Improvement",
@@ -307,7 +307,7 @@
     },
     {
       "id": "OC3A",
-      "file": "OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - HEALTHSYN NG.pdf.pdf",
+      "file": "OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - APEXHEALTH NG.pdf.pdf",
       "category": "Optional Criterion 3",
       "requirement": "Commercial / Technical Impact",
       "strength": "Critical Defect",
@@ -361,7 +361,7 @@
       "slug": "letter-forensics",
       "title": "Recommendation Letter Forensics",
       "filename": "letter-forensics.md",
-      "description": "Deep forensic inspection of embedded letters (Wapi Pay, UpSpeedHost, WAJO Ltd, Tech Anchor), cross-letter linguistic analysis.",
+      "description": "Deep forensic inspection of embedded letters (SwiftPay Global, ApexHost Solutions, CloudScale Technologies Ltd, Tech Anchor), cross-letter linguistic analysis.",
       "status": "Warning",
       "score": 25,
       "category": "Forensics",

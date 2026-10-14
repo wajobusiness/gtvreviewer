@@ -52,7 +52,7 @@ const defaultOrganizations: OrganizationSession[] = [
 const defaultProjects: ProjectSession[] = [
   {
     id: "proj-001",
-    candidateName: "Oluwafemi Wale Ogunniyi",
+    candidateName: "Alex Taylor (Sample Candidate)",
     visaRoute: "Exceptional Promise",
     targetField: "Digital Technology",
     applicantType: "Both",
@@ -220,7 +220,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         role === "SOLICITOR"
           ? "Sarah Jenkins, Solicitor"
           : role === "CANDIDATE"
-          ? "Oluwafemi Wale Ogunniyi (Applicant)"
+          ? "Alex Taylor (Sample Applicant)"
           : "System Administrator",
     }));
   };

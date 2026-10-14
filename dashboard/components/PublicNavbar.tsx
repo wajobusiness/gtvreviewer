@@ -50,12 +50,6 @@ export function PublicNavbar() {
         {/* Action Buttons */}
         <div className="hidden sm:flex items-center gap-3">
           <Link
-            href="/dashboard"
-            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-blue-400 hover:text-blue-300 bg-blue-950/40 border border-blue-500/30 hover:border-blue-500/50 transition-colors flex items-center gap-1"
-          >
-            Live Demo <ArrowRight className="w-3.5 h-3.5" />
-          </Link>
-          <Link
             href="/login"
             className="px-3.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition-colors"
           >
@@ -114,13 +108,6 @@ export function PublicNavbar() {
             </Link>
           </nav>
           <div className="pt-3 border-t border-slate-800 flex flex-col gap-2">
-            <Link
-              href="/dashboard"
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full text-center py-2 rounded-lg text-xs font-semibold text-blue-400 bg-blue-950/50 border border-blue-500/30"
-            >
-              Live Demo Dashboard
-            </Link>
             <Link
               href="/login"
               onClick={() => setMobileMenuOpen(false)}

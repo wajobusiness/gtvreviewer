@@ -1,13 +1,13 @@
-# TRANSCRIPTION & DOCUMENT RECORD: OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - HEALTHSYN NG.pdf.pdf
+# TRANSCRIPTION & DOCUMENT RECORD: OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - APEXHEALTH NG.pdf.pdf
 
-- **File Name:** `OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - HEALTHSYN NG.pdf.pdf`
+- **File Name:** `OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - APEXHEALTH NG.pdf.pdf`
 - **Internal Document Title (Heading):** `OPTIONAL CRITERIA 3A: FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY – BOTIFYAI.CLOUD`
 - **Subtitle in Document:** `BotifyAI – Scalable Digital Platform Delivering National Impact`
 - **File Type:** PDF (application/pdf)
 - **File Size:** 2,249,059 bytes (2.14 MB)
 - **Page Count:** 3
 - **Creation Date (Metadata):** 2026-10-11 15:22:20 +0000
-- **PDF Title (Metadata):** OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - HEALTHSYN NG.pdf
+- **PDF Title (Metadata):** OPTIONAL CRITERIA 3A- FOUNDED & LED A SUCCESSFUL PRODUCT-LED DIGITAL TECHNOLOGY COMPANY - APEXHEALTH NG.pdf
 - **Extraction Method:** Multimodal Vision & Direct Layout Analysis (Antigravity OCR/Vision Engine)
 - **Extraction Confidence:** High
 - **Unreadable / Blurry Parts:**
@@ -27,13 +27,13 @@ BotifyAI – Scalable Digital Platform Delivering National Impact
 In 2024, I founded BotifyAI.cloud, an AI-powered business automation platform that helps businesses manage customer engagement, marketing, sales, e-commerce, and operations from one intelligent platform. The platform combines AI chat automation, social media messaging, email marketing, CRM, workflow automation, e-commerce, and affiliate marketing tools to help businesses improve efficiency and scale.
 
 **[TABLE: COMPANY DETAILS]**
-- Company Name: `WAJO LIMITED`
+- Company Name: `CloudScale LIMITED`
 - CAC Registration No.: `RC1352306`
 - Digital Product Website: `www.botifyai.cloud`
 
 **[IMAGE: COMPANY CAC REG.]**
 - Document title: `FEDERAL REPUBLIC OF NIGERIA - CERTIFICATE OF INCORPORATION OF A PRIVATE COMPANY LIMITED BY SHARES`
-- Text: Certificate certifies that `WAJO LIMITED` is incorporated under CAMA 2020.
+- Text: Certificate certifies that `CloudScale LIMITED` is incorporated under CAMA 2020.
 - Registered Number: `1900387` *(Note conflict with typed table listing RC1352306)*
 - Date: `2nd day of March, 2022`
 - Tax ID: `24154665-0001`
@@ -65,7 +65,7 @@ BotifyAI.cloud automates customer engagement, sales, marketing, e-commerce, and 
 - Banner: `LAUNCHING MEDIA`
 - Platform: `MunchEye` (affiliate launch tracker)
 - Product: `BotifyAI Chatbot`
-- Creator: `Oluwafemi Ogunniyi`
+- Creator: `Alex Taylor`
 - Launch Date: `2024-Nov-30`
 - Front-End Price: `$37.00`
 - Commission: `50%`
@@ -124,7 +124,7 @@ BotifyAI.cloud automates customer engagement, sales, marketing, e-commerce, and 
 1. Top Left Screenshot:
    - Banner: `USER DASHBOARD (CONSUMER APP VIEW)`
    - URL: `botifyai.cloud/user/dashboard`
-   - Account Profile: `Oluwafemi ogunniyi` | `Merchant Mode` | `English`
+   - Account Profile: `Alex Taylor` | `Merchant Mode` | `English`
    - Metrics Cards:
      - `MESSAGES SENT: 32,435` (+100.0%)
      - `MESSAGES RECEIVED: 49,213` (+100.0%)
@@ -148,18 +148,18 @@ BotifyAI.cloud automates customer engagement, sales, marketing, e-commerce, and 
    - Product Details:
      - `Price: $37.00 Recurring`
      - `Commission: 50% 1st / 50% Rebill`
-     - `Seller: Oluwafemi Ogunniyi` (Public Profile)
+     - `Seller: Alex Taylor` (Public Profile)
      - `Commission paid via: JVZooPay`
      - Status Banner: `The product is part of a sales funnel which includes up to 3 other products.`
      - State: `This product is still active, become an Affiliate and start promoting today! [Get Approval]`
    - User Profile Card:
-     - Photo of Oluwafemi Ogunniyi
-     - Name: `Oluwafemi Ogunniyi`
-     - Company: `WAJO LIMITED`
+     - Photo of Alex Taylor
+     - Name: `Alex Taylor`
+     - Company: `CloudScale LIMITED`
 
 2. Middle Right Narrative Box:
    `This screenshot provides evidence of BotifyAI’s international market validation and commercial scalability. Following an independent product review, BotifyAI was approved on JVZoo and launched on the platform in November 2024, demonstrating recognition beyond Nigeria. The product has attracted over 1,000 affiliates promoting the platform, expanding its global reach and customer acquisition potential. This supports the international relevance, commercial readiness, and scalability of my AI-powered business automation solution.`
-   `This screenshot shows my name and company, WAJO Limited, officially associated with BotifyAI on JVZoo. It provides evidence of ownership, product representation, and international commercial presence through a recognised affiliate marketplace.`
+   `This screenshot shows my name and company, CloudScale Technologies Ltd, officially associated with BotifyAI on JVZoo. It provides evidence of ownership, product representation, and international commercial presence through a recognised affiliate marketplace.`
 
 **[BOTTOM ROW: ADMIN DASHBOARD METRICS]**
 1. Bottom Left Screenshot:

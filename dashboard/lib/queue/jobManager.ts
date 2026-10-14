@@ -196,11 +196,11 @@ class JobManager {
     job.stages[3].startedAt = new Date().toISOString();
     this.addLog(job, "info", "Executing cross-document contradiction detection...", "stage-integrity");
     await this.sleep(450);
-    this.addLog(job, "error", "CRITICAL DEFECT: MC1 award certificate issued to Chidiebere Felicitas Chiamaka with female pronouns.", "stage-integrity");
+    this.addLog(job, "error", "CRITICAL DEFECT: MC1 award certificate issued to third-party co-author with conflicting pronouns.", "stage-integrity");
     await this.sleep(300);
     this.addLog(job, "error", "CRITICAL DEFECT: 1,000x discrepancy on revenue (WHMCS dashboard ₦2.26M vs text ₦2.2B).", "stage-integrity");
     await this.sleep(300);
-    this.addLog(job, "warn", "ALERT: Billing system license registered to 'ShayanXtreme' warez release group (pirated WHMCS).", "stage-integrity");
+    this.addLog(job, "warn", "ALERT: Billing system license registered to unverified warez release key.", "stage-integrity");
     job.stages[3].progress = 100;
     job.stages[3].status = "completed";
     job.stages[3].completedAt = new Date().toISOString();

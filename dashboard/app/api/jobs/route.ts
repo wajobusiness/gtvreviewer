@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json().catch(() => ({}));
     const projectId = body.projectId || "proj-001";
-    const candidateName = body.candidateName || "Oluwafemi Wale Ogunniyi";
+    const candidateName = body.candidateName || "Alex Taylor (Sample Candidate)";
     const visaRoute = body.visaRoute || "Exceptional Promise";
 
     const job = jobManager.createJob(projectId, candidateName, visaRoute);

@@ -13,8 +13,7 @@ export class LocalFileSystemAuditRepository implements IAuditRepository {
 
   private getCandidateDirectories(): string[] {
     const primary = path.join(process.cwd(), "reports");
-    const secondary = path.join(process.cwd(), "..", "audit");
-    return [primary, secondary];
+    return [primary];
   }
 
   private isCacheStale(): boolean {

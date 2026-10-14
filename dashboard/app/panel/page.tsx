@@ -110,7 +110,7 @@ export default function PanelSimulationPage() {
             </p>
 
             <div className="pt-2 text-xs font-mono text-red-400/90 bg-red-950/40 p-3 rounded-lg border border-red-500/20">
-              <strong>Immigration Deception Notice:</strong> Submitting File 1 (award certificate belonging to Chidiebere Felicitas Chiamaka) as proof of personal recognition will trigger Home Office document verification checks under Immigration Rules Part 9.7.1, exposing the applicant to an administrative refusal and a potential 10-year UK entry ban.
+              <strong>Immigration Deception Notice:</strong> Submitting File 1 (award certificate belonging to a third-party co-author) as proof of personal recognition will trigger Home Office document verification checks under Immigration Rules Part 9.7.1, exposing the applicant to an administrative refusal and a potential 10-year UK entry ban.
             </div>
           </div>
         </div>

@@ -22,7 +22,7 @@ OPTIONAL CRITERIA 2B: EVIDENCE OF CONTRIBUTION OUTSIDE MY EMPLOYMENT: ADVANCING 
 Mentorship, Capacity Building, and Community Development in Digital Technology (Outside My Professional Employment)
 
 **[INTRODUCTORY NARRATIVE]**
-Between 2023 and 2025, I carried out voluntary, non-employment activities focused on improving digital skills, technology awareness, and innovation capacity among young people and community members in Nigeria. These contributions were independent of my commercial responsibilities at FinxHost and BotifyAI.cloud and were aimed at strengthening the wider digital technology ecosystem.
+Between 2023 and 2025, I carried out voluntary, non-employment activities focused on improving digital skills, technology awareness, and innovation capacity among young people and community members in Nigeria. These contributions were independent of my commercial responsibilities at CloudScale Labs and BotifyAI.cloud and were aimed at strengthening the wider digital technology ecosystem.
 
 My voluntary work has included digital skills training, mentorship, and knowledge-sharing initiatives covering digital marketing, ICT tools, AI-powered solutions, and practical technology adoption. These contributions have been recognised through independent awards and acknowledgements for my role in supporting digital skills development and empowering individuals within the technology ecosystem.
 
@@ -32,7 +32,7 @@ TechAnchor Innovations Co. Ltd. is a Nigerian technology company and community i
 
 I serve as a volunteer Digital Marketing and ICT Trainer at TechAnchor Innovations, where I provide training and mentorship in areas including digital marketing strategy, social media management, content creation, online safety, and AI-powered business tools.
 
-My contribution is completely outside my commercial activities at FinxHost and BotifyAI.cloud, and I provide this support voluntarily to help individuals develop practical digital skills.
+My contribution is completely outside my commercial activities at CloudScale Labs and BotifyAI.cloud, and I provide this support voluntarily to help individuals develop practical digital skills.
 1. Delivered training on digital marketing, ICT skills, and emerging technology tools.
 2. Shared practical industry knowledge to improve digital career readiness.
 3. Helped participants develop skills for employment and entrepreneurship.
@@ -48,23 +48,23 @@ My contribution is completely outside my commercial activities at FinxHost and B
 - Box Label: `Below: OFFICIAL LETTER FROM THE FOUNDER`
 - Letterhead: `TECH ANCHOR` logo
 - Contact details: `+234 703 842 4760 | hello@techanchor.com.ng | www.techanchor.com.ng | 15 January, 2026`
-- Addressee: `RE: Reference Letter Confirming Volunteer Contributions of Oluwafemi Wale Ogunniyi as a Digital Marketing Trainer`
+- Addressee: `RE: Reference Letter Confirming Volunteer Contributions of Alex Taylor as a Digital Marketing Trainer`
 - Body Text:
   `I am Nelson Mfon-Mfon, CEO and Lead Tutor of Tech Anchor Innovations Co. Ltd., a registered and government-approved technology and digital skills training organisation based in Oron, Akwa Ibom State, Nigeria.`
 
-  `I am pleased to confirm the contribution of Oluwafemi Wale Ogunniyi as a volunteer Digital Marketing Trainer with our organisation since 2024. His involvement has been voluntary, and he has contributed his expertise towards our mission of equipping individuals and professionals with practical digital skills.`
+  `I am pleased to confirm the contribution of Alex Taylor as a volunteer Digital Marketing Trainer with our organisation since 2024. His involvement has been voluntary, and he has contributed his expertise towards our mission of equipping individuals and professionals with practical digital skills.`
 
-  `During his time with Tech Anchor Innovations, Oluwafemi has delivered training in digital marketing, social media strategy, content creation, search engine optimisation (SEO), online business growth, and the practical use of modern digital tools. He has trained NYSC corps members, students, entrepreneurs, and professionals, helping participants develop skills that can be applied in their careers and businesses.`
+  `During his time with Tech Anchor Innovations, Alex has delivered training in digital marketing, social media strategy, content creation, search engine optimisation (SEO), online business growth, and the practical use of modern digital tools. He has trained NYSC corps members, students, entrepreneurs, and professionals, helping participants develop skills that can be applied in their careers and businesses.`
 
-  `As part of our intensive training programmes, Oluwafemi personally trained over 5,000 participants within a five-day programme, providing practical guidance and industry knowledge in digital marketing and online growth strategies.`
+  `As part of our intensive training programmes, Alex personally trained over 5,000 participants within a five-day programme, providing practical guidance and industry knowledge in digital marketing and online growth strategies.`
 
-  `His approach to training is informed by his practical experience building technology companies, including FinxHost, a digital infrastructure and web hosting company, and BotifyAI, an AI-powered marketing automation platform. This experience enables him to provide participants with real-world insights into how digital strategies can be applied to build and grow businesses.`
+  `His approach to training is informed by his practical experience building technology companies, including CloudScale Labs, a digital infrastructure and web hosting company, and BotifyAI, an AI-powered marketing automation platform. This experience enables him to provide participants with real-world insights into how digital strategies can be applied to build and grow businesses.`
 
   `Tech Anchor Innovations Co. Ltd. is a registered and government-approved organisation committed to digital empowerment and technology education. Through our programmes, we have trained over 30,000 individuals and professionals across different areas of technology and digital skills development.`
 
-  `Beyond his training sessions, Oluwafemi has consistently demonstrated a commitment to knowledge sharing, mentorship, and supporting individuals seeking opportunities in the digital economy. His contribution has added significant value to our programmes and strengthened our ability to deliver relevant industry-focused training.`
+  `Beyond his training sessions, Alex has consistently demonstrated a commitment to knowledge sharing, mentorship, and supporting individuals seeking opportunities in the digital economy. His contribution has added significant value to our programmes and strengthened our ability to deliver relevant industry-focused training.`
 
-  `I am pleased to provide this reference in support of Oluwafemi Wale Ogunniyi's UK Global Talent Visa application. I believe his expertise, professional achievements, and contribution to digital skills development represent a valuable impact within Nigeria's technology ecosystem.`
+  `I am pleased to provide this reference in support of Alex Taylor's UK Global Talent Visa application. I believe his expertise, professional achievements, and contribution to digital skills development represent a valuable impact within Nigeria's technology ecosystem.`
 
   `Regards,`
   `[Signature]`
@@ -107,8 +107,8 @@ In May 2026, the Young African Leaders Initiative (YALI) Network Abuja a public 
    - Header: `YOUNG AFRICAN LEADERS INITIATIVE (YALI) NETWORK, ABUJA | An initiative of the U.S. Department of State, Managed by the U.S. Mission in Nigeria`
    - Date: `11 May, 2026`
    - Addressee:
-     `Oluwafemi Wale Ogunniyi`
-     `Founder, FinxHost & BotifyAI`
+     `Alex Taylor`
+     `Founder, CloudScale Labs & BotifyAI`
    - Salutation: `Dear Sir,`
    - Subject: `INVITATION TO SERVE AS A PANELLIST AT YALI NETWORK ABUJA MAY 2026 FACE-TO-FACE EVENT`
    - Body:
@@ -123,9 +123,9 @@ In May 2026, the Young African Leaders Initiative (YALI) Network Abuja a public 
    - Theme: `Artificial Intelligence & Digital Intelligence: Essential Skills for Global Leaders`
    - Keynote Speaker: `Nazif Ibrahim Hadejia`
    - Panelists:
-     - `Oluwafemi Wale Ogunniyi (Panelist)`
+     - `Alex Taylor (Panelist)`
      - `Adaeze Ekwuochi (Panelist)`
-     - `Chidiebere Philip Nwabueze (Panelist)`
+     - `Morgan Philip Nwabueze (Panelist)`
      - `Kingsley Eyo (Panelist)`
    - Details:
      - Date: `30TH MAY 2026`
@@ -140,7 +140,7 @@ In May 2026, the Young African Leaders Initiative (YALI) Network Abuja a public 
 **[TOP ROW: EVENT EXECUTION PHOTOS & LINKEDIN EVIDENCE]**
 1. Photos:
    - Group photo of attendees and organizers in front of `IMPACT HUB ABUJA` backdrop.
-   - Individual photo of Oluwafemi Wale Ogunniyi speaking with microphone in front of `IMPACT HUB ABUJA` podium/sign.
+   - Individual photo of Alex Taylor speaking with microphone in front of `IMPACT HUB ABUJA` podium/sign.
 
 2. Narrative Box & Link:
    `This LinkedIn post documents my participation as a speaker at a Young African Leaders Initiative (YALI) programme, where I shared practical insights on digital marketing, entrepreneurship, AI-powered business tools, and technology innovation. The post serves as independent evidence of my contribution to developing digital skills and supporting the growth of Africa's technology ecosystem outside my commercial work.`
@@ -171,11 +171,11 @@ The resources were intentionally made accessible to support learners, educators,
 - Book 1:
   - Title: `THE CIRCUIT BETWEEN US`
   - Subtitle: `HOW PROFESSIONALS CAN ADAPT, INNOVATE, AND WIN IN THE AGE OF ARTIFICIAL INTELLIGENCE`
-  - Author: `BY: OLUWAFEMI WALE OGUNNIYI`
+  - Author: `BY: ALEX TAYLOR`
 - Book 2:
   - Title: `Media Buying Blueprint`
   - Subtitle: `How to Create Profitable Advertising Campaigns on Facebook, Instagram, Google, and TikTok`
-  - Author: `By: OLUWAFEMI WALE OGUNNIYI`
+  - Author: `By: ALEX TAYLOR`
 
 **[BOTTOM LEFT SUMMARY NOTE]**
 `This evidence demonstrates sustained contribution outside employment, advancing digital capability, and supporting Nigeria’s broader technology talent pipeline directly meeting OC2 criteria.`

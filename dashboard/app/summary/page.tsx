@@ -73,7 +73,7 @@ export default function ExecutiveSummaryPage() {
               UK Global Talent Visa Endorsement Audit
             </h2>
             <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-400 pt-1">
-              <span>Candidate: <strong>Oluwafemi Wale Ogunniyi</strong></span>
+              <span>Candidate: <strong>Alex Taylor (Sample Candidate)</strong></span>
               <span>•</span>
               <span>Field: <strong>Digital Technology</strong></span>
               <span>•</span>
@@ -118,7 +118,7 @@ export default function ExecutiveSummaryPage() {
                 <strong>Clear Domain Expertise:</strong> Real-world technical capabilities in web hosting infrastructure, DNS routing, and automation scripting.
               </li>
               <li>
-                <strong>Corporate Foundation:</strong> Valid CAC incorporation proof for WAJO Limited, establishing an active corporate vehicle.
+                <strong>Corporate Foundation:</strong> Valid corporate incorporation proof for CloudScale Technologies Ltd, establishing an active corporate vehicle.
               </li>
             </ul>
           </div>
@@ -131,13 +131,13 @@ export default function ExecutiveSummaryPage() {
             </div>
             <ul className="space-y-2 text-slate-300 pl-4 list-disc leading-relaxed">
               <li>
-                <strong>Attribution & Identity:</strong> Primary award certificate issued to Chidiebere Felicitas Chiamaka with female pronoun captions.
+                <strong>Attribution & Identity:</strong> Primary award certificate issued to third party (co-author name) with conflicting pronoun captions.
               </li>
               <li>
-                <strong>Numerical Credibility:</strong> WHMCS dashboard displays ₦2.26M revenue vs. self-asserted claims of over ₦2.2B and ₦5.3B.
+                <strong>Numerical Credibility:</strong> Billing dashboard displays ₦2.26M revenue vs. self-asserted claims of over ₦2.2B and ₦5.3B.
               </li>
               <li>
-                <strong>Software Piracy:</strong> Production billing system displays license registered to international warez group &quot;ShayanXtreme&quot; expiring in 2099.
+                <strong>Software Piracy:</strong> Production billing system displays license registered to international warez group &quot;Unverified Crack Key&quot; expiring in 2099.
               </li>
               <li>
                 <strong>Document Count Shortfall:</strong> Only 1 document submitted for OC2 and 1 for OC3 (Tech Nation guidance mandates a minimum of 2 distinct documents per criterion).
@@ -215,7 +215,7 @@ export default function ExecutiveSummaryPage() {
               <strong>Document Purge:</strong> Immediately remove the IESEG Business School certificate and all associated narrative referring to female pronouns.
             </li>
             <li>
-              <strong>Financial Reconciliation:</strong> Engage an independent chartered accountant to prepare an official compilation report matching bank deposits to invoices for WAJO Limited.
+              <strong>Financial Reconciliation:</strong> Engage an independent chartered accountant to prepare an official compilation report matching bank deposits to invoices for CloudScale Technologies Ltd.
             </li>
             <li>
               <strong>Regulatory Corroboration:</strong> Obtain certified FIRS tax receipts for the applicant&apos;s personal executive remuneration.

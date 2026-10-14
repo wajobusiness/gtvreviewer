@@ -90,7 +90,7 @@ export default function LoginPage() {
               <div className="font-semibold text-white flex items-center gap-1">
                 <UserCheck className="w-3 h-3 text-emerald-400" /> Applicant
               </div>
-              <div className="text-[10px] text-slate-400 truncate">Oluwafemi Wale</div>
+              <div className="text-[10px] text-slate-400 truncate">Alex Taylor (Sample)</div>
             </button>
           </div>
         </div>

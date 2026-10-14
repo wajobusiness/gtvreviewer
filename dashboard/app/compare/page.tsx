@@ -47,7 +47,7 @@ const defectResolutions: DefectResolution[] = [
     rank: 1,
     defectTitle: "Name & Pronoun Mismatch (Deception Ground Part 9.7.1)",
     originalFinding:
-      "IESEG Certificate of Participation issued to 'Chidiebere Felicitas Chiamaka' with female pronouns ('her contribution'), directly conflicting with applicant identity.",
+      "IESEG Certificate of Participation issued to third-party co-author with conflicting pronouns ('her contribution'), directly conflicting with applicant identity.",
     remediationAction:
       "Withdrawn third-party certificate. Replaced with primary degree certificate and official academic transcripts in applicant's verified legal name, authenticated by WES.",
     status: "RESOLVED",
@@ -69,7 +69,7 @@ const defectResolutions: DefectResolution[] = [
     rank: 3,
     defectTitle: "Pirated WHMCS Billing License (Registered to Warez Group)",
     originalFinding:
-      "License key in Evidence Document 2 registered to 'ShayanXtreme' (known warez crack release), exposing candidate to immediate character/integrity refusal.",
+      "License key in Evidence Document 2 registered to unverified warez group crack, exposing candidate to immediate character/integrity refusal.",
     remediationAction:
       "Purchased legitimate direct Enterprise Tier WHMCS license. Attached official WHMCS.com VAT invoice and digital cryptographic license certificate.",
     status: "RESOLVED",

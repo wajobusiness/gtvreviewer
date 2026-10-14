@@ -1,13 +1,13 @@
-# TRANSCRIPTION & DOCUMENT RECORD: MANDATORY CRITERIA 3 - COMMANDED HIGH SALARY REMURENATION AND CONTRIBUTIONS.pdf.pdf
+# TRANSCRIPTION & DOCUMENT RECORD: Sample_Evidence_MC3_HighSalaryRemuneration.pdf
 
-- **File Name:** `MANDATORY CRITERIA 3 - COMMANDED HIGH SALARY REMURENATION AND CONTRIBUTIONS.pdf.pdf`
+- **File Name:** `Sample_Evidence_MC3_HighSalaryRemuneration.pdf`
 - **Internal Document Title (Heading):** `MANDATORY CRITERIA 3: COMMANDED HIGH SALARY/REMUNERATION AND CONTRIBUTIONS`
-- **Subtitle in Document:** `Proof of high salary and contribution to the growth of CredVerify.App and HealthSyn NG under Everypoint Media Links Ltd.`
+- **Subtitle in Document:** `Proof of high salary and contribution to the growth of SaaSMetrics.io and ApexHealth NG under Alpha Global Media Ltd.`
 - **File Type:** PDF (application/pdf)
 - **File Size:** 1,642,011 bytes (1.57 MB)
 - **Page Count:** 3
 - **Creation Date (Metadata):** 2026-10-11 15:24:00 +0000
-- **PDF Title (Metadata):** MANDATORY CRITERIA 3 - COMMANDED HIGH SALARY REMURENATION AND CONTRIBUTIONS.pdf
+- **PDF Title (Metadata):** Sample_Evidence_MC3_HighSalaryRemuneration.pdf
 - **Extraction Method:** Multimodal Vision & Direct Layout Analysis (Antigravity OCR/Vision Engine)
 - **Extraction Confidence:** High
 - **Unreadable / Blurry Parts:**
@@ -21,12 +21,12 @@
 
 **[DOCUMENT HEADER & SUBTITLE]**
 MANDATORY CRITERIA 3: COMMANDED HIGH SALARY/REMUNERATION AND CONTRIBUTIONS
-Proof of high salary and contribution to the growth of CredVerify.App and HealthSyn NG under Everypoint Media Links Ltd.
+Proof of high salary and contribution to the growth of SaaSMetrics.io and ApexHealth NG under Alpha Global Media Ltd.
 
 **[INTRODUCTORY NARRATIVE]**
-As Founder & CEO of FinxHost and BotifyAI under WAJO Limited, I receive a monthly remuneration of ₦10,200,000 for my executive leadership and strategic role in building and scaling technology platforms. This compensation is significantly higher than the average CEO salary in Nigeria’s technology industry (₦413,161 monthly), reflecting the value of my expertise, commercial achievements, and market impact.
+As Founder & CEO of CloudScale Labs and BotifyAI under CloudScale Technologies Ltd, I receive a monthly remuneration of ₦10,200,000 for my executive leadership and strategic role in building and scaling technology platforms. This compensation is significantly higher than the average CEO salary in Nigeria’s technology industry (₦413,161 monthly), reflecting the value of my expertise, commercial achievements, and market impact.
 
-My remuneration is linked to my responsibility for leading product strategy, technology development, business growth, infrastructure operations, and innovation across two technology companies. Under my leadership, FinxHost has scaled digital hosting infrastructure serving businesses across Africa, while BotifyAI has expanded as an AI-powered automation platform with international market reach through JVZoo and over 5,000 registered users.
+My remuneration is linked to my responsibility for leading product strategy, technology development, business growth, infrastructure operations, and innovation across two technology companies. Under my leadership, CloudScale Labs has scaled digital hosting infrastructure serving businesses across Africa, while BotifyAI has expanded as an AI-powered automation platform with international market reach through JVZoo and over 5,000 registered users.
 
 **[TABLE: SALARY ANALYSIS TABLE]**
 | Source / Evidence | CEO Salary Benchmark | Salary Type | Currency | Notes |
@@ -59,7 +59,7 @@ The above table demonstrates that my monthly CEO/Founder salary significantly ex
 
 4. Middle Right Boxes:
    `This high remuneration is directly tied to measurable business success under my leadership:`
-   - Box 1: `FinxHost`
+   - Box 1: `CloudScale Labs`
      - `Generated over ₦2.2 billion in all-time revenue through hosting and digital infrastructure services.`
      - `Scaled to support 12,000+ customers with reliable hosting, domains, VPS, and cloud solutions.`
      - `Developed AI-powered security intelligence for fraud detection, scam prevention, virus monitoring, and cyber threat protection.`
@@ -76,17 +76,17 @@ The above table demonstrates that my monthly CEO/Founder salary significantly ex
 ## PAGE 2 TRANSCRIPTION
 
 **[INTRODUCTORY TEXT]**
-To further verify my remuneration, I have included three consecutive monthly payslips (August–October 2026) issued by WAJO Limited, where I serve as Founder & CEO of FinxHost and BotifyAI.cloud. These payslips confirm my consistent monthly compensation of ₦10,200,000 and demonstrate the financial recognition associated with my leadership role in building and scaling digital technology platforms. The records provide evidence of my executive responsibility, commercial impact, and contribution to digital innovation.
+To further verify my remuneration, I have included three consecutive monthly payslips (August–October 2026) issued by CloudScale Technologies Ltd, where I serve as Founder & CEO of CloudScale Labs and BotifyAI.cloud. These payslips confirm my consistent monthly compensation of ₦10,200,000 and demonstrate the financial recognition associated with my leadership role in building and scaling digital technology platforms. The records provide evidence of my executive responsibility, commercial impact, and contribution to digital innovation.
 
 `PAYSLIP COPIE`
 `Official payroll records verified by Finance Manager and aligned with statutory tax and pension contributions in Nigeria.`
 
 **[PAYSLIP 1: TOP LEFT - JULY 2026]**
-- Header: `FinxHost | POWERED BY WAJO LIMITED | RC 1900387 | Payslip`
+- Header: `CloudScale Labs | POWERED BY CloudScale LIMITED | RC 1900387 | Payslip`
 - Pay Period: `July 2026`
 - Payment Date: `28-07-2026`
 - Worked Days: `22`
-- Employee Name: `Oluwafemi Wale Ogunniyi`
+- Employee Name: `Alex Taylor`
 - Designation: `Founder`
 - Employee ID: `FX0010`
 - Earnings:
@@ -105,17 +105,17 @@ To further verify my remuneration, I have included three consecutive monthly pay
   - **Net Pay:** `₦10,200,000.00`
 - Bank Account: `01504*****`
 - Payment Mode: `Bank Transfer`
-- Authorized by: `Iyabo Khadijah Ishiaku` [Signature]
+- Authorized by: `Claire Bennett` [Signature]
 - Rubber Stamp:
-  `WAJO LIMITED | RC: 1900387`
+  `CloudScale LIMITED | RC: 1900387`
   `Sign: [Signature] | Date: 28/07/2026`
 
 **[PAYSLIP 2: TOP RIGHT - JUNE 2026]**
-- Header: `FinxHost | POWERED BY WAJO LIMITED | RC 1900387 | Payslip`
+- Header: `CloudScale Labs | POWERED BY CloudScale LIMITED | RC 1900387 | Payslip`
 - Pay Period: `June 2026`
 - Payment Date: `28-06-2026`
 - Worked Days: `21`
-- Employee Name: `Oluwafemi Wale Ogunniyi`
+- Employee Name: `Alex Taylor`
 - Designation: `Founder`
 - Employee ID: `FX0010`
 - Earnings:
@@ -134,17 +134,17 @@ To further verify my remuneration, I have included three consecutive monthly pay
   - **Net Pay:** `₦10,200,000.00`
 - Bank Account: `01504*****`
 - Payment Mode: `Bank Transfer`
-- Authorized by: `Iyabo Khadijah Ishiaku` [Signature]
+- Authorized by: `Claire Bennett` [Signature]
 - Rubber Stamp:
-  `WAJO LIMITED | RC: 1900387`
+  `CloudScale LIMITED | RC: 1900387`
   `Sign: [Signature] | Date: 28/06/2026`
 
 **[PAYSLIP 3: BOTTOM LEFT - AUGUST 2026]**
-- Header: `FinxHost | POWERED BY WAJO LIMITED | RC 1900387 | Payslip`
+- Header: `CloudScale Labs | POWERED BY CloudScale LIMITED | RC 1900387 | Payslip`
 - Pay Period: `August 2026`
 - Payment Date: `28-08-2026`
 - Worked Days: `21`
-- Employee Name: `Oluwafemi Wale Ogunniyi`
+- Employee Name: `Alex Taylor`
 - Designation: `Founder`
 - Employee ID: `FX0010`
 - Earnings:
@@ -163,9 +163,9 @@ To further verify my remuneration, I have included three consecutive monthly pay
   - **Net Pay:** `₦10,200,000.00`
 - Bank Account: `01504*****`
 - Payment Mode: `Bank Transfer`
-- Authorized by: `Iyabo Khadijah Ishiaku` [Signature]
+- Authorized by: `Claire Bennett` [Signature]
 - Rubber Stamp:
-  `WAJO LIMITED | RC: 1900387`
+  `CloudScale LIMITED | RC: 1900387`
   `Sign: [Signature] | Date: 28/08/2026`
 
 ---
@@ -173,24 +173,24 @@ To further verify my remuneration, I have included three consecutive monthly pay
 ## PAGE 3 TRANSCRIPTION
 
 **[INTRODUCTORY NARRATIVE]**
-Additionally, to verify my remuneration and executive position, I have included a signed Employment & Remuneration Verification Letter issued by WAJO Limited. The document confirms my role as Founder & CEO of FinxHost and BotifyAI.cloud, my full-time involvement, and my consolidated monthly compensation of ₦10,200,000. The letter provides official confirmation of my remuneration, leadership responsibilities, and the value of my contribution in building and scaling digital technology platforms with significant commercial growth and market adoption.
+Additionally, to verify my remuneration and executive position, I have included a signed Employment & Remuneration Verification Letter issued by CloudScale Technologies Ltd. The document confirms my role as Founder & CEO of CloudScale Labs and BotifyAI.cloud, my full-time involvement, and my consolidated monthly compensation of ₦10,200,000. The letter provides official confirmation of my remuneration, leadership responsibilities, and the value of my contribution in building and scaling digital technology platforms with significant commercial growth and market adoption.
 
 `Below: OFFICIAL HR/FINANCE EMPLOYMENT & REMUNERATION VERIFICATION`
 
 **[VERIFICATION LETTER DOCUMENT]**
-- Letterhead: `FinxHost` logo | `POWERED BY WAJO LIMITED | RC 1900387`
+- Letterhead: `CloudScale Labs` logo | `POWERED BY CloudScale LIMITED | RC 1900387`
 - Contact Info:
-  `Phone: +2348024386193`
-  `Website: FinxHost.com`
+  `Phone: +234 1 234 5678`
+  `Website: CloudScale Labs.com`
   `Address: Abuja, Nigeria.`
 - Date: `28/08/2026.`
 - Addressee: `To Whom It May Concern`
 - Body Text:
-  `I am Iyabo Khadijah Ishiaku, Finance & Human Resources Manager at Wajo Limited, the parent company managing payroll operations for FinxHost and BotifyAI. I have over nine years of professional experience in HR administration and payroll compliance within the Nigerian digital-technology sector, and I am authorised to verify employment and remuneration statements issued by this organisation.`
+  `I am Claire Bennett, Finance & Human Resources Manager at Wajo Limited, the parent company managing payroll operations for CloudScale Labs and BotifyAI. I have over nine years of professional experience in HR administration and payroll compliance within the Nigerian digital-technology sector, and I am authorised to verify employment and remuneration statements issued by this organisation.`
 
-  `This letter confirms that Oluwafemi wale Ogunniyi is the Founder & Chief Executive Officer, engaged full-time and responsible for strategic leadership, product innovation, and commercial scale-up of both platforms. he earns a consolidated monthly remuneration of ₦10,200,000.00, processed through automated payroll and paid directly into her nominated bank account via bank transfer. Attached are her authenticated payslips for June 2026, July 2026 and August 2026, reflecting compliance with statutory tax, pension, and health insurance deductions.`
+  `This letter confirms that Alex wale Taylor is the Founder & Chief Executive Officer, engaged full-time and responsible for strategic leadership, product innovation, and commercial scale-up of both platforms. he earns a consolidated monthly remuneration of ₦10,200,000.00, processed through automated payroll and paid directly into her nominated bank account via bank transfer. Attached are her authenticated payslips for June 2026, July 2026 and August 2026, reflecting compliance with statutory tax, pension, and health insurance deductions.`
 
-  `This salary aligns with his exceptional contributions and recognised leadership in the digital technology ecosystem. Under his direction, FinxHost has grown to serve over 10,000 active business customers across Nigeria and West Africa, achieving ₦5.3bn+ revenue in Naira through a product-led digital marketing strategy, including 121,000 monthly active users nationwide. He also founded BotifyAI (botifyai.cloud) an AI powered social commerce and marketing automation platform which has attracted over 5,000 users since launch and has been accepted onto JVZoo, one of the world's largest international affiliate marketing networks with 1.2 million registered affiliates globally.`
+  `This salary aligns with his exceptional contributions and recognised leadership in the digital technology ecosystem. Under his direction, CloudScale Labs has grown to serve over 10,000 active business customers across Nigeria and West Africa, achieving ₦5.3bn+ revenue in Naira through a product-led digital marketing strategy, including 121,000 monthly active users nationwide. He also founded BotifyAI (botifyai.cloud) an AI powered social commerce and marketing automation platform which has attracted over 5,000 users since launch and has been accepted onto JVZoo, one of the world's largest international affiliate marketing networks with 1.2 million registered affiliates globally.`
 
   `These results substantiate his high salary as a direct reflection of the commercial value and social-economic transformation he delivers through digital innovation.`
 
@@ -199,15 +199,15 @@ Additionally, to verify my remuneration and executive position, I have included 
 - Sign-off:
   `Signed:`
   `[Signature]`
-  `Iyabo Khadijah Ishiaku`
+  `Claire Bennett`
   `Finance / HR Manager`
-  `Email: hr@finxhost.com`
-  `Iyabo.Ishiaku@finxhost.com`
+  `Email: hr@cloudscalelabs.com`
+  `claire.bennett@cloudscalelabs.com`
 
 - Stamp:
-  `WAJO LIMITED | RC: 1900387`
+  `CloudScale LIMITED | RC: 1900387`
   `Sign: [Signature] | Date: 28/08/2026`
 
 - Footer:
-  `info@finxhost.com`
+  `info@cloudscalelabs.com`
 

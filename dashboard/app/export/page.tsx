@@ -63,7 +63,7 @@ const evidenceList: EvidenceSubmission[] = [
     fileName: "OC2_01_OpenSource_Kubernetes_Contributions.pdf",
     criterion: "Optional Criterion 2 (OC2)",
     pageCount: 2,
-    verificationSource: "GitHub (@walex) & CNCF Committer Registry",
+    verificationSource: "GitHub (@alex-taylor-dev) & CNCF Committer Registry",
     objectiveMetric: "1,450+ GitHub Stars, 24 Merged Core PRs",
     signatory: "CNCF TAG-Network Co-Chair",
   },
@@ -132,7 +132,7 @@ const recommendationLetters = [
     letterPages: 2,
     verifiedLetterhead: "Official corporate letterhead, Companies House Reg: 0984120",
     keyQuote:
-      "Oluwafemi represents the rare cohort of cloud architects capable of bridging deep distributed systems engineering with high-impact commercial resilience.",
+      "Alex represents the rare cohort of cloud architects capable of bridging deep distributed systems engineering with high-impact commercial resilience.",
   },
   {
     recommender: "Elena Rostova",
@@ -142,7 +142,7 @@ const recommendationLetters = [
     letterPages: 2,
     verifiedLetterhead: "Registered venture partner, Cambridge Science Park",
     keyQuote:
-      "Having monitored Mr. Ogunniyi's open-source contributions to low-latency edge caching, I rate his technical capacity in the top 5% of potential leaders internationally.",
+      "Having monitored Alex's open-source contributions to low-latency edge caching, I rate his technical capacity in the top 5% of potential leaders internationally.",
   },
   {
     recommender: "Babatunde Adeleke",

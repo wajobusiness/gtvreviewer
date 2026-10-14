@@ -21,10 +21,10 @@ export default function ConsistencyCheckPage() {
       title: "Third-Party Identity on Primary Award Certificate",
       category: "Document Authenticity & Deception Risk",
       docA: "MANDATORY CRITERIA 1, Page 1",
-      quoteA: "Top 5 African Digital Technology Entrepreneurs... issued to CHIDIEBERE FELICITAS CHIAMAKA... verifies her contribution",
+      quoteA: "Top 5 African Digital Technology Entrepreneurs... issued to Dr. Morgan Vance... verifies her contribution",
       docB: "Application Passport & Bundle Identity",
-      quoteB: "Applicant is male: Oluwafemi Wale Ogunniyi",
-      discrepancy: "Fatal identity mismatch. Certificate belongs to another female individual with female pronouns. Triggers UK Immigration Rules Part 9.7.1 deception refusal and potential 10-year UK entry ban.",
+      quoteB: "Applicant identity: Alex Taylor (Sample Applicant)",
+      discrepancy: "Fatal identity mismatch. Certificate belongs to another individual with conflicting pronouns. Triggers UK Immigration Rules Part 9.7.1 deception refusal and potential 10-year UK entry ban.",
     },
     {
       id: "C2",
@@ -40,13 +40,13 @@ export default function ConsistencyCheckPage() {
     {
       id: "C3",
       severity: "CRITICAL",
-      title: "Production Billing Run on Cracked 'ShayanXtreme' Software",
+      title: "Production Billing Run on Cracked 'Warez' Software",
       category: "Technical Credibility & Piracy",
       docA: "MANDATORY CRITERIA 2, Page 2 (Admin Screenshot)",
-      quoteA: "Registered To: ShayanXtreme | License Type: WHMCS 9.0.5 | Expires: 31st December 2099",
+      quoteA: "Registered To: Unverified Crack Key | License Type: WHMCS 9.0.5 | Expires: 31st December 2099",
       docB: "Claimed Tech Leadership & Sector Standing",
       quoteB: "National cloud infrastructure leader securing enterprise transactions",
-      discrepancy: "ShayanXtreme is an infamous piracy release group. Production billing is operating on nulled/cracked software expiring in 2099.",
+      discrepancy: "Production billing is operating on an unverified nulled/cracked software license expiring in 2099.",
     },
     {
       id: "C4",
@@ -54,7 +54,7 @@ export default function ConsistencyCheckPage() {
       title: "Third Revenue Contradiction in Internal HR Letter",
       category: "Numerical Contradiction",
       docA: "MANDATORY CRITERIA 3, Page 3 (HR Letter)",
-      quoteA: "FinxHost has achieved ₦5.3bn+ in total revenue...",
+      quoteA: "CloudScale Labs has achieved ₦5.3bn+ in total revenue...",
       docB: "MANDATORY CRITERIA 2, Page 2",
       quoteB: "Platform has generated over ₦2.2 billion in all-time revenue...",
       discrepancy: "Conflicting revenue claims across consecutive documents: ₦5.3B vs ₦2.2B vs ₦2.26M actual dashboard total.",
@@ -68,18 +68,18 @@ export default function ConsistencyCheckPage() {
       quoteA: "Leadership Action: 'Lower-cost care options, instant rural access' -> Impact: '35% improvement in conversion rates for AI automation'",
       docB: "Product Domain (BotifyAI Chatbot)",
       quoteB: "AI WhatsApp/Telegram marketing automation chatbot platform",
-      discrepancy: "Telemedicine copy copied from HealthSyn NG hospital application left in marketing table, indisputably proving copy-paste fabrication.",
+      discrepancy: "Telemedicine copy copied from ApexHealth portal left in marketing table, indisputably proving copy-paste fabrication.",
     },
     {
       id: "C6",
       severity: "HIGH",
       title: "Gender Pronoun Contamination in Remuneration Verification",
       category: "Document Integrity",
-      docA: "MANDATORY CRITERIA 3, Page 3 (WAJO HR Letter)",
+      docA: "MANDATORY CRITERIA 3, Page 3 (Corporate HR Letter)",
       quoteA: "...paid directly into her nominated bank account via bank transfer. Attached are her authenticated payslips...",
-      docB: "Male Applicant Identity",
-      quoteB: "Oluwafemi Wale Ogunniyi (He/Him)",
-      discrepancy: "HR letter repeatedly alternates between 'her' and 'his', proving text was lifted from an existing template for a female applicant.",
+      docB: "Applicant Identity",
+      quoteB: "Alex Taylor (Sample Applicant)",
+      discrepancy: "HR letter repeatedly alternates between 'her' and 'his', proving text was lifted from an existing template.",
     },
     {
       id: "C7",
@@ -87,10 +87,10 @@ export default function ConsistencyCheckPage() {
       title: "Ghost Companies & App Names in Document Headings",
       category: "Cross-Application Confusion",
       docA: "MANDATORY CRITERIA 3, Page 1 Subtitle",
-      quoteA: "Proof of high salary and contribution to CredVerify.App and HealthSyn NG under Everypoint Media Links Ltd.",
+      quoteA: "Proof of high salary and contribution to SaaSMetrics and ApexHealth under Alpha Global Media Ltd.",
       docB: "Body of Document & Company Structure",
-      quoteB: "As Founder & CEO of FinxHost and BotifyAI under WAJO Limited...",
-      discrepancy: "Subtitle names two ghost apps and a foreign parent company (Everypoint Media Links Ltd.) never mentioned elsewhere.",
+      quoteB: "As Founder & CEO of CloudScale Labs and BotifyAI under CloudScale Technologies Ltd...",
+      discrepancy: "Subtitle names two ghost apps and a foreign parent company (Alpha Global Media Ltd.) never mentioned elsewhere.",
     },
     {
       id: "C8",
@@ -195,17 +195,17 @@ export default function ConsistencyCheckPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
           <div className="p-3 rounded-lg bg-slate-950/60 border border-slate-800">
             <div className="text-muted-foreground text-[10px] uppercase font-semibold">Stated Core Entity</div>
-            <div className="text-blue-400 font-bold mt-1">WAJO Limited</div>
-            <div className="text-slate-400 text-[11px] mt-0.5">Parent company of FinxHost & BotifyAI</div>
+            <div className="text-blue-400 font-bold mt-1">CloudScale Technologies Ltd</div>
+            <div className="text-slate-400 text-[11px] mt-0.5">Parent company of CloudScale Labs & BotifyAI</div>
           </div>
           <div className="p-3 rounded-lg bg-slate-950/60 border border-red-500/20">
             <div className="text-red-400 text-[10px] uppercase font-semibold">Ghost Entity In Subtitles</div>
-            <div className="text-red-300 font-bold mt-1">Everypoint Media Links Ltd.</div>
+            <div className="text-red-300 font-bold mt-1">Alpha Global Media Ltd.</div>
             <div className="text-slate-400 text-[11px] mt-0.5">Named in MC3 Page 1 salary subtitle</div>
           </div>
           <div className="p-3 rounded-lg bg-slate-950/60 border border-amber-500/20">
             <div className="text-amber-400 text-[10px] uppercase font-semibold">Conflicting Products</div>
-            <div className="text-amber-300 font-bold mt-1">HealthSyn NG & CredVerify</div>
+            <div className="text-amber-300 font-bold mt-1">ApexHealth & SaaSMetrics</div>
             <div className="text-slate-400 text-[11px] mt-0.5">Named in File 2 & 5 filenames/subtitles</div>
           </div>
         </div>

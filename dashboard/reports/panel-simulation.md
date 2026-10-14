@@ -1,7 +1,7 @@
 # PANEL SIMULATION: UK TECH NATION GLOBAL TALENT VISA ENDORSEMENT
 
 - **Audit Date:** 13 October 2026
-- **Simulated Candidate:** Oluwafemi Wale Ogunniyi
+- **Simulated Candidate:** Alex Taylor
 - **Evidenced Tracks:** Mandatory Criterion (MC), Optional Criterion 2 (OC2), Optional Criterion 3 (OC3)
 - **Standard Applied:** Strict Tech Nation Digital Technology Endorsement Framework
 
@@ -11,10 +11,10 @@
 *Profile: Experienced Tech Nation casework reviewer evaluating adherence to published criteria, document limits, and evidentiary thresholds.*
 
 ### Strongest Argument for Endorsement:
-The applicant demonstrates active entrepreneurial initiative in the Nigerian technology ecosystem, showing operational activity across web hosting (FinxHost) and marketing automation (BotifyAI), supported by Corporate Affairs Commission (CAC) incorporation records, community training participation with NYSC/YALI, and local Nigerian technology sector awards (NiTA 2025, ABoICT 2024).
+The applicant demonstrates active entrepreneurial initiative in the Nigerian technology ecosystem, showing operational activity across web hosting (CloudScale Labs) and marketing automation (BotifyAI), supported by Corporate Affairs Commission (CAC) incorporation records, community training participation with NYSC/YALI, and local Nigerian technology sector awards (NiTA 2025, ABoICT 2024).
 
 ### Strongest Argument for Refusal:
-The application fails the basic structural rules of evidence and displays fatal integrity defects. The applicant has submitted 3 documents claiming the Mandatory Criterion (Files 1, 2, 3) and only 1 document each for Optional Criterion 2 (File 4) and Optional Criterion 3 (File 5), violating Tech Nation’s clear requirement for a minimum of two distinct pieces of evidence per criterion. Furthermore, File 1 Page 1 submits an award certificate issued to a completely different individual (`Chidiebere Felicitas Chiamaka`), File 2 displays a 1,000-fold discrepancy in revenue (`₦2,260,242` on dashboard vs. `₦2.2 billion` in text) while running cracked/nulled software (`ShayanXtreme`), and File 3 submits unverified internal payslips without official tax authority receipts or bank statements.
+The application fails the basic structural rules of evidence and displays fatal integrity defects. The applicant has submitted 3 documents claiming the Mandatory Criterion (Files 1, 2, 3) and only 1 document each for Optional Criterion 2 (File 4) and Optional Criterion 3 (File 5), violating Tech Nation’s clear requirement for a minimum of two distinct pieces of evidence per criterion. Furthermore, File 1 Page 1 submits an award certificate issued to a completely different individual (`Dr. Morgan Vance`), File 2 displays a 1,000-fold discrepancy in revenue (`₦2,260,242` on dashboard vs. `₦2.2 billion` in text) while running cracked/nulled software (`Unverified Crack Key`), and File 3 submits unverified internal payslips without official tax authority receipts or bank statements.
 
 ### Criterion Scorecard:
 - **Mandatory Criterion (MC - Leadership / Emerging Leadership):** **NOT MET**
@@ -27,7 +27,7 @@ The application fails the basic structural rules of evidence and displays fatal 
 - **Optional Criterion 4 (OC4 - Academic):** **NOT CLAIMED**
 
 ### Questions the Assessor Would Ask:
-1. "Why does the primary award certificate submitted on Page 1 of Mandatory Criteria 1 name `CHIDIEBERE FELICITAS CHIAMAKA` and state in the caption that it verifies 'her contribution'?"
+1. "Why does the primary award certificate submitted on Page 1 of Mandatory Criteria 1 name `DR. MORGAN VANCE` and state in the caption that it verifies 'her contribution'?"
 2. "Why does your WHMCS billing dashboard in File 2 show all-time revenue of `₦2,260,242` when your written narrative asserts you generated `over ₦2.2 billion`?"
 3. "Where are your official Personal Income Tax (PAYE) receipts from the Federal Inland Revenue Service (FIRS) and certified bank statements corroborating the ₦10,200,000 monthly salary claimed in File 3?"
 
@@ -40,7 +40,7 @@ The application fails the basic structural rules of evidence and displays fatal 
 The applicant has attempted to move up the value chain from standard web hosting into AI-driven chatbot automation with BotifyAI, securing a product listing on JVZoo and generating active user traffic.
 
 ### Strongest Argument for Refusal:
-The businesses presented are fundamentally not product-led digital technology companies as defined by Tech Nation. FinxHost is a commodity cPanel/WHM web hosting reseller. Reselling shared hosting, domain names, and VPS servers is IT infrastructure reselling and support, which Tech Nation explicitly excludes. The software powering the hosting dashboard is an unlicensed, cracked version of WHMCS (`Registered To: ShayanXtreme`), which is disqualifying for an applicant claiming to be a technical leader. BotifyAI appears to be an internet-marketing affiliate script launched via MunchEye and JVZoo with a $37 price point, rather than a defensible, proprietary, product-led SaaS platform.
+The businesses presented are fundamentally not product-led digital technology companies as defined by Tech Nation. CloudScale Labs is a commodity cPanel/WHM web hosting reseller. Reselling shared hosting, domain names, and VPS servers is IT infrastructure reselling and support, which Tech Nation explicitly excludes. The software powering the hosting dashboard is an unlicensed, cracked version of WHMCS (`Registered To: Unverified Crack Key`), which is disqualifying for an applicant claiming to be a technical leader. BotifyAI appears to be an internet-marketing affiliate script launched via MunchEye and JVZoo with a $37 price point, rather than a defensible, proprietary, product-led SaaS platform.
 
 ### Criterion Scorecard:
 - **Mandatory Criterion (MC):** **NOT MET** (Commodity hosting reselling, pirated billing software, and generic website templates do not demonstrate leadership).
@@ -48,8 +48,8 @@ The businesses presented are fundamentally not product-led digital technology co
 - **Optional Criterion 3 (OC3):** **NOT MET** (No proof of proprietary intellectual property, code repositories, system architecture, or audited SaaS metrics).
 
 ### Questions the Product Leader Would Ask:
-1. "If FinxHost is an enterprise-grade cloud provider trusted by Wapi Pay to process $500 million in remittances, why is your internal billing dashboard running on a cracked/pirated WHMCS license registered to `ShayanXtreme`?"
-2. "What proprietary software, codebase, or patented technology was developed in-house for FinxHost, versus off-the-shelf cPanel/WHM server management software?"
+1. "If CloudScale Labs is an enterprise-grade cloud provider trusted by SwiftPay Global to process $500 million in remittances, why is your internal billing dashboard running on a cracked/pirated WHMCS license registered to `Unverified Crack Key`?"
+2. "What proprietary software, codebase, or patented technology was developed in-house for CloudScale Labs, versus off-the-shelf cPanel/WHM server management software?"
 3. "Why does your live team page display unedited marketing placeholder text from the Quiety website theme ('Intrinsicly strategize cutting-edge functionalities...')?"
 
 ---
@@ -61,7 +61,7 @@ The businesses presented are fundamentally not product-led digital technology co
 The applicant holds regional industry awards in Nigeria, specifically from the Nigeria Technology Awards (NiTA 2025) and Nigeria CommunicationsWeek (ABoICT 2024), both of which are established commercial tech events in Lagos.
 
 ### Strongest Argument for Refusal:
-The awards evidence collapses under basic scrutiny. The international award (IESEG School of Management) is literally issued to another human being (`Chidiebere Felicitas Chiamaka`). The "EU-Africa Startups Partnership Recognition" poster grouping the applicant alongside Arthur Mensch (CEO of Mistral AI) and Alex Kendall (CEO of Wayve) has zero record on the official `eu-startups.com` website and relies on blog clippings from parked/obscure domains (`thehackers.co.uk`). The ThisDay news article linked under NiTA 2025 is actually an article from June 2023 covering a different event (Titans of Tech).
+The awards evidence collapses under basic scrutiny. The international award (IESEG School of Management) is literally issued to another human being (`Dr. Morgan Vance`). The "EU-Africa Startups Partnership Recognition" poster grouping the applicant alongside Arthur Mensch (CEO of Mistral AI) and Alex Kendall (CEO of Wayve) has zero record on the official `eu-startups.com` website and relies on blog clippings from parked/obscure domains (`thehackers.co.uk`). The ThisDay news article linked under NiTA 2025 is actually an article from June 2023 covering a different event (Titans of Tech).
 
 ### Criterion Scorecard:
 - **Mandatory Criterion (MC):** **NOT MET** (Severely tainted by certificate misattribution and unverified international recognition).
@@ -82,7 +82,7 @@ The awards evidence collapses under basic scrutiny. The international award (IES
 The applicant has assembled a portfolio attempting to cover leadership (MC), community training (OC2), and commercial founding (OC3), packaged in 3-page documents within the formal page ceiling.
 
 ### Strongest Argument for Refusal:
-The application presents an existential legal risk under **Paragraph 9.7.1 of the UK Immigration Rules (False Representations, False Documents, or Non-Disclosure of Material Facts)**. Submitting an award certificate in the name of `Chidiebere Felicitas Chiamaka` while claiming in caption and text that it was issued to the applicant, accompanied by female pronoun references (*"her contribution"*, *"her nominated bank account"* in the HR letter), will be interpreted by an Entry Clearance Officer / Caseworker as an intentional attempt to deceive. Furthermore, the mandatory standalone components (CV, Personal Statement, 3 independent letters of recommendation) are completely missing from the application folder.
+The application presents an existential legal risk under **Paragraph 9.7.1 of the UK Immigration Rules (False Representations, False Documents, or Non-Disclosure of Material Facts)**. Submitting an award certificate in the name of `Dr. Morgan Vance` while claiming in caption and text that it was issued to the applicant, accompanied by female pronoun references (*"her contribution"*, *"her nominated bank account"* in the HR letter), will be interpreted by an Entry Clearance Officer / Caseworker as an intentional attempt to deceive. Furthermore, the mandatory standalone components (CV, Personal Statement, 3 independent letters of recommendation) are completely missing from the application folder.
 
 ### Criterion Scorecard:
 - **Mandatory Criterion (MC):** **NOT MET / DECEPTION REFERRAL**
@@ -90,9 +90,9 @@ The application presents an existential legal risk under **Paragraph 9.7.1 of th
 - **Optional Criterion 3 (OC3):** **NOT MET** (Deficient evidence count, internal contradictions).
 
 ### Questions the Immigration Lawyer Would Ask:
-1. "Can you provide the original, unedited digital file, email correspondence, and institutional verification from IESEG School of Management proving this certificate was awarded to Oluwafemi Wale Ogunniyi?"
+1. "Can you provide the original, unedited digital file, email correspondence, and institutional verification from IESEG School of Management proving this certificate was awarded to Alex Taylor?"
 2. "Why are the three mandatory standalone letters of recommendation, CV, and Personal Statement missing from the formal application folder?"
-3. "Can you explain why the subtitle of File 3 explicitly references 'CredVerify.App and HealthSyn NG under Everypoint Media Links Ltd', while File 5 contains text regarding 'Lower-cost care options, instant rural access'?"
+3. "Can you explain why the subtitle of File 3 explicitly references 'SaaSMetrics.io and ApexHealth NG under Alpha Global Media Ltd', while File 5 contains text regarding 'Lower-cost care options, instant rural access'?"
 
 ---
 
@@ -103,12 +103,12 @@ The application presents an existential legal risk under **Paragraph 9.7.1 of th
 HOME OFFICE
 Digital Technology Endorsement Panel (Tech Nation)
 Application Reference: TN-GT-2026-REF-0982
-Applicant: Oluwafemi Wale Ogunniyi
+Applicant: Alex Taylor
 Route: Global Talent – Digital Technology (Exceptional Talent / Exceptional Promise)
 
 DECISION: ENDORSEMENT REFUSED
 
-Dear Mr Ogunniyi,
+Dear Mr Taylor,
 
 We have completed the assessment of your application for endorsement under the Global Talent (Digital Technology) route. Tech Nation has evaluated your application against the criteria set out in Appendix Global Talent of the UK Immigration Rules and the official Tech Nation Digital Technology Guidelines.
 
@@ -121,11 +121,11 @@ Under Appendix Global Talent, an applicant must demonstrate that they are recogn
 
 You have submitted evidence including award certificates, platform metrics, and compensation records across three documents (MC1, MC2, MC3). However, the panel found severe deficiencies in the credibility and authenticity of the evidence presented:
 
-a) In Document MC1 (Page 1), you claim to have received the 'Top 5 African Digital Technology Entrepreneurs Award (2025)' from IESEG School of Management. However, the certificate submitted is explicitly issued to a different person ('CHIDIEBERE FELICITAS CHIAMAKA') dated January 2024, and your accompanying caption notes that it verifies 'her contribution'. Submitting an award document belonging to a third party as evidence of your own professional recognition fatally undermines the credibility of your application.
+a) In Document MC1 (Page 1), you claim to have received the 'Top 5 African Digital Technology Entrepreneurs Award (2025)' from IESEG School of Management. However, the certificate submitted is explicitly issued to a different person ('DR. MORGAN VANCE') dated January 2024, and your accompanying caption notes that it verifies 'her contribution'. Submitting an award document belonging to a third party as evidence of your own professional recognition fatally undermines the credibility of your application.
 
-b) In Document MC2, you claim to have scaled FinxHost to over ₦2.2 billion in revenue. However, the billing dashboard screenshot provided (manage.finxhost.com) displays all-time revenue of ₦2,260,242.00, representing a thousand-fold discrepancy between your written narrative and your primary technical evidence. Furthermore, the dashboard confirms that your infrastructure utilizes an unlicensed billing script ('Registered To: ShayanXtreme'), which is incompatible with the standard of an exceptional technology leader. Moreover, web hosting and domain reselling represent routine IT infrastructure services rather than proprietary product-led digital technology innovation.
+b) In Document MC2, you claim to have scaled CloudScale Labs to over ₦2.2 billion in revenue. However, the billing dashboard screenshot provided (manage.cloudscalelabs.com) displays all-time revenue of ₦2,260,242.00, representing a thousand-fold discrepancy between your written narrative and your primary technical evidence. Furthermore, the dashboard confirms that your infrastructure utilizes an unlicensed billing script ('Registered To: Unverified Crack Key'), which is incompatible with the standard of an exceptional technology leader. Moreover, web hosting and domain reselling represent routine IT infrastructure services rather than proprietary product-led digital technology innovation.
 
-c) In Document MC3, your remuneration evidence consists exclusively of self-generated payslips and an HR confirmation letter issued by your own private company (WAJO Limited). You have provided no independent third-party corroboration, such as verified bank statements or official tax clearance certificates from the Federal Inland Revenue Service (FIRS). The HR verification letter also refers to the applicant using female pronouns ('her nominated bank account', 'her authenticated payslips'), indicating that documentation has been extracted from an unverified template.
+c) In Document MC3, your remuneration evidence consists exclusively of self-generated payslips and an HR confirmation letter issued by your own private company (CloudScale Technologies Ltd). You have provided no independent third-party corroboration, such as verified bank statements or official tax clearance certificates from the Federal Inland Revenue Service (FIRS). The HR verification letter also refers to the applicant using female pronouns ('her nominated bank account', 'her authenticated payslips'), indicating that documentation has been extracted from an unverified template.
 
 2. OPTIONAL CRITERIA: NOT MET
 To be endorsed, an applicant must satisfy at least two of the four optional criteria. You have failed to meet the required threshold:

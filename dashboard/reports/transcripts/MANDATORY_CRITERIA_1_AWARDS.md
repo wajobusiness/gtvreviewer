@@ -1,11 +1,11 @@
-# TRANSCRIPTION & DOCUMENT RECORD: MANDATORY CRITERIA 1 - NATIONALLY AND INTERNATIONALLY RECOGNISED AWARDS (1).pdf.pdf
+# TRANSCRIPTION & DOCUMENT RECORD: Sample_Evidence_MC1_TechLeadershipAward.pdf
 
-- **File Name:** `MANDATORY CRITERIA 1 - NATIONALLY AND INTERNATIONALLY RECOGNISED AWARDS (1).pdf.pdf`
+- **File Name:** `Sample_Evidence_MC1_TechLeadershipAward.pdf`
 - **File Type:** PDF (application/pdf)
 - **File Size:** 2,742,439 bytes (2.62 MB)
 - **Page Count:** 3
 - **Creation Date (Metadata):** 2026-10-11 17:10:12 +0000
-- **PDF Title (Metadata):** MANDATORY CRITERIA 1 - NATIONALLY AND INTERNATIONALLY RECOGNISED AWARDS (1).pdf
+- **PDF Title (Metadata):** Sample_Evidence_MC1_TechLeadershipAward.pdf
 - **Extraction Method:** Multimodal Vision & Direct Layout Analysis (Antigravity OCR/Vision Engine)
 - **Extraction Confidence:** High
 - **Unreadable / Blurry Parts:**
@@ -37,7 +37,7 @@ The recognition followed a competitive selection process in which over 150 nomin
 - Certificate Title: `CERTIFICATE OF AWARD`
 - Certificate Body Text:
   `This is to certify that`
-  `CHIDIEBERE FELICITAS CHIAMAKA , participated successfully`
+  `DR. MORGAN VANCE , participated successfully`
   `in our Digital Technology Winter Program, From January 14th to January 25th 2024`
   `at IESEG School of Management and has made the top 5 African Digital Technology`
   `Entrepreneurs who are covering massive gap in Africa Technology Industry.`
@@ -72,11 +72,11 @@ These metrics demonstrate BotifyAI’s commercial traction, operational scale, a
 **[SECTION 2 HEADING & TEXT]**
 LEADERSHIP EVIDENCE 2: 11TH NIGERIA TECHNOLOGY AWARDS (NiTA), 2025
 
-In 2025, I was nominated for the 11th Nigerian Technology Award (NiTA) and subsequently recognised as the Most Outstanding Tech Innovation and Growth Executive of the Year in recognition of my contributions to technology innovation, digital transformation, and business growth through my work with FinxHost and BotifyAI.
+In 2025, I was nominated for the 11th Nigerian Technology Award (NiTA) and subsequently recognised as the Most Outstanding Tech Innovation and Growth Executive of the Year in recognition of my contributions to technology innovation, digital transformation, and business growth through my work with CloudScale Labs and BotifyAI.
 
 The Nigeria Technology Awards employs a structured, three-round judging process designed to promote fairness, transparency, and credibility. According to its published judging criteria, technology professionals are evaluated on demonstrated professional excellence, innovation and creativity, measurable impact and influence, continuous professional development, and ethical standards. The published scoring framework assigns 70% to judging panel screening, vetting and voting, 20% to work experience and professional achievements, and 10% to public review and online voting, where applicable. These criteria reflect the importance of professional accomplishment, innovation, leadership, and contributions to Nigeria’s technology ecosystem.
 
-My recognition reflects my commitment to building innovative digital solutions and supporting business growth through technology. Through FinxHost, I help businesses establish and strengthen their online presence through web hosting, domain registration, and website development services. Through BotifyAI, I contribute to advancing the adoption of AI-powered tools that help businesses improve customer engagement, streamline communication, and enhance digital operations.
+My recognition reflects my commitment to building innovative digital solutions and supporting business growth through technology. Through CloudScale Labs, I help businesses establish and strengthen their online presence through web hosting, domain registration, and website development services. Through BotifyAI, I contribute to advancing the adoption of AI-powered tools that help businesses improve customer engagement, streamline communication, and enhance digital operations.
 
 This achievement represents a significant milestone in my journey as a technology entrepreneur and digital innovation advocate, underscoring my dedication to leveraging technology to create opportunities, empower businesses, and contribute to the growth of Nigeria’s digital economy.
 
@@ -101,15 +101,15 @@ This achievement represents a significant milestone in my journey as a technolog
    - Date: `17th September, 2025`
    - Addressee:
      `The Founder`
-     `FinxHost/BotifyAI`
+     `CloudScale Labs/BotifyAI`
      `FCT, Abuja`
      `Nigeria.`
-     `Attention: Oluwafemi Wale Ogunniyi`
+     `Attention: Alex Taylor`
    - Salutation: `Dear Sir/Ma,`
    - Subject: `RE: AWARDS/WINNING NOTIFICATION - 11TH NIGERIA TECHNOLOGY AWARDS (NiTA), 2025`
    - Content:
      `Congratulations!`
-     `We write to inform you that, following the rigorous nomination and entry process of the 11th Nigeria Technology Awards (NiTA), 2025, the nomination of "OLUWAFEMI WALE OGUNNIYI" was received and voted by the Judging Panel and Advisory Board to receive the following award:`
+     `We write to inform you that, following the rigorous nomination and entry process of the 11th Nigeria Technology Awards (NiTA), 2025, the nomination of "ALEX TAYLOR" was received and voted by the Judging Panel and Advisory Board to receive the following award:`
      `• Most Outstanding Tech Innovation & Growth Executive of the Year`
      `This recognition is testament to your exceptional contributions to the growth of Nigeria’s technology ecosystem...`
      `AWARDS/EVENT CEREMONY:`
@@ -124,14 +124,14 @@ This achievement represents a significant milestone in my journey as a technolog
    - Text Caption:
      `Link to media news: News on Thisdaylive News, one of the top newspapers`
      `News on TechInfo Africa News, a foremost tech blog`
-   - Search box: `Search By Name: OLUWAFEMI WALE OGUNNIYI`
+   - Search box: `Search By Name: ALEX TAYLOR`
    - Directory Listing row:
-     `AWARD RECIPIENT: OLUWAFEMI WALE OGUNNIYI (The Founder) FINXHOST`
+     `AWARD RECIPIENT: ALEX TAYLOR (The Founder) CLOUDSCALELABS`
      `AWARD CATEGORY: Most Outstanding Tech Innovation & Growth Executive of the Year`
      `AWARD YEAR: 2025`
    - Accompanying Box:
      `AWARDS WEBSITE VERIFIED LISTING NOTIFICATION`
-     `The 2025 award recognition can be verified through the official Nigeria Technology Awards website. Visit the Individual Winners Directory and search for Oluwafemi Wale Ogunniyi to view the corresponding award category and year.`
+     `The 2025 award recognition can be verified through the official Nigeria Technology Awards website. Visit the Individual Winners Directory and search for Alex Taylor to view the corresponding award category and year.`
      `Official source: https://www.nigeriatechnologyawards.com/winners/`
 
 **[SECTION 3 HEADING & TEXT]**
@@ -139,7 +139,7 @@ LEADERSHIP EVIDENCE 3: AFRICA BEACON OF ICT (ABoICT) AWARDS 2024
 
 In March 2024, I was honoured at the 16th Africa Beacon of ICT (ABoICT) Awards, organised by Nigeria CommunicationsWeek, a recognised Nigerian ICT industry publication. The awards celebrated contributions to the advancement of information and communications technology and digital innovation in Nigeria. The 2024 edition was themed “Artificial Intelligence: The Good, The Complex and The Anticipated,” highlighting the growing influence of artificial intelligence and its implications for the technology ecosystem.
 
-My recognition reflected my contributions to technology innovation and digital transformation through my work at FinxHost, where I focus on delivering digital solutions that help businesses establish their online presence, strengthen their digital capabilities, and leverage technology for growth.
+My recognition reflected my contributions to technology innovation and digital transformation through my work at CloudScale Labs, where I focus on delivering digital solutions that help businesses establish their online presence, strengthen their digital capabilities, and leverage technology for growth.
 
 This honour marked an important milestone in my professional journey as a technology entrepreneur, reinforcing my commitment to innovation, digital inclusion, and the continued development of Nigeria’s technology ecosystem.
 
@@ -150,29 +150,29 @@ This honour marked an important milestone in my professional journey as a techno
    - Plaque text:
      `Beacon of ICT Award 2024`
      `INNOVATIVE MARKETING PERSONALITY OF THE YEAR`
-     `Oluwafemi Wale Ogunniyi`
+     `Alex Taylor`
      `CommunicationsWeek`
 2. Bottom Center Letter (Label `AWARD LETTER`):
    - Header: `CommunicationsWeek` logo
    - Date: `25th March, 2024`
    - Addressee:
-     `The Founder, FINXHOST`
+     `The Founder, CLOUDSCALELABS`
      `Federal Housing Authority (FHA), FCT, Abuja, Nigeria.`
-     `Attention: Oluwafemi Wale Ogunniyi`
+     `Attention: Alex Taylor`
    - Salutation: `Dear Sir/Madam,`
    - Subject: `RE: AWARDS WINNING NOTIFICATION - 16th Africa Beacon of ICT (ABoICT) Awards, organised by Nigeria CommunicationsWeek`
    - Text:
-     `We are delighted to inform you that, following the rigorous nomination and entry process of the 16th Africa Beacon of ICT (ABoICT) Awards, organised by Nigeria CommunicationsWeek, the nomination of "OLUWAFEMI WALE OGUNNIYI" was received and voted by the Judging Panel and Advisory Board to receive the following award:`
+     `We are delighted to inform you that, following the rigorous nomination and entry process of the 16th Africa Beacon of ICT (ABoICT) Awards, organised by Nigeria CommunicationsWeek, the nomination of "ALEX TAYLOR" was received and voted by the Judging Panel and Advisory Board to receive the following award:`
      `Innovative Marketing Personality of the Year 2024`
      `...`
      `Signed: Ken Nwogbo, Founder and Editor-in-Chief`
 3. Bottom Right News Screenshot (Label `NEWS`):
    - Site Name: `NaijaBlitz News`
-   - URL / Category: `Home > Latest News > Finxhost CEO, Oluwafemi Wale Ogunniyi, Honoured at Prestigious Beacon of ICT Awards 2024`
-   - Headline: `Finxhost CEO, Oluwafemi Wale Ogunniyi, Honoured at Prestigious Beacon of ICT Awards 2024`
+   - URL / Category: `Home > Latest News > CloudScale Labs CEO, Alex Taylor, Honoured at Prestigious Beacon of ICT Awards 2024`
+   - Headline: `CloudScale Labs CEO, Alex Taylor, Honoured at Prestigious Beacon of ICT Awards 2024`
    - Byline: `by EMMANUEL AGAJI March 31, 2024`
    - Body excerpt:
-     `In recognition of his remarkable contributions to Africa's digital transformation, Oluwafemi Wale Ogunniyi, Founder and CEO of Finxhost and BotifyAI, has been honoured at the 2024 Africa Beacon of ICT (ABoICT) Awards held at the Four Points by Sheraton, Lagos.`
+     `In recognition of his remarkable contributions to Africa's digital transformation, Alex Taylor, Founder and CEO of CloudScale Labs and BotifyAI, has been honoured at the 2024 Africa Beacon of ICT (ABoICT) Awards held at the Four Points by Sheraton, Lagos.`
 
 ---
 
@@ -190,7 +190,7 @@ The recognition was announced in connection with the EU-Startups Summit 2025, he
 - Title: `EU-AFRICA STARTUPS PARTNERSHIP RECOGNITION`
 - Subtitle: `10 DIGITAL TECHNOLOGY LEADERS WHO SHAPED THE DIGITAL FUTURE 2015 - 2025`
 - 10 Profile photos & name cards displayed:
-  1. `OLUWAFEMI WALE OGUNNIYI` (Nigeria flag)
+  1. `ALEX TAYLOR` (Nigeria flag)
   2. `ARTHUR MENSCH` (France flag)
   3. `ALEX KENDALL` (UK flag)
   4. `KATE KALLOT` (Kenya flag)
@@ -205,7 +205,7 @@ The recognition was announced in connection with the EU-Startups Summit 2025, he
 **[RIGHT NARRATIVE BOX]**
 The summit’s 11th edition brought together approximately 2,200 founders, investors, startup enthusiasts, and other key stakeholders for discussions, networking, and knowledge-sharing focused on technology and entrepreneurship.
 
-Being included among the ten recognised technology leaders highlighted my work in digital innovation and entrepreneurship through FinxHost, my technology business focused on web hosting, domain registration, and website development. This recognition represents an important milestone in my professional journey and reinforces my commitment to developing digital solutions, supporting business growth, and contributing to Africa’s expanding digital economy.
+Being included among the ten recognised technology leaders highlighted my work in digital innovation and entrepreneurship through CloudScale Labs, my technology business focused on web hosting, domain registration, and website development. This recognition represents an important milestone in my professional journey and reinforces my commitment to developing digital solutions, supporting business growth, and contributing to Africa’s expanding digital economy.
 
 **[MIDDLE-RIGHT NEWS ARTICLE SCREENSHOT]**
 - URL bar: `thehackers.co.uk/2025/04/10/eu-startups-summit-2025-ten-digital-technology-leaders-recognised-for-shaping-the-digital-future/`
@@ -213,7 +213,7 @@ Being included among the ten recognised technology leaders highlighted my work i
 - Article text excerpt:
   `Among those recognized was Arthur Mensch, Co-founder and CEO of French artificial intelligence company Mistral AI, alongside Alex Kendall, Co-founder and CEO of UK-based Wayve, whose work focuses on artificial intelligence and autonomous driving technology.`
   `The list also featured Kate Kallot, Founder and CEO of Amini in Kenya; Marta Oliveira, Co-founder and CEO of Germany's ATOM Space; Diliara Lupenko, Co-founder and COO of Spain-based Impress; and Daniel Metzler, Co-founder and CEO of German aerospace company Isar Aerospace.`
-  `Africa's technology ecosystem was represented by a number of emerging digital leaders, including Nigerian technology professionals Oluwafemi Wale Ogunniyi, Founder of FinxHost, and Efetobore Alexander Monedo, identified as Digital Product Manager at Wakademe.`
+  `Africa's technology ecosystem was represented by a number of emerging digital leaders, including Nigerian technology professionals Alex Taylor, Founder of CloudScale Labs, and Efetobore Alexander Monedo, identified as Digital Product Manager at Wakademe.`
   `Also featured were Oluwaseyi Tolulope Fakunle, Founder of Getcaresaure, and Pelonomi Moiloa, Co-founder and CEO of South African artificial intelligence company Lelapa AI.`
   `The selection reflects the increasingly international nature of the technology sector, with African and European founders and technology professionals contributing to a digital ecosystem that increasingly transcends geographical boundaries.`
   `A meeting point for Europe's technology ecosystem`

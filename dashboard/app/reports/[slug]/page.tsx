@@ -66,7 +66,7 @@ export default async function ReportAnalysisPage({ params }: PageProps) {
         weaknesses: [
           "Award certificate issued to a different person (document deception risk)",
           "1,000x numerical contradiction in WHMCS revenue metrics",
-          "Production infrastructure operated on nulled ShayanXtreme license",
+          "Production infrastructure operated on unverified warez license key",
           "Internal salary records self-asserted without FIRS tax proof",
         ],
         recommendations: [

@@ -81,10 +81,10 @@ export default function MarketingHomePage() {
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
           <Link
-            href="/dashboard"
+            href="/login"
             className="w-full sm:w-auto px-8 py-3.5 rounded-xl font-bold text-sm text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-700/80 transition-colors flex items-center justify-center gap-2"
           >
-            Explore Live Audit Demo
+            Sign In to Workspace
           </Link>
         </div>
 
@@ -110,17 +110,17 @@ export default function MarketingHomePage() {
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-800">
             <div>
               <span className="text-xs font-mono text-emerald-400 uppercase font-semibold">
-                Live Audit Transformation Engine
+                Audit Transformation Engine
               </span>
               <h2 className="text-xl sm:text-2xl font-bold text-white mt-1">
                 How GTV Reviewer Turns a Refusal into an Endorsement
               </h2>
             </div>
             <Link
-              href="/dashboard"
+              href="/register"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-semibold text-xs shadow-md shadow-blue-500/20 transition-all shrink-0"
             >
-              Open Full Interactive Dashboard <ArrowRight className="w-4 h-4" />
+              Start Free Audit <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
@@ -142,15 +142,15 @@ export default function MarketingHomePage() {
               <div className="space-y-2 text-xs text-slate-300">
                 <div className="flex items-start gap-2 text-red-300">
                   <span className="text-red-400 font-bold">✕</span>
-                  <span><strong>Part 9 Deception:</strong> Female pronouns & wrong name on IESEG award.</span>
+                  <span><strong>Part 9 Deception:</strong> Co-author certificate with mismatched pronouns & surname.</span>
                 </div>
                 <div className="flex items-start gap-2 text-red-300">
                   <span className="text-red-400 font-bold">✕</span>
-                  <span><strong>1,000x Misrepresentation:</strong> ₦2.2M screenshot vs ₦2.2B text.</span>
+                  <span><strong>Metric Variance:</strong> $12k in screenshot vs $1.2M claimed in text narrative.</span>
                 </div>
                 <div className="flex items-start gap-2 text-red-300">
                   <span className="text-red-400 font-bold">✕</span>
-                  <span><strong>Character Risk:</strong> Billing software registered to warez cracker.</span>
+                  <span><strong>Character Risk:</strong> Production tooling operating on unverified third-party key.</span>
                 </div>
                 <div className="flex items-start gap-2 text-red-300">
                   <span className="text-red-400 font-bold">✕</span>
@@ -180,19 +180,19 @@ export default function MarketingHomePage() {
               <div className="space-y-2 text-xs text-slate-300">
                 <div className="flex items-start gap-2 text-emerald-300">
                   <span className="text-emerald-400 font-bold">✓</span>
-                  <span><strong>Primary Credentials:</strong> WES-authenticated university degree certificate.</span>
+                  <span><strong>Primary Credentials:</strong> WES-authenticated university degree certificate in applicant legal name.</span>
                 </div>
                 <div className="flex items-start gap-2 text-emerald-300">
                   <span className="text-emerald-400 font-bold">✓</span>
-                  <span><strong>Audited Accounts:</strong> 12 months audited bank statements from Zenith Bank.</span>
+                  <span><strong>Audited Accounts:</strong> 12 months audited bank statements from commercial bank & certified CPA sign-off.</span>
                 </div>
                 <div className="flex items-start gap-2 text-emerald-300">
                   <span className="text-emerald-400 font-bold">✓</span>
-                  <span><strong>Legitimate Licenses:</strong> Official WHMCS enterprise invoice & crypto key.</span>
+                  <span><strong>Legitimate Licenses:</strong> Official direct enterprise invoice & verified key.</span>
                 </div>
                 <div className="flex items-start gap-2 text-emerald-300">
                   <span className="text-emerald-400 font-bold">✓</span>
-                  <span><strong>3 / 3 Rec Letters:</strong> UK Tech CEO, AI Director, Telecom VP letters.</span>
+                  <span><strong>3 / 3 Rec Letters:</strong> Scaleup CEO, AI Research Director, Telecom VP letters.</span>
                 </div>
               </div>
 
@@ -451,10 +451,10 @@ export default function MarketingHomePage() {
               Run Your Pre-Submission Audit
             </Link>
             <Link
-              href="/dashboard"
+              href="/login"
               className="px-8 py-3 rounded-xl font-bold text-sm text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-700 transition-colors"
             >
-              Explore Live Demo
+              Sign In to Workspace
             </Link>
           </div>
         </div>
