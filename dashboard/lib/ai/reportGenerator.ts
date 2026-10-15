@@ -60,15 +60,15 @@ ${topRefusalRisks
 
 ## Overview
 - Total Submitted Pieces: **${evidenceMatrix.length}**
-- Legal Limit: Maximum 10 pieces across Mandatory & Optional Criteria.
-- Page Budget Limit: Maximum 3 pages per individual piece.
+- Statutory Limit: Maximum 10 pieces across Mandatory & Optional Criteria.
+- Statutory Page Limit: Maximum 3 A4 pages per individual piece.
 
-| Item # | Document Name | Criterion Target | Strength | Risk Severity | Attributable | Inside 5-Yr Window |
-| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| Item # | File | What It Actually Shows | Criterion Claimed | Matches Guidance Example | Inside 5-Yr Window | Distinct? | Personally Attributable? | Metrics Shown? | Independently Verifiable? | Third-Party Source? | Risk Severity | Rationale / Why |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 ${evidenceMatrix
   .map(
     (e) =>
-      `| ${e.id} | \`${e.fileName || e.file}\` | ${e.category} | ${e.strength} | ${e.status} | ${e.attributable ? "Yes" : "No"} | ${e.insideWindow ? "Yes" : "No"} |`
+      `| ${e.id} | \`${e.fileName || e.file}\` | ${e.shows || e.category} | ${e.category} | ${e.guidanceExampleMatch || e.requirement || "Tech Nation Criteria"} | ${e.insideWindow ? "Yes" : "No"} | ${e.distinct !== false ? "Yes" : "No"} | ${e.attributable ? "Yes" : "No"} | ${e.metrics ? "Yes (" + e.metrics + ")" : "None cited"} | ${e.verifiable !== false ? "Yes" : "No"} | ${e.thirdPartySource !== false ? "Yes" : "No"} | ${e.status} | ${e.why || e.risk || "Evaluated against criteria"} |`
   )
   .join("\n")}
 `;

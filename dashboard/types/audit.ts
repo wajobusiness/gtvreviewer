@@ -95,6 +95,12 @@ export interface EvidenceRow {
   insideWindow: boolean;
   metrics: string;
   risk: string;
+  shows?: string;
+  guidanceExampleMatch?: string;
+  distinct?: boolean;
+  verifiable?: boolean;
+  thirdPartySource?: boolean;
+  why?: string;
 }
 
 export interface ReportMeta {
