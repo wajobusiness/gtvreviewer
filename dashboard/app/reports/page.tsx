@@ -4,6 +4,10 @@ import { getAllReports } from "@/lib/reports";
 import { ReportCard } from "@/components/ReportCard";
 import { FileText, Sparkles, FolderSync } from "lucide-react";
 
+import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic";
+
 export default async function ReportsIndexPage({
   searchParams,
 }: {
@@ -11,12 +15,20 @@ export default async function ReportsIndexPage({
 }) {
   const resolvedParams = searchParams ? await searchParams : {};
   const isSample = resolvedParams.sample === "true";
-  const reportsData = await Promise.resolve(
-    getAllReports(
-      isSample ? "sample-audit" : resolvedParams.projectId,
-      resolvedParams.runId
-    )
-  );
+  let targetProjectId = isSample ? "sample-audit" : resolvedParams.projectId;
+  let targetRunId = resolvedParams.runId;
+
+  if (!isSample && !targetProjectId) {
+    try {
+      const cookieStore = await cookies();
+      targetProjectId = cookieStore.get("gt_active_project_id")?.value;
+      if (!targetRunId) {
+        targetRunId = cookieStore.get("gt_active_run_id")?.value;
+      }
+    } catch {}
+  }
+
+  const reportsData = await getAllReports(targetProjectId, targetRunId);
   const reports = Array.isArray(reportsData) ? reportsData : [];
 
   return (

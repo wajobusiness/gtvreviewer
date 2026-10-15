@@ -10,12 +10,12 @@ export const metadata: Metadata = {
     "Hostile-but-fair forensic pre-submission audit and verification platform for UK Global Talent visa endorsement application under Tech Nation (Digital Technology).",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const audit = getAuditData();
+  const audit = await getAuditData();
 
   return (
     <html lang="en" className="dark">

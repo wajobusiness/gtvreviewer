@@ -47,12 +47,25 @@ export async function saveAuditRunToDb(params: {
     const isUuid = (val?: string): boolean =>
       !!val && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(val);
 
-    const projectUuid = isUuid(projectId) ? projectId : crypto.randomUUID();
+    let projectUuid = isUuid(projectId) ? projectId : null;
+
+    if (!projectUuid) {
+      // Check if project already exists in DB by candidate name
+      const existing = await sql`
+        SELECT id FROM projects WHERE candidate_name ILIKE ${candidateName.trim()} LIMIT 1;
+      `.catch(() => []);
+      if (existing && existing.length > 0 && existing[0].id) {
+        projectUuid = String(existing[0].id);
+      } else {
+        projectUuid = crypto.randomUUID();
+      }
+    }
+
     const runUuid = crypto.randomUUID();
 
-    // 1. Ensure project exists in DB
+    // 1. Ensure project exists in DB and update its latest run and score
     await sql`
-      INSERT INTO projects (id, organization_id, candidate_name, visa_route, target_field, current_score, status)
+      INSERT INTO projects (id, organization_id, candidate_name, visa_route, target_field, current_score, latest_run_id, status)
       VALUES (
         ${projectUuid}::uuid,
         (SELECT id FROM organizations LIMIT 1),
@@ -60,11 +73,14 @@ export async function saveAuditRunToDb(params: {
         ${visaRoute},
         ${targetField},
         ${analysis.kpis.overallScore},
+        ${runUuid},
         'ready_to_submit'
       )
       ON CONFLICT (id) DO UPDATE
       SET candidate_name = ${candidateName},
           current_score = ${analysis.kpis.overallScore},
+          latest_run_id = ${runUuid},
+          status = 'ready_to_submit',
           updated_at = CURRENT_TIMESTAMP;
     `.catch(async () => {
       // If organization table doesn't have an entry yet, create one
@@ -73,6 +89,26 @@ export async function saveAuditRunToDb(params: {
         VALUES ('Default Law Firm / Workspace', 'default-workspace', 'PROFESSIONAL')
         ON CONFLICT (slug) DO NOTHING;
       `;
+      // Retry project insert
+      await sql`
+        INSERT INTO projects (id, organization_id, candidate_name, visa_route, target_field, current_score, latest_run_id, status)
+        VALUES (
+          ${projectUuid}::uuid,
+          (SELECT id FROM organizations LIMIT 1),
+          ${candidateName},
+          ${visaRoute},
+          ${targetField},
+          ${analysis.kpis.overallScore},
+          ${runUuid},
+          'ready_to_submit'
+        )
+        ON CONFLICT (id) DO UPDATE
+        SET candidate_name = ${candidateName},
+            current_score = ${analysis.kpis.overallScore},
+            latest_run_id = ${runUuid},
+            status = 'ready_to_submit',
+            updated_at = CURRENT_TIMESTAMP;
+      `.catch((e) => console.warn("[NeonDB] Project insert warning:", e?.message));
     });
 
     // 2. Insert audit_run record
@@ -101,7 +137,17 @@ export async function saveAuditRunToDb(params: {
       ON CONFLICT DO NOTHING;
     `;
 
-    // 3. Insert report documents
+    // 3. Update any corresponding audit_jobs entry with the run UUID
+    await sql`
+      UPDATE audit_jobs
+      SET result_run_id = ${runUuid},
+          final_score = ${analysis.kpis.overallScore},
+          final_status = ${analysis.kpis.currentStatus},
+          updated_at = CURRENT_TIMESTAMP
+      WHERE project_id = ${projectId} OR candidate_name ILIKE ${candidateName.trim()};
+    `.catch(() => {});
+
+    // 4. Insert report documents
     if (analysis.markdownReports) {
       for (const [filename, content] of Object.entries(analysis.markdownReports)) {
         const slug = filename.replace(/\.md$/, "").toLowerCase();
@@ -135,21 +181,87 @@ export async function saveAuditRunToDb(params: {
   }
 }
 
-export async function getLatestAuditRunFromDb(projectId: string): Promise<StructuredAnalysisResult | null> {
+async function withDbTimeout<T>(promise: Promise<T>, ms = 2500): Promise<T | null> {
+  let timer: NodeJS.Timeout;
+  const timeoutPromise = new Promise<null>((resolve) => {
+    timer = setTimeout(() => resolve(null), ms);
+  });
+  return Promise.race([
+    promise.then((res) => {
+      clearTimeout(timer);
+      return res;
+    }),
+    timeoutPromise,
+  ]).catch(() => null);
+}
+
+export async function getLatestAuditRunFromDb(
+  projectId?: string,
+  runId?: string
+): Promise<StructuredAnalysisResult | null> {
   const sql = getDb();
   if (!sql) return null;
 
+  const isUuid = (val?: string): boolean =>
+    !!val && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(val);
+
   try {
-    const rows = await sql`
-      SELECT raw_audit_json
-      FROM audit_runs
-      WHERE project_id = ${projectId}::uuid
-      ORDER BY created_at DESC
-      LIMIT 1;
-    `;
+    let rows: any[] | null = null;
+
+    // 1. If runId is provided, query by audit_run ID
+    if (runId) {
+      if (isUuid(runId)) {
+        rows = await withDbTimeout(sql`
+          SELECT raw_audit_json FROM audit_runs WHERE id = ${runId}::uuid LIMIT 1;
+        `);
+      }
+      if (!rows || rows.length === 0) {
+        rows = await withDbTimeout(sql`
+          SELECT ar.raw_audit_json
+          FROM audit_runs ar
+          JOIN audit_jobs aj ON aj.result_run_id = ar.id::text OR aj.id = ${runId}
+          ORDER BY ar.created_at DESC LIMIT 1;
+        `);
+      }
+    }
+
+    // 2. If projectId is provided and no rows found yet
+    if ((!rows || rows.length === 0) && projectId && projectId !== "sample-audit") {
+      if (isUuid(projectId)) {
+        rows = await withDbTimeout(sql`
+          SELECT raw_audit_json
+          FROM audit_runs
+          WHERE project_id = ${projectId}::uuid
+          ORDER BY created_at DESC
+          LIMIT 1;
+        `);
+      }
+      if (!rows || rows.length === 0) {
+        rows = await withDbTimeout(sql`
+          SELECT ar.raw_audit_json
+          FROM audit_runs ar
+          LEFT JOIN projects p ON p.id = ar.project_id
+          LEFT JOIN audit_jobs aj ON aj.result_run_id = ar.id::text
+          WHERE p.candidate_name ILIKE ${projectId} OR aj.project_id = ${projectId}
+          ORDER BY ar.created_at DESC
+          LIMIT 1;
+        `);
+      }
+    }
+
+    // 3. Fallback: If no run found yet, query the most recent completed audit run in the database
+    if (!rows || rows.length === 0) {
+      rows = await withDbTimeout(sql`
+        SELECT raw_audit_json
+        FROM audit_runs
+        ORDER BY created_at DESC
+        LIMIT 1;
+      `);
+    }
 
     if (rows && rows.length > 0 && rows[0].raw_audit_json) {
-      return rows[0].raw_audit_json as StructuredAnalysisResult;
+      const raw = rows[0].raw_audit_json;
+      return typeof raw === "string" ? JSON.parse(raw) : (raw as StructuredAnalysisResult);
     }
     return null;
   } catch (err: any) {
@@ -436,18 +548,27 @@ export async function createProjectInDb(params: {
   }
 }
 
-export async function listProjectsFromDb(organizationId: string): Promise<any[]> {
+export async function listProjectsFromDb(organizationId?: string): Promise<any[]> {
   const sql = getDb();
   if (!sql) return [];
 
   await ensureProjectsTable();
 
   try {
-    const rows = await sql`
-      SELECT * FROM projects
-      WHERE organization_id = ${organizationId}::uuid
-      ORDER BY created_at DESC;
-    `;
+    const isUuid = !!organizationId && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(organizationId);
+    let rows;
+    if (isUuid) {
+      rows = await sql`
+        SELECT * FROM projects
+        WHERE organization_id = ${organizationId}::uuid
+        ORDER BY created_at DESC;
+      `;
+    } else {
+      rows = await sql`
+        SELECT * FROM projects
+        ORDER BY created_at DESC;
+      `;
+    }
 
     return (rows || []).map((r: any) => ({
       id: String(r.id),
@@ -458,7 +579,7 @@ export async function listProjectsFromDb(organizationId: string): Promise<any[]>
       applicantType: r.applicant_type,
       status: r.status,
       currentScore: r.current_score || 0,
-      totalRuns: 0,
+      totalRuns: r.latest_run_id ? 1 : 0,
       activeRunId: r.latest_run_id || "",
       createdAt: r.created_at,
     }));

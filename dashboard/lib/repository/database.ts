@@ -2,12 +2,13 @@ import { AuditData, ReportMeta } from "@/types/audit";
 import { IAuditRepository, SearchResult } from "@/types/repository";
 import { ProjectModel, AuditRunSummary } from "@/types/saas";
 import { LocalFileSystemAuditRepository } from "./local";
+import { getLatestAuditRunFromDb } from "@/lib/db/neon";
 
 /**
  * DatabaseAuditRepository
  *
- * Implements IAuditRepository for relational/cloud backends (PostgreSQL, Supabase, Cloudflare R2).
- * Designed for Phase 1-2 productization. If database environment variables are not fully configured,
+ * Implements IAuditRepository for relational/cloud backends (PostgreSQL Neon).
+ * If database environment variables are not fully configured or no rows match,
  * it safely delegates to the local repository so zero existing features break.
  */
 export class DatabaseAuditRepository implements IAuditRepository {
@@ -16,60 +17,92 @@ export class DatabaseAuditRepository implements IAuditRepository {
 
   constructor() {
     this.fallbackRepo = new LocalFileSystemAuditRepository();
-    this.isConfigured = !!process.env.DATABASE_URL;
+    this.isConfigured = !!(process.env.DATABASE_URL || process.env.POSTGRES_URL);
   }
 
-  public getAuditData(projectId?: string, runId?: string): AuditData {
-    if (!this.isConfigured) {
-      return this.fallbackRepo.getAuditData();
+  public async getAuditData(projectId?: string, runId?: string): Promise<AuditData> {
+    if (this.isConfigured) {
+      try {
+        const fromDb = await getLatestAuditRunFromDb(projectId, runId);
+        if (fromDb) return fromDb as AuditData;
+      } catch (e) {
+        console.warn("[DatabaseAuditRepository] Error fetching from DB:", e);
+      }
     }
-    // Future database query: SELECT raw_audit_json FROM audit_runs WHERE project_id = $1 AND id = $2
     return this.fallbackRepo.getAuditData();
   }
 
-  public getAllReports(projectId?: string, runId?: string): ReportMeta[] {
-    if (!this.isConfigured) {
-      return this.fallbackRepo.getAllReports();
+  public async getAllReports(projectId?: string, runId?: string): Promise<ReportMeta[]> {
+    if (this.isConfigured) {
+      try {
+        const fromDb = await getLatestAuditRunFromDb(projectId, runId);
+        if (fromDb && fromDb.markdownReports) {
+          return Object.entries(fromDb.markdownReports).map(([filename, content]) => ({
+            slug: filename.replace(/\.md$/, "").toLowerCase(),
+            title: filename.replace(/\.md$/, "").replace(/-/g, " ").toUpperCase(),
+            filename,
+            description: `Forensic AI report generated for ${fromDb.metadata?.candidateName || fromDb.metadata?.documentOwner || "Applicant"}`,
+            category: "Forensic Analysis",
+            status: (fromDb.kpis.overallScore >= 70 ? "Passed" : "Critical") as any,
+            score: fromDb.kpis.overallScore,
+            icon: "FileText",
+            date: fromDb.metadata?.auditDate || new Date().toISOString().split("T")[0],
+            size: `${Math.round(content.length / 1024)} KB`,
+            content,
+          }));
+        }
+      } catch (e) {
+        console.warn("[DatabaseAuditRepository] Error fetching reports from DB:", e);
+      }
     }
-    // Future database query: SELECT slug, title, filename, description, category, status, score FROM report_documents WHERE audit_run_id = $1
     return this.fallbackRepo.getAllReports();
   }
 
-  public getReportBySlug(
+  public async getReportBySlug(
     slug: string,
     projectId?: string,
     runId?: string
-  ): { meta: ReportMeta; content: string } | null {
-    if (!this.isConfigured) {
-      return this.fallbackRepo.getReportBySlug(slug);
-    }
-    // Future database query: SELECT * FROM report_documents WHERE slug = $1 AND audit_run_id = $2
-    return this.fallbackRepo.getReportBySlug(slug);
+  ): Promise<{ meta: ReportMeta; content: string } | null> {
+    const reports = await this.getAllReports(projectId, runId);
+    const found = reports.find((r) => r.slug === slug || r.filename === slug || r.filename === `${slug}.md`);
+    if (!found) return null;
+    return {
+      meta: found,
+      content: found.content || "",
+    };
   }
 
-  public searchAllReports(
+  public async searchAllReports(
     query: string,
     projectId?: string,
     runId?: string
-  ): SearchResult[] {
-    if (!this.isConfigured) {
-      return this.fallbackRepo.searchAllReports(query);
+  ): Promise<SearchResult[]> {
+    const reports = await this.getAllReports(projectId, runId);
+    const q = query.toLowerCase();
+    const results: SearchResult[] = [];
+    for (const r of reports) {
+      const lines = (r.content || "").split("\n");
+      for (let i = 0; i < lines.length; i++) {
+        if (lines[i].toLowerCase().includes(q)) {
+          results.push({
+            slug: r.slug,
+            title: r.title,
+            filename: r.filename,
+            matchSnippet: lines[i].trim(),
+            matchLine: i + 1,
+          });
+          break;
+        }
+      }
     }
-    // Future full-text search: SELECT slug, title, ts_headline(...) FROM report_documents WHERE to_tsvector('english', content) @@ plainto_tsquery($1)
-    return this.fallbackRepo.searchAllReports(query);
+    return results;
   }
 
-  public listAuditRuns(projectId?: string): AuditRunSummary[] {
-    if (!this.isConfigured) {
-      return this.fallbackRepo.listAuditRuns();
-    }
+  public async listAuditRuns(projectId?: string): Promise<AuditRunSummary[]> {
     return this.fallbackRepo.listAuditRuns();
   }
 
-  public getProject(projectId?: string): ProjectModel | null {
-    if (!this.isConfigured) {
-      return this.fallbackRepo.getProject();
-    }
+  public async getProject(projectId?: string): Promise<ProjectModel | null> {
     return this.fallbackRepo.getProject();
   }
 }

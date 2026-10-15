@@ -206,6 +206,17 @@ export default function JobMonitorPage() {
             <div className="flex items-center gap-2">
               <Link
                 href={job.resultRunId ? `/dashboard?runId=${job.resultRunId}&projectId=${job.projectId}` : "/dashboard"}
+                onClick={() => {
+                  try {
+                    if (job.projectId) {
+                      document.cookie = `gt_active_project_id=${encodeURIComponent(job.projectId)}; path=/; max-age=2592000; SameSite=Lax`;
+                      localStorage.setItem("gt_active_proj", job.projectId);
+                    }
+                    if (job.resultRunId) {
+                      document.cookie = `gt_active_run_id=${encodeURIComponent(job.resultRunId)}; path=/; max-age=2592000; SameSite=Lax`;
+                    }
+                  } catch {}
+                }}
                 className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white shadow-md transition-colors flex items-center gap-1.5"
               >
                 <span>View Dashboard</span>
@@ -213,6 +224,17 @@ export default function JobMonitorPage() {
               </Link>
               <Link
                 href={job.resultRunId ? `/reports?runId=${job.resultRunId}&projectId=${job.projectId}` : "/reports"}
+                onClick={() => {
+                  try {
+                    if (job.projectId) {
+                      document.cookie = `gt_active_project_id=${encodeURIComponent(job.projectId)}; path=/; max-age=2592000; SameSite=Lax`;
+                      localStorage.setItem("gt_active_proj", job.projectId);
+                    }
+                    if (job.resultRunId) {
+                      document.cookie = `gt_active_run_id=${encodeURIComponent(job.resultRunId)}; path=/; max-age=2592000; SameSite=Lax`;
+                    }
+                  } catch {}
+                }}
                 className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition-colors flex items-center gap-1.5"
               >
                 <FileText className="w-3.5 h-3.5 text-blue-400" />

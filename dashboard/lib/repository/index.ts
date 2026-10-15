@@ -22,12 +22,14 @@ function createAuditRepository(): IAuditRepository {
 // Singleton repository instance
 export const auditRepository: IAuditRepository = createAuditRepository();
 
+import { getLatestAuditRunFromDb } from "@/lib/db/neon";
 import { createEmptyAuditData } from "@/lib/emptyAudit";
 
 /**
  * Backward-compatible helper functions matching existing lib/reports.ts API
  */
-export function getAuditData(projectId?: string, runId?: string): AuditData {
+export async function getAuditData(projectId?: string, runId?: string): Promise<AuditData> {
+  // 1. In-memory worker check
   if (runId) {
     const analysis = jobManager.getAnalysisForRun(runId);
     if (analysis) return analysis;
@@ -43,18 +45,66 @@ export function getAuditData(projectId?: string, runId?: string): AuditData {
     if (latest) return latest;
   }
 
-  // Explicit sample demonstration mode
+  // 2. Neon Database persistent check
+  try {
+    const fromDb = await getLatestAuditRunFromDb(projectId, runId);
+    if (fromDb) {
+      if (fromDb.markdownReports && (!fromDb.reports || fromDb.reports.length === 0)) {
+        fromDb.reports = Object.entries(fromDb.markdownReports).map(([filename, content]) => {
+          const slug = filename.replace(/\.md$/, "").toLowerCase();
+          return {
+            slug,
+            title: filename.replace(/\.md$/, "").replace(/-/g, " ").toUpperCase(),
+            filename,
+            description: `Forensic AI report generated for ${fromDb.metadata?.candidateName || fromDb.metadata?.documentOwner || "Applicant"}`,
+            category: "Forensic Analysis",
+            status: (fromDb.kpis.overallScore >= 70 ? "Passed" : "Critical") as any,
+            score: fromDb.kpis.overallScore,
+            icon: "FileText",
+            date: fromDb.metadata?.auditDate || new Date().toISOString().split("T")[0],
+            size: `${Math.round(content.length / 1024)} KB`,
+            content,
+          };
+        });
+      }
+      return fromDb as AuditData;
+    }
+  } catch (err) {
+    console.warn("[getAuditData] DB fetch notice:", err);
+  }
+
+  // 3. Explicit sample demonstration mode
+  if (projectId === "sample-audit" || runId === "sample" || process.env.STORAGE_DRIVER === "demo") {
+    const res = await auditRepository.getAuditData(projectId, runId);
+    return res as AuditData;
+  }
+
+  // 4. In production SaaS mode: default to the real, clean empty workspace
+  return createEmptyAuditData(projectId || "Candidate Application");
+}
+
+export function getAuditDataSync(projectId?: string, runId?: string): AuditData {
+  if (runId) {
+    const analysis = jobManager.getAnalysisForRun(runId);
+    if (analysis) return analysis;
+  }
+  if (projectId && projectId !== "sample-audit") {
+    const analysis = jobManager.getAnalysisForProject(projectId);
+    if (analysis) return analysis;
+  }
+  if (!projectId && !runId) {
+    const latest = jobManager.getLatestAnalysis();
+    if (latest) return latest;
+  }
   if (projectId === "sample-audit" || runId === "sample" || process.env.STORAGE_DRIVER === "demo") {
     const res = auditRepository.getAuditData(projectId, runId);
     return res as AuditData;
   }
-
-  // In production SaaS mode: default to the real, clean empty workspace
   return createEmptyAuditData(projectId || "Candidate Application");
 }
 
-export function getAllReports(projectId?: string, runId?: string): ReportMeta[] {
-  let targetAnalysis = null;
+export async function getAllReports(projectId?: string, runId?: string): Promise<ReportMeta[]> {
+  let targetAnalysis: any = null;
   if (runId) {
     targetAnalysis = jobManager.getAnalysisForRun(runId);
   } else if (projectId && projectId !== "sample-audit") {
@@ -63,19 +113,25 @@ export function getAllReports(projectId?: string, runId?: string): ReportMeta[] 
     targetAnalysis = jobManager.getLatestAnalysis();
   }
 
+  if (!targetAnalysis) {
+    try {
+      targetAnalysis = await getLatestAuditRunFromDb(projectId, runId);
+    } catch {}
+  }
+
   if (targetAnalysis && targetAnalysis.markdownReports) {
-    return Object.entries(targetAnalysis.markdownReports).map(([filename, content]) => {
+    return Object.entries(targetAnalysis.markdownReports).map(([filename, content]: [string, any]) => {
       const slug = filename.replace(/\.md$/, "").toLowerCase();
       return {
         slug,
         title: filename.replace(/\.md$/, "").replace(/-/g, " ").toUpperCase(),
         filename,
-        description: `Forensic AI report generated for ${targetAnalysis.metadata.candidateName || targetAnalysis.metadata.documentOwner || "Applicant"}`,
+        description: `Forensic AI report generated for ${targetAnalysis.metadata?.candidateName || targetAnalysis.metadata?.documentOwner || "Applicant"}`,
         category: "Forensic Analysis",
-        status: (targetAnalysis.kpis.overallScore >= 70 ? "Passed" : "Critical") as any,
-        score: targetAnalysis.kpis.overallScore,
+        status: ((targetAnalysis.kpis?.overallScore || 0) >= 70 ? "Passed" : "Critical") as any,
+        score: targetAnalysis.kpis?.overallScore || 0,
         icon: "FileText",
-        date: targetAnalysis.metadata.auditDate,
+        date: targetAnalysis.metadata?.auditDate || new Date().toISOString().split("T")[0],
         size: `${Math.round(content.length / 1024)} KB`,
         content,
       };
@@ -83,60 +139,51 @@ export function getAllReports(projectId?: string, runId?: string): ReportMeta[] 
   }
 
   if (projectId === "sample-audit" || runId === "sample" || process.env.STORAGE_DRIVER === "demo") {
-    const res = auditRepository.getAllReports(projectId, runId);
+    const res = await auditRepository.getAllReports(projectId, runId);
     return res as ReportMeta[];
   }
 
-  // Production SaaS mode: Return empty array so users see their real empty repository
   return [];
 }
 
-export function getReportBySlug(
+export async function getReportBySlug(
   slug: string,
   projectId?: string,
   runId?: string
-): { meta: ReportMeta; content: string } | null {
-  let targetAnalysis = null;
-  if (runId) {
-    targetAnalysis = jobManager.getAnalysisForRun(runId);
-  } else if (projectId && projectId !== "sample-audit") {
-    targetAnalysis = jobManager.getAnalysisForProject(projectId);
-  } else if (projectId !== "sample-audit" && runId !== "sample") {
-    targetAnalysis = jobManager.getLatestAnalysis();
-  }
-
-  if (targetAnalysis && targetAnalysis.markdownReports) {
-    for (const [filename, content] of Object.entries(targetAnalysis.markdownReports)) {
-      const fileSlug = filename.replace(/\.md$/, "").toLowerCase();
-      if (fileSlug === slug.toLowerCase()) {
-        const meta: ReportMeta = {
-          slug: fileSlug,
-          title: filename.replace(/\.md$/, "").replace(/-/g, " ").toUpperCase(),
-          filename,
-          description: `Forensic AI report generated for ${targetAnalysis.metadata.candidateName || targetAnalysis.metadata.documentOwner || "Applicant"}`,
-          category: "Forensic Analysis",
-          status: (targetAnalysis.kpis.overallScore >= 70 ? "Passed" : "Critical") as any,
-          score: targetAnalysis.kpis.overallScore,
-          icon: "FileText",
-          date: targetAnalysis.metadata.auditDate,
-          size: `${Math.round(content.length / 1024)} KB`,
-        };
-        return { meta, content };
-      }
-    }
-  }
-
-  const res = auditRepository.getReportBySlug(slug, projectId, runId);
-  return res as { meta: ReportMeta; content: string } | null;
+): Promise<{ meta: ReportMeta; content: string } | null> {
+  const reports = await getAllReports(projectId, runId);
+  const found = reports.find((r) => r.slug === slug || r.filename === slug || r.filename === `${slug}.md`);
+  if (!found) return null;
+  return {
+    meta: found,
+    content: found.content || "",
+  };
 }
 
-export function searchAllReports(
+export async function searchAllReports(
   query: string,
   projectId?: string,
   runId?: string
-): SearchResult[] {
-  const res = auditRepository.searchAllReports(query, projectId, runId);
-  return res as SearchResult[];
+): Promise<SearchResult[]> {
+  const reports = await getAllReports(projectId, runId);
+  const q = query.toLowerCase();
+  const results: SearchResult[] = [];
+  for (const r of reports) {
+    const lines = (r.content || "").split("\n");
+    for (let i = 0; i < lines.length; i++) {
+      if (lines[i].toLowerCase().includes(q)) {
+        results.push({
+          slug: r.slug,
+          title: r.title,
+          filename: r.filename,
+          matchSnippet: lines[i].trim(),
+          matchLine: i + 1,
+        });
+        break;
+      }
+    }
+  }
+  return results;
 }
 
 export function listAuditRuns(projectId?: string): AuditRunSummary[] {

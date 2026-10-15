@@ -15,8 +15,31 @@ import {
   CheckCircle,
 } from "lucide-react";
 
-export default function LetterForensicsPage() {
-  const audit = getAuditData();
+import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic";
+
+export default async function LetterForensicsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ sample?: string; projectId?: string; runId?: string }>;
+}) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const isSample = resolvedParams.sample === "true";
+  let targetProjectId = isSample ? "sample-audit" : resolvedParams.projectId;
+  let targetRunId = resolvedParams.runId;
+
+  if (!isSample && !targetProjectId) {
+    try {
+      const cookieStore = await cookies();
+      targetProjectId = cookieStore.get("gt_active_project_id")?.value;
+      if (!targetRunId) {
+        targetRunId = cookieStore.get("gt_active_run_id")?.value;
+      }
+    } catch {}
+  }
+
+  const audit = await getAuditData(targetProjectId, targetRunId);
   const { kpis, evidenceMatrix, topRefusalRisks, isEmpty } = audit;
 
   const isAuditEmpty = isEmpty || (kpis?.totalFilesAnalysed || 0) === 0;

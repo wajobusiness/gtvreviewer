@@ -49,7 +49,7 @@ const navigationItems = [
 export function Sidebar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user, activeRunId } = useAuth();
+  const { user, activeRunId, project } = useAuth();
   const isRun2 = activeRunId === "run-002";
 
   const isCandidate = user.role === "CANDIDATE";
@@ -127,14 +127,24 @@ export function Sidebar() {
               const isActive =
                 item.href === "/"
                   ? pathname === "/"
-                  : pathname === item.href || pathname.startsWith(item.href + "/");
+                  : pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href + "/"));
 
               const Icon = item.icon;
+              const isAuditPage =
+                item.href !== "/" &&
+                item.href !== "/projects" &&
+                item.href !== "/billing" &&
+                item.href !== "/settings";
+
+              const itemHref =
+                isAuditPage && project?.id
+                  ? `${item.href}?projectId=${encodeURIComponent(project.id)}${activeRunId ? `&runId=${encodeURIComponent(activeRunId)}` : ""}`
+                  : item.href;
 
               return (
                 <Link
                   key={item.name}
-                  href={item.href}
+                  href={itemHref}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
                     "flex items-center gap-3 px-3 py-2 rounded-lg text-xs font-medium transition-all group",

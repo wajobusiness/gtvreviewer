@@ -30,6 +30,10 @@ import {
   Lightbulb,
 } from "lucide-react";
 
+import { cookies } from "next/headers";
+
+export const dynamic = "force-dynamic";
+
 export default async function ExecutiveDashboardPage({
   searchParams,
 }: {
@@ -37,10 +41,20 @@ export default async function ExecutiveDashboardPage({
 }) {
   const resolvedParams = searchParams ? await searchParams : {};
   const isSample = resolvedParams.sample === "true";
-  const audit = getAuditData(
-    isSample ? "sample-audit" : resolvedParams.projectId,
-    resolvedParams.runId
-  );
+  let targetProjectId = isSample ? "sample-audit" : resolvedParams.projectId;
+  let targetRunId = resolvedParams.runId;
+
+  if (!isSample && !targetProjectId) {
+    try {
+      const cookieStore = await cookies();
+      targetProjectId = cookieStore.get("gt_active_project_id")?.value;
+      if (!targetRunId) {
+        targetRunId = cookieStore.get("gt_active_run_id")?.value;
+      }
+    } catch {}
+  }
+
+  const audit = await getAuditData(targetProjectId, targetRunId);
   const { metadata, kpis, radarChart, complianceBreakdown, timeline, topRefusalRisks, reports = [] } = audit;
 
   const hasAnalysis = kpis.totalFilesAnalysed > 0 || kpis.overallScore > 0;

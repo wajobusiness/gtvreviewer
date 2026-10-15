@@ -24,27 +24,30 @@ interface PageProps {
   searchParams?: Promise<{ sample?: string; projectId?: string; runId?: string }>;
 }
 
-export async function generateStaticParams() {
-  return [
-    { slug: "final-report" },
-    { slug: "evidence-matrix" },
-    { slug: "requirements" },
-    { slug: "letter-forensics" },
-    { slug: "consistency-check" },
-    { slug: "panel-simulation" },
-    { slug: "executive_audit_summary" },
-  ];
-}
+export const dynamic = "force-dynamic";
+
+import { cookies } from "next/headers";
 
 export default async function ReportAnalysisPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
   const resolvedSearchParams = searchParams ? await searchParams : {};
-  let reportData = await Promise.resolve(
-    getReportBySlug(slug, resolvedSearchParams.projectId, resolvedSearchParams.runId)
-  );
+  let targetProjectId = resolvedSearchParams.projectId;
+  let targetRunId = resolvedSearchParams.runId;
+
+  if (!targetProjectId) {
+    try {
+      const cookieStore = await cookies();
+      targetProjectId = cookieStore.get("gt_active_project_id")?.value;
+      if (!targetRunId) {
+        targetRunId = cookieStore.get("gt_active_run_id")?.value;
+      }
+    } catch {}
+  }
+
+  let reportData = await getReportBySlug(slug, targetProjectId, targetRunId);
 
   if (!reportData) {
-    reportData = await Promise.resolve(getReportBySlug(slug, "sample-audit"));
+    reportData = await getReportBySlug(slug, "sample-audit");
   }
 
   if (!reportData) {
@@ -66,7 +69,7 @@ export default async function ReportAnalysisPage({ params, searchParams }: PageP
   const wordCount = content.split(/\s+/).length;
   const readTimeMin = Math.max(1, Math.ceil(wordCount / 220));
 
-  const audit = getAuditData(resolvedSearchParams.projectId, resolvedSearchParams.runId);
+  const audit = await getAuditData(targetProjectId, targetRunId);
 
   // Determine metadata summary based on report slug and active audit
   const getAiSummary = (slug: string) => {

@@ -107,7 +107,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                     projData.projects.find((p: any) => p.id === savedActiveProj) ||
                     projData.projects[0];
                   setCurrentProjectId(target.id);
+                  if (target.activeRunId) {
+                    setActiveRunId(target.activeRunId);
+                  }
                   localStorage.setItem("gt_user_projects", JSON.stringify(projData.projects));
+                  try {
+                    document.cookie = `gt_active_project_id=${encodeURIComponent(target.id)}; path=/; max-age=2592000; SameSite=Lax`;
+                    if (target.activeRunId) {
+                      document.cookie = `gt_active_run_id=${encodeURIComponent(target.activeRunId)}; path=/; max-age=2592000; SameSite=Lax`;
+                    }
+                  } catch {}
                 }
               }
             } catch (pErr) {
@@ -209,19 +218,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const switchProject = (projectId: string) => {
     setCurrentProjectId(projectId);
+    const target = projects.find((p) => p.id === projectId);
     const runs = auditRunsByProject[projectId] || [];
-    if (runs.length > 0) {
-      setActiveRunId(runs[0].id);
+    const runId = target?.activeRunId || (runs.length > 0 ? runs[0].id : "");
+    if (runId) {
+      setActiveRunId(runId);
     } else {
       setActiveRunId("");
     }
     try {
       localStorage.setItem("gt_active_proj", projectId);
+      document.cookie = `gt_active_project_id=${encodeURIComponent(projectId)}; path=/; max-age=2592000; SameSite=Lax`;
+      if (runId) {
+        document.cookie = `gt_active_run_id=${encodeURIComponent(runId)}; path=/; max-age=2592000; SameSite=Lax`;
+      } else {
+        document.cookie = `gt_active_run_id=; path=/; max-age=0; SameSite=Lax`;
+      }
     } catch {}
   };
 
   const switchAuditRun = (runId: string) => {
     setActiveRunId(runId);
+    try {
+      document.cookie = `gt_active_run_id=${encodeURIComponent(runId)}; path=/; max-age=2592000; SameSite=Lax`;
+    } catch {}
   };
 
   const switchUserRole = (role: UserRole) => {

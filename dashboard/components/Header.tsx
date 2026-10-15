@@ -11,6 +11,8 @@ import { RiskBadge } from "./RiskBadge";
 import Link from "next/link";
 import { GitCompare, FileCheck2 } from "lucide-react";
 
+import { useAuth } from "@/lib/context/AuthContext";
+
 interface HeaderProps {
   documentOwner?: string;
   auditDate?: string;
@@ -22,6 +24,13 @@ export function Header({
   auditDate = "2026-10-13",
   currentStatus = "CRITICAL REFUSAL RISK",
 }: HeaderProps) {
+  const { project } = useAuth();
+  const effectiveStatus = project?.status === "ready_to_submit"
+    ? "READY TO SUBMIT"
+    : project?.status === "action_required"
+    ? "CRITICAL REFUSAL RISK"
+    : currentStatus;
+
   return (
     <header className="sticky top-0 z-20 w-full border-b border-slate-800/80 bg-slate-950/80 backdrop-blur-md px-4 sm:px-6 py-2.5">
       <div className="flex items-center justify-between gap-4">
@@ -32,8 +41,8 @@ export function Header({
           <div className="hidden xl:block">
             <AuditRunSwitcher />
           </div>
-          {currentStatus && currentStatus !== "NO_ANALYSIS" && (
-            <RiskBadge status={currentStatus} size="sm" className="hidden lg:inline-flex" />
+          {effectiveStatus && effectiveStatus !== "NO_ANALYSIS" && (
+            <RiskBadge status={effectiveStatus} size="sm" className="hidden lg:inline-flex" />
           )}
         </div>
 

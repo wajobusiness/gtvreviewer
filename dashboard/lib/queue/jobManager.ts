@@ -347,7 +347,7 @@ Summary: Detailed proof piece demonstrating eligibility against 2026 Tech Nation
     this.analysesByProjectId.set(job.projectId, analysis);
 
     // Persist to Neon PostgreSQL if DATABASE_URL is available
-    await saveAuditRunToDb({
+    const savedRunUuid = await saveAuditRunToDb({
       projectId: job.projectId,
       candidateName: job.candidateName,
       visaRoute: job.visaRoute,
@@ -355,7 +355,13 @@ Summary: Detailed proof piece demonstrating eligibility against 2026 Tech Nation
       analysis,
     }).catch((err) => {
       console.warn("[JobManager] Database save non-fatal error:", err?.message);
+      return null;
     });
+
+    if (savedRunUuid) {
+      job.resultRunId = savedRunUuid;
+      this.analysesByRunId.set(savedRunUuid, analysis);
+    }
 
     this.addLog(job, "success", "Reports generated: FINAL-REPORT.md, evidence-matrix.md, letter-forensics.md...", "stage-reports");
     job.stages[6].progress = 100;

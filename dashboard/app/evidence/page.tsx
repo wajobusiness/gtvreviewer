@@ -4,9 +4,31 @@ import { getAuditData } from "@/lib/reports";
 import { EvidenceTable } from "@/components/EvidenceTable";
 import { MetricCard } from "@/components/MetricCard";
 import { Table, ShieldAlert, CheckCircle2, FileText, ArrowRight } from "lucide-react";
+import { cookies } from "next/headers";
 
-export default function EvidenceMatrixPage() {
-  const audit = getAuditData();
+export const dynamic = "force-dynamic";
+
+export default async function EvidenceMatrixPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ sample?: string; projectId?: string; runId?: string }>;
+}) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const isSample = resolvedParams.sample === "true";
+  let targetProjectId = isSample ? "sample-audit" : resolvedParams.projectId;
+  let targetRunId = resolvedParams.runId;
+
+  if (!isSample && !targetProjectId) {
+    try {
+      const cookieStore = await cookies();
+      targetProjectId = cookieStore.get("gt_active_project_id")?.value;
+      if (!targetRunId) {
+        targetRunId = cookieStore.get("gt_active_run_id")?.value;
+      }
+    } catch {}
+  }
+
+  const audit = await getAuditData(targetProjectId, targetRunId);
   const { evidenceMatrix, kpis } = audit;
 
   const criticalCount = evidenceMatrix.filter((e) => e.status === "Critical").length;

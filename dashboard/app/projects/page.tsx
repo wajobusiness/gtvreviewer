@@ -252,26 +252,29 @@ export default function ProjectsPage() {
 
                 {/* Action */}
                 <div className="mt-5 pt-3 border-t border-slate-800 flex items-center justify-between">
-                  {isActive ? (
+                  <div className="flex items-center gap-2">
                     <Link
-                      href="/dashboard"
+                      href={`/dashboard?projectId=${encodeURIComponent(p.id)}${p.activeRunId ? `&runId=${encodeURIComponent(p.activeRunId)}` : ""}`}
+                      onClick={() => switchProject(p.id)}
                       className="inline-flex items-center gap-1.5 text-xs font-semibold text-blue-400 hover:text-blue-300 transition-colors"
                     >
                       <span>View Live Dashboard</span>
                       <ArrowRight className="w-3.5 h-3.5" />
                     </Link>
-                  ) : (
-                    <button
-                      onClick={() => switchProject(p.id)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-300 hover:text-white transition-colors cursor-pointer"
-                    >
-                      <span>Switch to this Candidate</span>
-                      <ArrowRight className="w-3.5 h-3.5" />
-                    </button>
-                  )}
+                    {!isActive && (
+                      <button
+                        onClick={() => switchProject(p.id)}
+                        className="text-[10px] text-slate-400 hover:text-slate-200 transition-colors font-mono"
+                        title="Set as active workspace candidate"
+                      >
+                        (Activate)
+                      </button>
+                    )}
+                  </div>
 
                   <Link
-                    href="/upload"
+                    href={`/upload?projectId=${encodeURIComponent(p.id)}`}
+                    onClick={() => switchProject(p.id)}
                     className="text-xs text-muted-foreground hover:text-slate-200 transition-colors font-mono"
                   >
                     Upload Evidence
