@@ -41,19 +41,6 @@ interface UploadedDocument {
   contentText?: string;
 }
 
-const criterionOptions = [
-  "Mandatory Criterion (Leadership / Recognition)",
-  "Optional Criterion 1 (Innovation / IP)",
-  "Optional Criterion 2 (Work Outside Immediate Occupation)",
-  "Optional Criterion 3 (Commercial / Technical Impact)",
-  "Optional Criterion 4 (Academic Research)",
-  "Standalone Letter of Recommendation 1",
-  "Standalone Letter of Recommendation 2",
-  "Standalone Letter of Recommendation 3",
-  "Candidate CV / Resume (Max 2 Pages)",
-  "Personal Statement (Max 1,000 Words)",
-];
-
 export default function EvidenceUploadPage() {
   const router = useRouter();
   const { project, addProject } = useAuth();
@@ -85,17 +72,8 @@ export default function EvidenceUploadPage() {
   const [driveInspectionSuccess, setDriveInspectionSuccess] = useState<string | null>(null);
   const [driveInspectionError, setDriveInspectionError] = useState<string | null>(null);
 
-  const totalEvidencePieces = documents.filter(
-    (d) =>
-      !d.criterion.includes("CV") &&
-      !d.criterion.includes("Personal Statement") &&
-      !d.criterion.includes("Letter of Recommendation")
-  ).length;
-
+  const totalEvidencePieces = documents.length;
   const totalPages = documents.reduce((acc, curr) => acc + curr.estimatedPages, 0);
-  const standaloneLettersCount = documents.filter((d) =>
-    d.criterion.includes("Letter of Recommendation")
-  ).length;
 
   const handleFiles = async (files: FileList | null) => {
     if (!files || files.length === 0) return;
@@ -175,12 +153,6 @@ export default function EvidenceUploadPage() {
 
   const removeDocument = (id: string) => {
     setDocuments((prev) => prev.filter((d) => d.id !== id));
-  };
-
-  const updateCriterion = (id: string, criterion: string) => {
-    setDocuments((prev) =>
-      prev.map((d) => (d.id === id ? { ...d, criterion } : d))
-    );
   };
 
   const handleInspectDrive = async () => {
@@ -398,34 +370,34 @@ export default function EvidenceUploadPage() {
       {/* Portfolio Budget Counters */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <MetricCard
-          title="Evidence Pieces"
-          value={`${totalEvidencePieces} / 10`}
+          title="Uploaded Portfolio Files"
+          value={`${totalEvidencePieces} Pieces`}
           subtitle="Max 10 per Tech Nation rule"
           icon="FileCheck2"
           variant={totalEvidencePieces > 10 ? "danger" : "default"}
-          badge={totalEvidencePieces > 10 ? "EXCEEDED" : `${10 - totalEvidencePieces} Left`}
+          badge={totalEvidencePieces > 10 ? "EXCEEDED" : `${Math.max(0, 10 - totalEvidencePieces)} Left`}
         />
         <MetricCard
           title="Total Page Budget"
-          value={`${totalPages} / 30`}
+          value={`${totalPages} Pages`}
           subtitle="Max 3 pages per piece"
           icon="Layers"
           variant={totalPages > 30 ? "danger" : "default"}
         />
         <MetricCard
-          title="Standalone Rec Letters"
-          value={`${standaloneLettersCount} / 3`}
-          subtitle="3 mandatory letters required"
-          icon="FileText"
-          variant={standaloneLettersCount < 3 ? "danger" : "success"}
-          badge={standaloneLettersCount < 3 ? "DEFICIT" : "MET"}
+          title="Autonomous AI Scanner"
+          value="Enabled"
+          subtitle="Headline, text & screenshot arrows"
+          icon="Sparkles"
+          variant="success"
+          badge="ACTIVE"
         />
         <MetricCard
-          title="Statutory Status"
-          value={totalEvidencePieces <= 10 && standaloneLettersCount >= 3 ? "Valid" : "Pending"}
-          subtitle="Document caps compliance"
+          title="Caseworker Rigor"
+          value="Hostile"
+          subtitle="Disapproval patterns cross-check"
           icon="ShieldAlert"
-          variant={totalEvidencePieces <= 10 && standaloneLettersCount >= 3 ? "success" : "warning"}
+          variant="warning"
         />
       </div>
 
@@ -610,17 +582,10 @@ export default function EvidenceUploadPage() {
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <select
-                    value={doc.criterion}
-                    onChange={(e) => updateCriterion(doc.id, e.target.value)}
-                    className="px-2.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-[11px] text-slate-300 focus:outline-none focus:border-blue-500 max-w-xs truncate"
-                  >
-                    {criterionOptions.map((opt) => (
-                      <option key={opt} value={opt}>
-                        {opt}
-                      </option>
-                    ))}
-                  </select>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-blue-950/40 border border-blue-500/30 text-[11px] font-mono text-blue-300">
+                    <Sparkles className="w-3.5 h-3.5 text-blue-400" />
+                    <span>Autonomous AI Classification</span>
+                  </span>
 
                   <button
                     onClick={() => removeDocument(doc.id)}

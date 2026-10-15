@@ -121,6 +121,8 @@ export interface IndividualDocumentAudit {
   documentId: string;
   documentName: string;
   category: string;
+  detectedHeadline?: string;
+  autonomousCategoryReasoning?: string;
   pageCount: number;
   pageLimitExceeded: boolean;
   verdict: "CRITICAL REFUSAL RISK" | "BORDERLINE / WEAK" | "COMPLIANT / STRONG";
@@ -131,6 +133,9 @@ export interface IndividualDocumentAudit {
     screenshotCount?: number;
     details: string;
     verificationStatus: "VERIFIED_PUBLIC" | "UNVERIFIED_INTERNAL" | "NO_SCREENSHOTS" | "SUSPICIOUS";
+    hasCalloutArrows?: boolean;
+    hasDescriptiveWriteup?: boolean;
+    calloutAnalysis?: string;
   };
   personalAttribution: {
     isPersonallyAttributable: boolean;
@@ -146,9 +151,23 @@ export interface IndividualDocumentAudit {
     isProductLed: boolean;
     details: string;
   };
+  rejectionPatternMatch?: {
+    patternName: string;
+    sourceForumOrCase: string;
+    precedentQuote: string;
+    remediationDirective: string;
+  };
   fatalDefects: string[];
   exactQuotes: string[];
   remediationAdvice: string;
+}
+
+export interface RejectionPrecedent {
+  pattern: string;
+  forumSource: string;
+  caseworkerQuote: string;
+  impactOnCandidate: string;
+  remediation: string;
 }
 
 export interface AuditData {
@@ -162,6 +181,7 @@ export interface AuditData {
   panelVotes: PanelVote[];
   evidenceMatrix: EvidenceRow[];
   individualDocumentAudits?: IndividualDocumentAudit[];
+  rejectionPrecedents?: RejectionPrecedent[];
   reports?: ReportMeta[];
   isEmpty?: boolean;
 }

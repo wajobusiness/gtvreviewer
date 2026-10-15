@@ -32,7 +32,6 @@ const navigationItems = [
   { name: "Executive Summary", href: "/summary", icon: ShieldAlert },
   { name: "Candidates & Portfolios", href: "/projects", icon: FolderKanban },
   { name: "Evidence Uploader", href: "/upload", icon: UploadCloud },
-  { name: "Version Compare", href: "/compare", icon: GitCompare },
   { name: "Solicitor Bundle", href: "/export", icon: FileCheck2 },
   { name: "Billing & Plans", href: "/billing", icon: CreditCard },
   { name: "Workspace Settings", href: "/settings", icon: Settings },

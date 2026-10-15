@@ -38,11 +38,6 @@ export function PublicFooter() {
                 </Link>
               </li>
               <li>
-                <Link href="/compare" className="hover:text-white transition-colors">
-                  Version Diff Engine
-                </Link>
-              </li>
-              <li>
                 <Link href="/export" className="hover:text-white transition-colors">
                   Solicitor Dossier
                 </Link>

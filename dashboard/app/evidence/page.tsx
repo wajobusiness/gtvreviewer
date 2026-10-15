@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getAuditData } from "@/lib/reports";
 import { EvidenceTable } from "@/components/EvidenceTable";
 import { MetricCard } from "@/components/MetricCard";
-import { Table, ShieldAlert, CheckCircle2, FileText, ArrowRight, AlertTriangle } from "lucide-react";
+import { Table, ShieldAlert, CheckCircle2, FileText, ArrowRight, AlertTriangle, Sparkles } from "lucide-react";
 import { cookies } from "next/headers";
 
 export const dynamic = "force-dynamic";
@@ -206,6 +206,18 @@ export default async function EvidenceMatrixPage({
                         <div className="text-xs text-slate-400">
                           {doc.category}
                         </div>
+                        {doc.detectedHeadline && (
+                          <div className="flex items-center gap-1.5 text-xs text-blue-300 font-mono mt-1">
+                            <Sparkles className="w-3 h-3 text-blue-400 shrink-0" />
+                            <span className="font-semibold text-slate-300">Scanned Headline:</span>
+                            <span className="truncate">&quot;{doc.detectedHeadline}&quot;</span>
+                          </div>
+                        )}
+                        {doc.autonomousCategoryReasoning && (
+                          <div className="text-[11px] text-slate-400 italic font-sans mt-0.5">
+                            AI Classification Rationale: {doc.autonomousCategoryReasoning}
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex items-center gap-2 text-xs font-mono">
@@ -264,6 +276,27 @@ export default async function EvidenceMatrixPage({
                         <p className="text-slate-300 font-sans text-xs leading-relaxed">
                           {doc.screenshotAnalysis.details}
                         </p>
+                        {doc.screenshotAnalysis.hasScreenshots && (
+                          <div className="pt-2 border-t border-slate-800/80 space-y-1 text-[11px] font-mono">
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-400">Callout Arrows / Highlights:</span>
+                              <span className={doc.screenshotAnalysis.hasCalloutArrows ? "text-emerald-400 font-bold" : "text-amber-400 font-bold"}>
+                                {doc.screenshotAnalysis.hasCalloutArrows ? "✓ PRESENT" : "✗ MISSING ARROWS"}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <span className="text-slate-400">Narrative Caption:</span>
+                              <span className={doc.screenshotAnalysis.hasDescriptiveWriteup ? "text-emerald-400 font-bold" : "text-amber-400 font-bold"}>
+                                {doc.screenshotAnalysis.hasDescriptiveWriteup ? "✓ PRESENT" : "✗ MISSING WRITE-UP"}
+                              </span>
+                            </div>
+                            {doc.screenshotAnalysis.calloutAnalysis && (
+                              <p className="text-slate-400 italic font-sans text-[10px] pt-0.5">
+                                {doc.screenshotAnalysis.calloutAnalysis}
+                              </p>
+                            )}
+                          </div>
+                        )}
                       </div>
 
                       {/* Corroboration & Product-Led */}
@@ -301,6 +334,28 @@ export default async function EvidenceMatrixPage({
                       </div>
                     )}
 
+                    {/* Real-World Rejection Pattern Match */}
+                    {doc.rejectionPatternMatch && (
+                      <div className="mt-3 p-3.5 rounded-lg bg-amber-950/30 border border-amber-500/30 space-y-1.5 text-xs">
+                        <div className="text-amber-300 font-bold flex items-center justify-between">
+                          <span className="flex items-center gap-1.5">
+                            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                            Refusal Precedent Match: {doc.rejectionPatternMatch.patternName}
+                          </span>
+                          <span className="text-[10px] font-mono text-amber-400/80">
+                            {doc.rejectionPatternMatch.sourceForumOrCase}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-slate-300 italic bg-amber-950/40 p-2.5 rounded border border-amber-500/20 font-sans">
+                          &quot;{doc.rejectionPatternMatch.precedentQuote}&quot;
+                        </div>
+                        <div className="text-[11px] text-amber-200">
+                          <strong className="text-white font-mono">Remediation Directive: </strong>
+                          {doc.rejectionPatternMatch.remediationDirective}
+                        </div>
+                      </div>
+                    )}
+
                     <div className="mt-3 p-3 rounded-lg bg-slate-950/80 border border-slate-800 text-xs">
                       <span className="text-blue-400 font-bold font-mono">Remediation Action: </span>
                       <span className="text-slate-200">{doc.remediationAdvice}</span>
@@ -309,6 +364,45 @@ export default async function EvidenceMatrixPage({
                 );
               })}
             </div>
+
+            {/* Real-World Tech Nation Refusal Case Law & Forum Precedents */}
+            {audit.rejectionPrecedents && audit.rejectionPrecedents.length > 0 && (
+              <div className="mt-8 rounded-xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-base font-bold text-foreground tracking-tight flex items-center gap-2">
+                      <ShieldAlert className="w-4 h-4 text-red-400" />
+                      Tech Nation Refusal Precedents Archive (discourse.tnvisaforum.org & Immigration Boards)
+                    </h3>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Verified rejection patterns and caseworker rulings from candidates who submitted complete 10-document dossiers
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                  {audit.rejectionPrecedents.map((prec, pIdx) => (
+                    <div key={pIdx} className="p-4 rounded-xl border border-slate-800 bg-slate-950/60 space-y-2">
+                      <div className="font-bold text-white flex items-center justify-between gap-2">
+                        <span className="text-red-400">#{pIdx + 1} {prec.pattern}</span>
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-900 border border-slate-800 text-slate-400 shrink-0">
+                          {prec.forumSource.split("/")[0].trim()}
+                        </span>
+                      </div>
+                      <p className="text-slate-300 italic text-[11px] bg-red-950/20 p-2.5 rounded border border-red-500/20">
+                        &quot;{prec.caseworkerQuote}&quot;
+                      </p>
+                      <div className="text-[11px] text-slate-400">
+                        <strong className="text-slate-300">Impact: </strong>{prec.impactOnCandidate}
+                      </div>
+                      <div className="text-[11px] text-blue-300">
+                        <strong className="text-blue-400">Remediation: </strong>{prec.remediation}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       )}

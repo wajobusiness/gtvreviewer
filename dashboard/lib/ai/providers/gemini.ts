@@ -108,6 +108,7 @@ export class GeminiAiProvider implements IAiProvider {
         topRefusalRisks: parsed.topRefusalRisks || [],
         evidenceMatrix: parsed.evidenceMatrix || [],
         individualDocumentAudits: parsed.individualDocumentAudits || [],
+        rejectionPrecedents: parsed.rejectionPrecedents || [],
         summary: {
           overallScore: Number(parsed.overallScore) || 50,
           currentStatus: parsed.currentStatus || "BORDERLINE",

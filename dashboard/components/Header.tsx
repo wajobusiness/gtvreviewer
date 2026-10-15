@@ -49,13 +49,6 @@ export function Header({
         {/* Right: Actions, Search, Theme & Profile */}
         <div className="flex items-center gap-2 sm:gap-2.5">
           <Link
-            href="/compare"
-            className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-slate-300 hover:text-white bg-slate-900 border border-slate-800 hover:border-slate-700 transition-colors"
-          >
-            <GitCompare className="w-3.5 h-3.5 text-blue-400" />
-            <span className="hidden md:inline">Compare</span>
-          </Link>
-          <Link
             href="/export"
             className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-emerald-400 hover:text-emerald-300 bg-emerald-950/30 border border-emerald-500/30 hover:border-emerald-500/50 transition-colors"
           >

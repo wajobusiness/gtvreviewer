@@ -55,7 +55,7 @@ export default async function ExecutiveDashboardPage({
   }
 
   const audit = await getAuditData(targetProjectId, targetRunId);
-  const { metadata, kpis, radarChart, complianceBreakdown, timeline, topRefusalRisks, reports = [] } = audit;
+  const { metadata, kpis, radarChart, complianceBreakdown, timeline, topRefusalRisks, rejectionPrecedents = [], reports = [] } = audit;
 
   const hasAnalysis = kpis.totalFilesAnalysed > 0 || kpis.overallScore > 0;
 
@@ -395,6 +395,46 @@ export default async function ExecutiveDashboardPage({
 
                 <div className="shrink-0 font-mono text-[11px] text-red-400/90 bg-red-950/40 p-2 rounded border border-red-500/20 max-w-xs truncate">
                   &quot;{risk.quote}&quot;
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* 5a. Internet Disapproval & Precedent Cross-Check (discourse.tnvisaforum.org) */}
+      {rejectionPrecedents && rejectionPrecedents.length > 0 && (
+        <div className="rounded-xl border border-amber-500/30 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-base font-bold text-foreground tracking-tight flex items-center gap-2">
+                <ShieldAlert className="w-4 h-4 text-amber-400" />
+                Internet Disapproval & Precedent Cross-Check (discourse.tnvisaforum.org)
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Evidence cross-examined against documented reasons why caseworkers rejected complete 10-document submissions
+              </p>
+            </div>
+            <Link
+              href="/evidence"
+              className="text-xs font-semibold text-amber-400 hover:text-amber-300 flex items-center gap-1"
+            >
+              Evidence Matrix View <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+            {rejectionPrecedents.slice(0, 4).map((prec, pIdx) => (
+              <div key={pIdx} className="p-3.5 rounded-lg border border-amber-500/20 bg-amber-950/15 space-y-1.5">
+                <div className="font-bold text-white flex items-center justify-between">
+                  <span className="text-amber-300 font-mono text-xs">{prec.pattern}</span>
+                  <span className="text-[10px] font-mono text-slate-400">{prec.forumSource.split("/")[0].trim()}</span>
+                </div>
+                <p className="text-slate-300 italic text-[11px] bg-amber-950/30 p-2 rounded border border-amber-500/20">
+                  &quot;{prec.caseworkerQuote}&quot;
+                </p>
+                <div className="text-[11px] text-slate-400">
+                  <strong className="text-amber-400">Risk Mitigation: </strong>{prec.remediation}
                 </div>
               </div>
             ))}

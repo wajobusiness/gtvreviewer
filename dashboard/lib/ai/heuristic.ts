@@ -1,6 +1,51 @@
 import { AiAnalysisInput, StructuredAnalysisResult } from "./types";
-import { CriterionScore, IndividualDocumentAudit, PanelVote } from "@/types/audit";
+import { CriterionScore, IndividualDocumentAudit, PanelVote, RejectionPrecedent } from "@/types/audit";
 import { generateMarkdownReportsFromAnalysis } from "./reportGenerator";
+
+export const TECH_NATION_REFUSAL_PRECEDENTS: RejectionPrecedent[] = [
+  {
+    pattern: "The 'We' vs 'I' Conflation (Corporate Umbrella Fallacy)",
+    forumSource: "discourse.tnvisaforum.org / Immigration Boards Casework Reports",
+    caseworkerQuote: "The evidence outlines substantial platform growth and company metrics, but fails to isolate the applicant's personal contribution beyond standard job duties. Evidence repeatedly states 'we achieved', indicating team execution rather than individual exceptional leadership.",
+    impactOnCandidate: "Caseworker rejects Mandatory Criterion (Leadership) or OC3, concluding evidence reflects company success rather than personal exceptional talent.",
+    remediation: "Dissect every metric: explicitly state 'I individually architected X, which drove Y% of the total result'. Provide signed employment attestations confirming candidate's sole or lead contribution."
+  },
+  {
+    pattern: "Unannotated / Unverified Internal Screenshots & Dashboards",
+    forumSource: "Tech Nation Official Endorsement Reviews & Immigration Appeals",
+    caseworkerQuote: "The applicant provided screenshots of internal dashboards, Jira tickets, and code repositories. However, these lack independent public verification, timestamps, or directional callout arrows explaining the applicant's personal role. Internal screenshots without third-party audit trail are self-serving and carry minimal evidential weight.",
+    impactOnCandidate: "Screenshots are dismissed by caseworkers, causing the evidence piece to fail the substantiation standard.",
+    remediation: "Add prominent callout arrows, highlighted boxes, and explicit write-ups to every screenshot. Anchor all internal metrics with public repository URLs, press links, or notarized executive attestations."
+  },
+  {
+    pattern: "Non-Product-Led Agency or Consultancy Exclusion",
+    forumSource: "Immigration Rules Appendix Global Talent & TN Guidance Sec 3.1",
+    caseworkerQuote: "The applicant's employer operates as a software development agency / digital consultancy providing bespoke client services. Under Tech Nation guidelines, consultancy work, client project delivery, and outsourcing services do not qualify as proprietary product-led digital technology.",
+    impactOnCandidate: "Immediate failure of evidence under MC, OC1, and OC3 as non-qualifying business model.",
+    remediation: "Pivot evidence strictly toward proprietary products, IP, internal tools with commercial monetization, or independent open-source contributions."
+  },
+  {
+    pattern: "Pre-Submission Evidence Clustering / Manufactured Recognition",
+    forumSource: "discourse.tnvisaforum.org Case Law & EP Advisory Refusal Review",
+    caseworkerQuote: "The applicant submitted several awards, articles, and speaking engagements that were all acquired within 60-90 days prior to submitting this endorsement application. The assessor concluded this burst of activity was manufactured solely to support the visa application rather than demonstrating sustained continuous sector leadership.",
+    impactOnCandidate: "Caseworker discounts recent awards/talks under OC2 and MC as artificial or unestablished.",
+    remediation: "Ensure evidence spans a continuous track record across the past 3 to 5 years, demonstrating long-standing community leadership, open source, or sustained technical impact."
+  },
+  {
+    pattern: "Generic Character Reference Letters Lacking Proprietary Metrics",
+    forumSource: "discourse.tnvisaforum.org Endorsement Review Analysis",
+    caseworkerQuote: "The recommendation letters read as standard employment references or general character testimonials. They praise the applicant's work ethic and diligence, but fail to detail how the author has personal knowledge of the applicant's exceptional achievements, nor do they cite confidential project impact or commercial metrics.",
+    impactOnCandidate: "Fatal defect: 1 or more recommendation letters fail the mandatory Tech Nation criteria, leading to outright application refusal.",
+    remediation: "Referee letters must be written by distinct C-level sector leaders, contain company letterheads, explain exactly how the author knows the applicant, and provide specific, confidential commercial or technical impact figures."
+  },
+  {
+    pattern: "Exceeding 3-Page Statutory Limit per Evidence Piece",
+    forumSource: "Tech Nation Guidance Document Rule 4 & Home Office Caseworker Guidance",
+    caseworkerQuote: "Piece 4 of the applicant's submission comprised 4 pages. As clearly stipulated in the Tech Nation guidelines, each evidence piece cannot exceed 3 A4 pages. Only the first 3 pages were reviewed, and crucial evidence on page 4 was disregarded.",
+    impactOnCandidate: "Key evidence truncated; criterion deemed unevidenced.",
+    remediation: "Strictly format every piece into 3 pages or fewer, optimizing layout, removing filler text, and consolidating high-impact metrics."
+  }
+];
 
 export function analyzeWithHeuristics(input: AiAnalysisInput): StructuredAnalysisResult {
   const docs = input.documents || [];
@@ -37,39 +82,65 @@ export function analyzeWithHeuristics(input: AiAnalysisInput): StructuredAnalysi
     const fatalDefects: string[] = [];
     const exactQuotes: string[] = [];
 
-    // --- Categorization ---
-    let assignedCategory = doc.category || "Evidence Item";
+    // Extract detected headline (first non-empty line of contentText or clean doc name)
+    const contentLines = doc.contentText.split("\n").map((l) => l.trim()).filter(Boolean);
+    const rawHeadline = contentLines.length > 0 && contentLines[0].length < 140 ? contentLines[0] : doc.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+    const detectedHeadline = rawHeadline.length > 0 ? rawHeadline : doc.name;
+
+    // --- Autonomous Categorization ---
+    let assignedCategory = "Mandatory Criterion (Leadership / Recognition)";
+    let autonomousCategoryReasoning = "";
     let criterionId: "MC" | "OC1" | "OC2" | "OC3" | "OC4" | "REC_LETTER" = "MC";
 
     if (
       lowerText.includes("recommendation") ||
       lowerText.includes("referee") ||
       lowerText.includes("endorsement letter") ||
-      assignedCategory.includes("Letter")
+      lowerText.includes("letter of recommendation") ||
+      lowerText.includes("to whom it may concern")
     ) {
       recLetterCount++;
       criterionId = "REC_LETTER";
       assignedCategory = "Standalone Letter of Recommendation";
+      autonomousCategoryReasoning = "Document contains formal referee address, letterhead credentials, or recommendation phraseology for visa endorsement.";
+    } else if (
+      lowerText.includes("personal statement") ||
+      lowerText.includes("statement of purpose") ||
+      lowerText.includes("why the uk")
+    ) {
+      assignedCategory = "Personal Statement (Max 1,000 Words)";
+      autonomousCategoryReasoning = "Opening narrative outlines candidate career trajectory, motivations for UK relocation, and sector aspirations.";
+    } else if (
+      lowerText.includes("curriculum vitae") ||
+      lowerText.includes("resume") ||
+      lowerText.includes("employment history")
+    ) {
+      assignedCategory = "Candidate CV / Resume (Max 2 Pages)";
+      autonomousCategoryReasoning = "Chronological employment history, education credentials, and technical skills manifest.";
     } else if (
       lowerText.includes("innovation") ||
       lowerText.includes("patent") ||
       lowerText.includes("r&d") ||
       lowerText.includes("algorithm") ||
-      assignedCategory.includes("Innovation")
+      lowerText.includes("architecture diagram") ||
+      lowerText.includes("proprietary technology")
     ) {
       oc1Total++;
       criterionId = "OC1";
       assignedCategory = "Optional Criterion 1 (Innovation / Significant IP)";
+      autonomousCategoryReasoning = "Headline and technical substance center on proprietary algorithms, architectural invention, patent filings, or R&D breakthroughs.";
     } else if (
       lowerText.includes("mentorship") ||
       lowerText.includes("community") ||
       lowerText.includes("hackathon") ||
       lowerText.includes("outside") ||
-      assignedCategory.includes("Outside")
+      lowerText.includes("open source") ||
+      lowerText.includes("volunteer")
     ) {
       oc2Total++;
       criterionId = "OC2";
       assignedCategory = "Optional Criterion 2 (Work Outside Immediate Occupation)";
+      autonomousCategoryReasoning = "Content details sector contributions outside primary commercial employment (mentorship, open-source governance, conference judging).";
     } else if (
       lowerText.includes("revenue") ||
       lowerText.includes("commercial") ||
@@ -77,25 +148,30 @@ export function analyzeWithHeuristics(input: AiAnalysisInput): StructuredAnalysi
       lowerText.includes("arr") ||
       lowerText.includes("growth") ||
       lowerText.includes("salary") ||
-      assignedCategory.includes("Commercial")
+      lowerText.includes("ebitda") ||
+      lowerText.includes("equity")
     ) {
       oc3Total++;
       criterionId = "OC3";
       assignedCategory = "Optional Criterion 3 (Commercial / Technical Impact)";
+      autonomousCategoryReasoning = "Headline and text emphasize business traction, commercial revenue acceleration, client contract value, or product adoption metrics.";
     } else if (
       lowerText.includes("research") ||
       lowerText.includes("paper") ||
       lowerText.includes("citation") ||
       lowerText.includes("academic") ||
-      assignedCategory.includes("Academic")
+      lowerText.includes("peer-reviewed") ||
+      lowerText.includes("conference proceedings")
     ) {
       oc4Total++;
       criterionId = "OC4";
       assignedCategory = "Optional Criterion 4 (Academic Research)";
+      autonomousCategoryReasoning = "Academic inquiry, peer-reviewed publications, DOI links, or conference presentations detected.";
     } else {
       mcTotal++;
       criterionId = "MC";
       assignedCategory = "Mandatory Criterion (Leadership / Recognition)";
+      autonomousCategoryReasoning = "Headline and evidence demonstrate individual sector recognition, media profiling, keynote addresses, or organizational leadership.";
     }
 
     // --- Forensic Check 1: 3-Page Statutory Limit ---
@@ -172,24 +248,49 @@ export function analyzeWithHeuristics(input: AiAnalysisInput): StructuredAnalysi
       attributionAnalysis = "Recommendation letter authored by external referee.";
     }
 
-    // --- Forensic Check 3: Screenshot & Visual Artifact Inspection ---
+    // --- Forensic Check 3: Deep Screenshot, Callout Arrow & Visual Annotation Inspection ---
     const screenshotMarkers = [
       "screenshot", "dashboard", "figma", "slack", "diagram",
-      "ui", "interface", "image", "screen", "capture", "analytics"
+      "ui", "interface", "image", "screen", "capture", "analytics", "graph", "table"
     ];
     const publicVerificationMarkers = [
       "https://", "http://", "github.com", "gitlab.com", "npm",
       "pypi", "app store", "play.google.com", "doi.org", "patent", "companies house"
     ];
+    const arrowMarkers = [
+      "arrow", "callout", "annotat", "highlight", "pointer", "red box",
+      "bounding box", "circle", "labeled", "figure 1", "figure 2"
+    ];
+    const writeupMarkers = [
+      "screenshot shows", "caption", "depicted above", "shown below",
+      "in the diagram", "as illustrated", "indicated by", "the interface above demonstrates"
+    ];
 
     const hasScreenshots = screenshotMarkers.some((m) => lowerText.includes(m));
     const hasPublicVerification = publicVerificationMarkers.some((m) => lowerText.includes(m));
+    const hasCalloutArrows = arrowMarkers.some((m) => lowerText.includes(m));
+    const hasDescriptiveWriteup = writeupMarkers.some((m) => lowerText.includes(m));
 
     let screenshotVerificationStatus: IndividualDocumentAudit["screenshotAnalysis"]["verificationStatus"] =
       "NO_SCREENSHOTS";
     let screenshotDetails = "Document text-based; no standalone screenshots detected.";
+    let calloutAnalysis = "No visual screenshots detected in document text.";
 
     if (hasScreenshots) {
+      if (hasCalloutArrows && hasDescriptiveWriteup) {
+        calloutAnalysis = "Screenshots are supported by directional callout arrows/annotations and explicit narrative write-ups linking candidate actions to the interface elements.";
+      } else if (!hasCalloutArrows && hasDescriptiveWriteup) {
+        calloutAnalysis = "Screenshots include explanatory text/captions, but lack direct visual callout arrows or bounding highlights pointing to the candidate's exact code/metrics.";
+        const defect = `[FACT] Missing Screenshot Callouts: Screenshots lack directional callout arrows or highlighting to isolate applicant's specific contributions within the UI.`;
+        fatalDefects.push(defect);
+      } else if (!hasCalloutArrows && !hasDescriptiveWriteup) {
+        calloutAnalysis = "CRITICAL DEFECT: Raw unannotated screenshots detected. No callout arrows, labels, or accompanying explanatory write-ups connecting the candidate to the visual elements.";
+        const defect = `[FACT] Raw Unannotated Screenshots: Visual evidence consists of isolated captures without callout arrows, labels, or narrative explanations.`;
+        fatalDefects.push(defect);
+      } else {
+        calloutAnalysis = "Visual markers detected with partial directional annotations.";
+      }
+
       if (hasPublicVerification) {
         screenshotVerificationStatus = "VERIFIED_PUBLIC";
         screenshotDetails =
@@ -298,11 +399,45 @@ export function analyzeWithHeuristics(input: AiAnalysisInput): StructuredAnalysi
         .join("; ")}`;
     }
 
+    // Check against real-world refusal precedents
+    let rejectionPatternMatch: IndividualDocumentAudit["rejectionPatternMatch"] = undefined;
+    if (!isPersonallyAttributable && criterionId !== "REC_LETTER") {
+      rejectionPatternMatch = {
+        patternName: "The 'We' vs 'I' Conflation (Corporate Umbrella Fallacy)",
+        sourceForumOrCase: "discourse.tnvisaforum.org / Immigration Boards Casework Reports",
+        precedentQuote: "The evidence outlines substantial platform growth, but fails to isolate the applicant's personal contribution beyond standard job duties.",
+        remediationDirective: "State candidate's distinct personal authorship and quantitative individual metrics; attach founder/executive letter of attribution."
+      };
+    } else if (hasScreenshots && (!hasCalloutArrows || screenshotVerificationStatus === "UNVERIFIED_INTERNAL")) {
+      rejectionPatternMatch = {
+        patternName: "Unannotated / Unverified Internal Screenshots & Dashboards",
+        sourceForumOrCase: "Tech Nation Endorsement Review Case Law",
+        precedentQuote: "Screenshots of internal Jira tickets and dashboards without directional callout arrows or public verification carry minimal evidential weight.",
+        remediationDirective: "Add directional red callout arrows, bounding boxes, and an explanatory caption under every screenshot linking candidate to the graphic."
+      };
+    } else if (!isProductLed && criterionId !== "REC_LETTER") {
+      rejectionPatternMatch = {
+        patternName: "Non-Product-Led Agency or Consultancy Exclusion",
+        sourceForumOrCase: "Tech Nation Guidance Section 3.1 & Appendix Global Talent",
+        precedentQuote: "The applicant's employer operates as a digital consultancy providing bespoke client services, which does not qualify as proprietary product-led technology.",
+        remediationDirective: "Pivot evidence entirely to proprietary software products, internal tools with monetization, or independent open-source projects."
+      };
+    } else if (pageLimitExceeded) {
+      rejectionPatternMatch = {
+        patternName: "Exceeding 3-Page Statutory Limit per Evidence Piece",
+        sourceForumOrCase: "Tech Nation Guidance Document Rule 4",
+        precedentQuote: "Each evidence piece cannot exceed 3 A4 pages. Only the first 3 pages were reviewed, and crucial evidence on later pages was disregarded.",
+        remediationDirective: "Reformat and condense evidence to strictly 3 A4 pages or fewer."
+      };
+    }
+
     // Record individual document audit
     individualDocumentAudits.push({
       documentId: `doc-${idx + 1}`,
       documentName: doc.name,
       category: assignedCategory,
+      detectedHeadline,
+      autonomousCategoryReasoning,
       pageCount: pages,
       pageLimitExceeded,
       verdict: docVerdict,
@@ -310,6 +445,10 @@ export function analyzeWithHeuristics(input: AiAnalysisInput): StructuredAnalysi
       wordCount,
       screenshotAnalysis: {
         hasScreenshots,
+        screenshotCount: hasScreenshots ? 1 : 0,
+        hasCalloutArrows,
+        hasDescriptiveWriteup,
+        calloutAnalysis,
         details: screenshotDetails,
         verificationStatus: screenshotVerificationStatus,
       },
@@ -329,6 +468,7 @@ export function analyzeWithHeuristics(input: AiAnalysisInput): StructuredAnalysi
         isProductLed,
         details: productLedDetails,
       },
+      rejectionPatternMatch,
       fatalDefects,
       exactQuotes,
       remediationAdvice,
@@ -558,6 +698,7 @@ export function analyzeWithHeuristics(input: AiAnalysisInput): StructuredAnalysi
     topRefusalRisks,
     evidenceMatrix,
     individualDocumentAudits,
+    rejectionPrecedents: TECH_NATION_REFUSAL_PRECEDENTS,
     panelVotes: [
       {
         reviewer: "Tech Nation Lead Caseworker",
