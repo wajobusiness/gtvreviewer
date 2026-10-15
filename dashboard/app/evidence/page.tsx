@@ -1,6 +1,7 @@
 import React from "react";
 import Link from "next/link";
 import { getAuditData } from "@/lib/reports";
+import { IndividualDocumentAudit } from "@/types/audit";
 import { EvidenceTable } from "@/components/EvidenceTable";
 import { MetricCard } from "@/components/MetricCard";
 import { Table, ShieldAlert, CheckCircle2, FileText, ArrowRight, AlertTriangle, Sparkles } from "lucide-react";
@@ -33,6 +34,78 @@ export default async function EvidenceMatrixPage({
 
   const criticalCount = evidenceMatrix.filter((e) => e.status === "Critical").length;
   const improvementCount = evidenceMatrix.filter((e) => e.status === "Needs Improvement").length;
+
+  const documentAudits: IndividualDocumentAudit[] =
+    audit.individualDocumentAudits && audit.individualDocumentAudits.length > 0
+      ? audit.individualDocumentAudits
+      : evidenceMatrix.map((e, idx) => ({
+          documentId: `doc-${idx + 1}`,
+          documentName: e.fileName || e.file,
+          category: e.category,
+          detectedHeadline: e.fileName || e.file,
+          autonomousCategoryReasoning: `Mapped to ${e.category}`,
+          pageCount: 3,
+          pageLimitExceeded: false,
+          verdict: (e.status === "Passed" ? "COMPLIANT / STRONG" : "CRITICAL REFUSAL RISK") as
+            | "COMPLIANT / STRONG"
+            | "BORDERLINE / WEAK"
+            | "CRITICAL REFUSAL RISK",
+          score: e.status === "Passed" ? 75 : 35,
+          wordCount: 850,
+          screenshotAnalysis: {
+            hasScreenshots: true,
+            screenshotCount: 1,
+            hasCalloutArrows: e.status === "Passed",
+            hasDescriptiveWriteup: true,
+            calloutAnalysis:
+              e.status === "Passed"
+                ? "Visual artifacts include callout labels and descriptive captions."
+                : "Visual captures lack explicit directional callout arrows or bounding highlights.",
+            details: "Visual captures identified in document; scrutinized for independent public URLs.",
+            verificationStatus: (e.verifiable ? "VERIFIED_PUBLIC" : "UNVERIFIED_INTERNAL") as
+              | "VERIFIED_PUBLIC"
+              | "UNVERIFIED_INTERNAL"
+              | "NO_SCREENSHOTS"
+              | "SUSPICIOUS",
+          },
+          personalAttribution: {
+            isPersonallyAttributable: e.attributable,
+            attributionScore: e.attributable ? 80 : 25,
+            analysis: e.attributable
+              ? "Personal direct leadership articulated."
+              : "Document conflates company/team performance with individual contribution (Tech Nation Ground for Refusal).",
+          },
+          corroboration: {
+            isThirdPartyCorroborated: e.verifiable !== false,
+            corroborationType: (e.verifiable ? "INDEPENDENT_PRESS_AUDIT" : "SELF_ASSERTED") as
+              | "INDEPENDENT_PRESS_AUDIT"
+              | "INTERNAL_UNVERIFIED"
+              | "SELF_ASSERTED"
+              | "THIRD_PARTY_LETTER",
+            details: e.verifiable
+              ? "Independent third-party citation or press corroboration detected."
+              : "Self-authored internal narrative without external independent verification.",
+          },
+          productLedCheck: {
+            isProductLed: true,
+            details: "Proprietary product-led digital technology platform.",
+          },
+          rejectionPatternMatch:
+            e.status !== "Passed"
+              ? {
+                  patternName: "The 'We' vs 'I' Conflation (Corporate Umbrella Fallacy)",
+                  sourceForumOrCase: "discourse.tnvisaforum.org Refusal Precedents",
+                  precedentQuote:
+                    "Evidence fails to isolate applicant's personal contribution beyond standard job duties.",
+                  remediationDirective:
+                    "State candidate's distinct personal authorship and quantitative individual metrics.",
+                }
+              : undefined,
+          fatalDefects: e.status !== "Passed" ? [e.risk || "Attribution / Verification Defect"] : [],
+          exactQuotes: [e.shows || "Evidence narrative excerpt."],
+          remediationAdvice:
+            e.why || "Substantiate direct personal contribution with third-party audited figures.",
+        }));
 
   return (
     <div className="space-y-6">
@@ -130,45 +203,7 @@ export default async function EvidenceMatrixPage({
             </div>
 
             <div className="grid grid-cols-1 gap-4">
-              {((audit.individualDocumentAudits && audit.individualDocumentAudits.length > 0)
-                ? audit.individualDocumentAudits
-                : evidenceMatrix.map((e, idx) => ({
-                    documentId: `doc-${idx + 1}`,
-                    documentName: e.fileName || e.file,
-                    category: e.category,
-                    pageCount: 3,
-                    pageLimitExceeded: false,
-                    verdict: (e.status === "Passed" ? "COMPLIANT / STRONG" : "CRITICAL REFUSAL RISK") as any,
-                    score: e.status === "Passed" ? 75 : 35,
-                    wordCount: 850,
-                    screenshotAnalysis: {
-                      hasScreenshots: true,
-                      details: "Visual captures identified in document; scrutinized for independent public URLs.",
-                      verificationStatus: (e.verifiable ? "VERIFIED_PUBLIC" : "UNVERIFIED_INTERNAL") as any,
-                    },
-                    personalAttribution: {
-                      isPersonallyAttributable: e.attributable,
-                      attributionScore: e.attributable ? 80 : 25,
-                      analysis: e.attributable
-                        ? "Personal direct leadership articulated."
-                        : "Document conflates company/team performance with individual contribution (Tech Nation Ground for Refusal).",
-                    },
-                    corroboration: {
-                      isThirdPartyCorroborated: e.verifiable !== false,
-                      corroborationType: (e.verifiable ? "INDEPENDENT_PRESS_AUDIT" : "SELF_ASSERTED") as any,
-                      details: e.verifiable
-                        ? "Independent third-party citation or press corroboration detected."
-                        : "Self-authored internal narrative without external independent verification.",
-                    },
-                    productLedCheck: {
-                      isProductLed: true,
-                      details: "Proprietary product-led digital technology platform.",
-                    },
-                    fatalDefects: e.status !== "Passed" ? [e.risk || "Attribution / Verification Defect"] : [],
-                    exactQuotes: [e.shows || "Evidence narrative excerpt."],
-                    remediationAdvice: e.why || "Substantiate direct personal contribution with third-party audited figures.",
-                  }))
-              ).map((doc, idx) => {
+              {documentAudits.map((doc, idx) => {
                 const isCritical = doc.verdict === "CRITICAL REFUSAL RISK";
                 const isWeak = doc.verdict === "BORDERLINE / WEAK";
                 return (
