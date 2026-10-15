@@ -270,6 +270,19 @@ export async function getJobFromDb(jobId: string): Promise<any | null> {
     `;
     if (!rows || rows.length === 0) return null;
     const r = rows[0];
+    let analysisResult = null;
+    if (r.result_run_id) {
+      const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(r.result_run_id);
+      if (isUuid) {
+        const runRows = await sql`
+          SELECT raw_audit_json FROM audit_runs WHERE id = ${r.result_run_id}::uuid LIMIT 1;
+        `.catch(() => []);
+        if (runRows && runRows.length > 0 && runRows[0].raw_audit_json) {
+          analysisResult = typeof runRows[0].raw_audit_json === "string" ? JSON.parse(runRows[0].raw_audit_json) : runRows[0].raw_audit_json;
+        }
+      }
+    }
+
     return {
       id: r.id,
       projectId: r.project_id,
@@ -286,6 +299,7 @@ export async function getJobFromDb(jobId: string): Promise<any | null> {
       finalScore: r.final_score,
       finalStatus: r.final_status,
       resultRunId: r.result_run_id,
+      analysisResult,
       error: r.error_message,
       createdAt: r.created_at,
     };

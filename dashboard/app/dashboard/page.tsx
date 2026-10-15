@@ -27,6 +27,7 @@ import {
   UploadCloud,
   FolderOpen,
   Check,
+  Lightbulb,
 } from "lucide-react";
 
 export default async function ExecutiveDashboardPage({
@@ -359,7 +360,7 @@ export default async function ExecutiveDashboardPage({
           </div>
 
           <div className="space-y-2.5">
-            {topRefusalRisks.slice(0, 5).map((risk) => (
+            {topRefusalRisks.map((risk) => (
               <div
                 key={risk.rank}
                 className="p-3.5 rounded-lg border border-red-500/20 bg-red-950/15 flex flex-col md:flex-row md:items-center justify-between gap-3 text-xs"
@@ -374,7 +375,7 @@ export default async function ExecutiveDashboardPage({
                   </div>
                   <p className="text-slate-400 line-clamp-1">{risk.impact}</p>
                   <div className="text-[11px] font-mono text-slate-500">
-                    {risk.file} • Page {risk.page}
+                    Rule: <strong className="text-slate-300">{risk.rule}</strong> • {risk.file} • Page {risk.page}
                   </div>
                 </div>
 
@@ -386,6 +387,69 @@ export default async function ExecutiveDashboardPage({
           </div>
         </div>
       )}
+
+      {/* 5b. Prioritized Remediation Recommendations Card */}
+      <div className="rounded-xl border border-blue-500/30 bg-slate-900/50 p-6 backdrop-blur-md shadow-sm space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-base font-bold text-foreground tracking-tight flex items-center gap-2">
+              <Lightbulb className="w-4 h-4 text-blue-400" />
+              Strategic Remediation Recommendations & Roadmap
+            </h3>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              Definitive corrective actions required to elevate your endorsement probability before Home Office submission
+            </p>
+          </div>
+          <Link
+            href="/summary"
+            className="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center gap-1"
+          >
+            Executive Summary & Roadmap <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+          <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/50 space-y-2">
+            <div className="font-bold text-foreground flex items-center gap-2">
+              <span className="w-5 h-5 rounded-md bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-mono">1</span>
+              <span>Statutory Page Cap Compliance</span>
+            </div>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              Ensure every submitted evidence piece (PDF, Word, or image scan) is trimmed to a strict maximum of 3 A4 pages. Caseworkers summarily disregard any pages exceeding this statutory threshold.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/50 space-y-2">
+            <div className="font-bold text-foreground flex items-center gap-2">
+              <span className="w-5 h-5 rounded-md bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-mono">2</span>
+              <span>Recommendation Letters Protocol</span>
+            </div>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              Secure exactly 3 standalone letters from verifiable C-suite digital technology leaders. Each letter must detail how the referee knows you, author credentials, and verify your leadership achievements.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/50 space-y-2">
+            <div className="font-bold text-foreground flex items-center gap-2">
+              <span className="w-5 h-5 rounded-md bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-mono">3</span>
+              <span>Commercial & Metric Corroboration</span>
+            </div>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              Every financial claim, revenue impact (ARR/MRR), or high salary metric must be supported by official third-party documentary evidence (tax returns, employment agreements, or audited accounts).
+            </p>
+          </div>
+
+          <div className="p-4 rounded-xl border border-slate-800 bg-slate-950/50 space-y-2">
+            <div className="font-bold text-foreground flex items-center gap-2">
+              <span className="w-5 h-5 rounded-md bg-blue-500/20 text-blue-400 text-xs flex items-center justify-center font-mono">4</span>
+              <span>Attribution & Deception Safeguard</span>
+            </div>
+            <p className="text-slate-300 text-[11px] leading-relaxed">
+              Verify that team awards, press features, and patents explicitly cite the candidate by name. Tech Nation rejects collective organizational accomplishments unless individual contribution is proven.
+            </p>
+          </div>
+        </div>
+      </div>
 
       {/* 6. Recent Audit Reports Section */}
       <div className="space-y-4">

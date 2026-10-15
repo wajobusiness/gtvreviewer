@@ -251,6 +251,15 @@ test("Google Drive Ingestion: parses and validates public Google Drive folder li
   const fileResult = extractGoogleDriveId(fileUrl);
   assert.equal(fileResult.type, "file");
   assert.equal(fileResult.id, "1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs");
+
+  // Verify multi-format document criterion inference
+  const { inferCriterionFromFilename } = await import("../lib/drive.ts");
+  assert.equal(inferCriterionFromFilename("Recommendation_Letter_CTO.pdf"), "Standalone Letter of Recommendation");
+  assert.equal(inferCriterionFromFilename("Patent_Algorithm_Architecture.docx"), "Optional Criterion 1 (Innovation)");
+  assert.equal(inferCriterionFromFilename("Speaking_Conference_Keynote.png"), "Optional Criterion 2 (Work Outside Immediate Occupation)");
+  assert.equal(inferCriterionFromFilename("Commercial_ARR_Growth_Metrics.txt"), "Optional Criterion 3 (Commercial / Technical Impact)");
+  assert.equal(inferCriterionFromFilename("Academic_Research_Paper_Citations.pdf"), "Optional Criterion 4 (Academic Research)");
+  assert.equal(inferCriterionFromFilename("Tech_Leadership_Board_Role.pdf"), "Mandatory Criterion (Leadership / Recognition)");
 });
 
 test("Security & Auth Engine: validates PBKDF2 password hashing and session signature integrity", async () => {

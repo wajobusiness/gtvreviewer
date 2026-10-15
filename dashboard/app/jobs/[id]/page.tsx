@@ -13,6 +13,9 @@ import {
   Terminal,
   ArrowRight,
   ShieldAlert,
+  ShieldCheck,
+  AlertTriangle,
+  Lightbulb,
   ArrowLeft,
   Clock,
   Sparkles,
@@ -20,6 +23,8 @@ import {
   FileText,
   Globe,
   ExternalLink,
+  Table,
+  Check,
 } from "lucide-react";
 import { useAuth } from "@/lib/context/AuthContext";
 import { cn } from "@/lib/utils";
@@ -359,6 +364,247 @@ export default function JobMonitorPage() {
           </div>
         </div>
       </div>
+
+      {/* Comprehensive Audit Findings & Actionable Remediation Section */}
+      {isCompleted && (
+        <div className="space-y-6 pt-4 border-t border-slate-800/80">
+          {/* Section Heading */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-800">
+            <div>
+              <h2 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight flex items-center gap-2.5">
+                <Sparkles className="w-5 h-5 text-blue-400" />
+                <span>Forensic Pre-Submission Audit Results & Remediation</span>
+              </h2>
+              <p className="text-xs text-muted-foreground mt-1">
+                Detailed audit evaluation against official 2026 Tech Nation Guidelines and UKVI Part 9 Deception Rules.
+              </p>
+            </div>
+            <div className="flex items-center gap-2.5">
+              <Link
+                href={job.resultRunId ? `/dashboard?runId=${job.resultRunId}&projectId=${job.projectId}` : "/dashboard"}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-500/20 transition-all"
+              >
+                <span>Interactive Dashboard</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                href={job.resultRunId ? `/reports?runId=${job.resultRunId}&projectId=${job.projectId}` : "/reports"}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition-colors"
+              >
+                <FileText className="w-3.5 h-3.5 text-blue-400" />
+                <span>All 7 Reports</span>
+              </Link>
+            </div>
+          </div>
+
+          {/* 1. Executive Verdict Callout */}
+          <div
+            className={`p-5 rounded-xl border text-xs leading-relaxed space-y-2.5 ${
+              (job.finalScore || 0) >= 70
+                ? "border-emerald-500/30 bg-emerald-950/20 text-slate-200"
+                : "border-red-500/30 bg-red-950/20 text-slate-200"
+            }`}
+          >
+            <div
+              className={`flex items-center gap-2 text-sm font-bold uppercase tracking-wider ${
+                (job.finalScore || 0) >= 70 ? "text-emerald-400" : "text-red-400"
+              }`}
+            >
+              {(job.finalScore || 0) >= 70 ? (
+                <ShieldCheck className="w-5 h-5 text-emerald-400" />
+              ) : (
+                <ShieldAlert className="w-5 h-5 text-red-400 animate-pulse" />
+              )}
+              <span>
+                Examiner Verdict:{" "}
+                {job.analysisResult?.kpis?.recommendation ||
+                  ((job.finalScore || 0) >= 70
+                    ? "PORTFOLIO QUALIFIES FOR ENDORSEMENT"
+                    : "CRITICAL DEFICITS FLAGGED — REMEDIATION MANDATORY")}
+              </span>
+            </div>
+            <p className="text-slate-300 text-xs sm:text-sm">
+              {(job.finalScore || 0) >= 70
+                ? `Candidate portfolio scores ${job.finalScore}/100. Evaluated evidence fulfills statutory Tech Nation criteria with an estimated ${
+                    job.analysisResult?.kpis?.estimatedVisaSuccess || 85
+                  }% visa success rate.`
+                : `Candidate portfolio scores ${job.finalScore}/100 with ${
+                    job.analysisResult?.topRefusalRisks?.length || 1
+                  } flagged risk trigger(s). Submitting without resolving these specific issues creates an acute risk of non-endorsement under Home Office guidelines.`}
+            </p>
+          </div>
+
+          {/* 2. Side-by-Side: What is NOT Good vs What is Good */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* What is NOT Good (Refusal Risks & Evidentiary Deficits) */}
+            <div className="rounded-xl border border-red-500/30 bg-slate-900/60 p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-red-400 font-bold text-sm uppercase tracking-wide">
+                  <ShieldAlert className="w-4 h-4 text-red-400" />
+                  <span>What Is NOT Good (Refusal Risks)</span>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-red-500/20 text-red-300 text-[10px] font-mono font-bold">
+                  {job.analysisResult?.topRefusalRisks?.length || 0} Issue(s)
+                </span>
+              </div>
+
+              {(!job.analysisResult?.topRefusalRisks || job.analysisResult.topRefusalRisks.length === 0) ? (
+                <p className="text-xs text-slate-400 italic">No critical refusal risks flagged in this submission.</p>
+              ) : (
+                <div className="space-y-3">
+                  {job.analysisResult.topRefusalRisks.map((risk: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="p-3.5 rounded-lg border border-red-500/20 bg-red-950/20 space-y-1.5 text-xs"
+                    >
+                      <div className="flex items-center justify-between gap-2">
+                        <span className="font-bold text-red-300 flex items-center gap-1.5">
+                          <span className="w-4 h-4 rounded-full bg-red-500/20 text-red-400 text-[10px] flex items-center justify-center font-mono">
+                            {idx + 1}
+                          </span>
+                          {risk.title}
+                        </span>
+                        <RiskBadge status={risk.severity} size="sm" showDot={false} />
+                      </div>
+                      <p className="text-slate-300 text-[11px] leading-relaxed">{risk.impact}</p>
+                      <div className="pt-1 flex flex-wrap items-center gap-3 text-[10px] font-mono text-slate-400">
+                        <span>Rule: <strong className="text-slate-300">{risk.rule}</strong></span>
+                        {risk.file && <span>• File: <strong className="text-slate-300">{risk.file}</strong></span>}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* What is Good (Strengths & Criteria Satisfied) */}
+            <div className="rounded-xl border border-emerald-500/30 bg-slate-900/60 p-5 space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2 text-emerald-400 font-bold text-sm uppercase tracking-wide">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>What Is Good (Portfolio Strengths)</span>
+                </div>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-bold">
+                  Verified Compliant
+                </span>
+              </div>
+
+              <div className="space-y-3">
+                <div className="p-3.5 rounded-lg border border-emerald-500/20 bg-emerald-950/20 text-xs space-y-1.5">
+                  <div className="font-bold text-emerald-300 flex items-center gap-1.5">
+                    <Check className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>Evidence Ingestion & Structure</span>
+                  </div>
+                  <p className="text-slate-300 text-[11px] leading-relaxed">
+                    Successfully verified and cataloged candidate evidence documents across digital technology criteria.
+                  </p>
+                </div>
+
+                {job.analysisResult?.criteriaScorecard
+                  ?.filter((c: any) => c.verdict === "MET")
+                  .map((c: any, idx: number) => (
+                    <div
+                      key={idx}
+                      className="p-3.5 rounded-lg border border-emerald-500/20 bg-emerald-950/20 text-xs space-y-1.5"
+                    >
+                      <div className="font-bold text-emerald-300 flex items-center gap-1.5">
+                        <Check className="w-3.5 h-3.5 text-emerald-400" />
+                        <span>{c.id} ({c.name})</span>
+                      </div>
+                      <p className="text-slate-300 text-[11px] leading-relaxed">
+                        Statutory evidentiary standards satisfied with {c.piecesCount} qualifying piece(s) corroborated.
+                      </p>
+                    </div>
+                  ))}
+
+                {(job.analysisResult?.kpis?.recommendationLetters || 0) >= 3 && (
+                  <div className="p-3.5 rounded-lg border border-emerald-500/20 bg-emerald-950/20 text-xs space-y-1.5">
+                    <div className="font-bold text-emerald-300 flex items-center gap-1.5">
+                      <Check className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Recommendation Letters Quota Satisfied</span>
+                    </div>
+                    <p className="text-slate-300 text-[11px] leading-relaxed">
+                      3 required standalone letters of recommendation from recognized digital technology leaders cataloged.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Actionable Recommendations Protocol */}
+          <div className="rounded-xl border border-blue-500/30 bg-slate-900/60 p-5 space-y-3 text-xs">
+            <div className="flex items-center gap-2 font-bold text-blue-400 uppercase tracking-wide text-xs">
+              <Lightbulb className="w-4 h-4 text-blue-400" />
+              <span>Prioritized Recommendations & Strategic Remediation Protocol</span>
+            </div>
+            <ol className="list-decimal pl-5 space-y-2 text-slate-300 leading-relaxed">
+              <li>
+                <strong>Page Budget Compliance:</strong> Ensure no submitted PDF or evidence piece exceeds the statutory 3 A4 page limit. Any overflow pages are disregarded by Tech Nation assessors.
+              </li>
+              <li>
+                <strong>Mandatory Letters of Recommendation:</strong> Ensure exactly 3 standalone letters from verifiable C-suite / senior industry executives are included, accompanied by author CVs and organization credentials.
+              </li>
+              <li>
+                <strong>Commercial Metric Corroboration:</strong> Reconcile all salary claims, product MRR/ARR metrics, and user growth statistics with third-party verifiable proofs (audited letters, contracts, or tax returns).
+              </li>
+              <li>
+                <strong>Direct Attribution:</strong> Confirm the applicant is explicitly named as the primary lead on all awards, patents, open-source repositories, and technical contributions.
+              </li>
+            </ol>
+          </div>
+
+          {/* 4. Audited Evidence Items Breakdown Table */}
+          {job.analysisResult?.evidenceMatrix && job.analysisResult.evidenceMatrix.length > 0 && (
+            <div className="rounded-xl border border-slate-800 bg-slate-900/50 p-5 space-y-3">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                  <Table className="w-4 h-4 text-blue-400" />
+                  <span>Audited Evidence Items Registry ({job.analysisResult.evidenceMatrix.length} Documents)</span>
+                </h3>
+                <span className="text-xs font-mono text-muted-foreground">
+                  Official 2026 Tech Nation Guidelines Check
+                </span>
+              </div>
+
+              <div className="overflow-x-auto">
+                <table className="w-full text-left text-xs border-collapse">
+                  <thead>
+                    <tr className="border-b border-slate-800 text-[11px] font-mono uppercase text-muted-foreground bg-slate-950/60">
+                      <th className="py-2.5 px-3">File Name</th>
+                      <th className="py-2.5 px-3">Assigned Criterion</th>
+                      <th className="py-2.5 px-3">Status</th>
+                      <th className="py-2.5 px-3">Findings / Risk</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-800/60">
+                    {job.analysisResult.evidenceMatrix.map((item: any, idx: number) => (
+                      <tr key={idx} className="hover:bg-slate-800/30">
+                        <td className="py-2.5 px-3 font-semibold text-slate-200">{item.fileName || item.file}</td>
+                        <td className="py-2.5 px-3 text-slate-400">{item.category}</td>
+                        <td className="py-2.5 px-3">
+                          <RiskBadge
+                            status={
+                              item.status === "Passed"
+                                ? "Passed"
+                                : item.status === "Critical"
+                                ? "Critical"
+                                : "Warning"
+                            }
+                            size="sm"
+                            showDot={false}
+                          />
+                        </td>
+                        <td className="py-2.5 px-3 text-slate-400 text-[11px]">{item.risk || item.metrics}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

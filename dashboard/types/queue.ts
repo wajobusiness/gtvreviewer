@@ -37,6 +37,7 @@ export interface AuditJob {
   additionalInstructions?: string;
   finalScore?: number;
   finalStatus?: string;
+  analysisResult?: any;
   error?: string;
   createdAt: string;
   completedAt?: string;
