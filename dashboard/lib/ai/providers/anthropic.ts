@@ -112,6 +112,7 @@ export class AnthropicAiProvider implements IAiProvider {
         criteriaScorecard: parsed.criteriaScorecard || [],
         topRefusalRisks: parsed.topRefusalRisks || [],
         evidenceMatrix: parsed.evidenceMatrix || [],
+        individualDocumentAudits: parsed.individualDocumentAudits || [],
         summary: {
           overallScore: Number(parsed.overallScore) || 50,
           currentStatus: parsed.currentStatus || "BORDERLINE",

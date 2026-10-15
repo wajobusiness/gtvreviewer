@@ -117,6 +117,40 @@ export interface ReportMeta {
   content?: string;
 }
 
+export interface IndividualDocumentAudit {
+  documentId: string;
+  documentName: string;
+  category: string;
+  pageCount: number;
+  pageLimitExceeded: boolean;
+  verdict: "CRITICAL REFUSAL RISK" | "BORDERLINE / WEAK" | "COMPLIANT / STRONG";
+  score: number; // 0-100
+  wordCount: number;
+  screenshotAnalysis: {
+    hasScreenshots: boolean;
+    screenshotCount?: number;
+    details: string;
+    verificationStatus: "VERIFIED_PUBLIC" | "UNVERIFIED_INTERNAL" | "NO_SCREENSHOTS" | "SUSPICIOUS";
+  };
+  personalAttribution: {
+    isPersonallyAttributable: boolean;
+    attributionScore: number; // 0-100
+    analysis: string; // analysis of "I" vs "We" / employer vs individual
+  };
+  corroboration: {
+    isThirdPartyCorroborated: boolean;
+    corroborationType: "INDEPENDENT_PRESS_AUDIT" | "INTERNAL_UNVERIFIED" | "SELF_ASSERTED" | "THIRD_PARTY_LETTER";
+    details: string;
+  };
+  productLedCheck: {
+    isProductLed: boolean;
+    details: string;
+  };
+  fatalDefects: string[];
+  exactQuotes: string[];
+  remediationAdvice: string;
+}
+
 export interface AuditData {
   metadata: AuditMetadata;
   kpis: AuditKPIs;
@@ -127,6 +161,7 @@ export interface AuditData {
   topRefusalRisks: RefusalRisk[];
   panelVotes: PanelVote[];
   evidenceMatrix: EvidenceRow[];
+  individualDocumentAudits?: IndividualDocumentAudit[];
   reports?: ReportMeta[];
   isEmpty?: boolean;
 }

@@ -141,8 +141,51 @@ ${topRefusalRisks
 ${kpis.recommendation}
 `;
 
+  const perDocumentForensicsReport = `# Word-for-Word Per-Document Forensic Dossier
+
+## Statutory Casework Objective
+Every evidence piece must be audited individually before being relied upon in an application dossier.
+Tech Nation caseworkers evaluate each piece against 4 core tests:
+1. **Statutory Page Limit Test**: Max 3 A4 pages per piece.
+2. **Personal Attribution Test ("The Company Trap")**: Does this evidence prove the candidate's direct personal leadership and contribution, or merely aggregate team/company success?
+3. **Independent Third-Party Corroboration**: Are metrics, revenue figures, and claims backed by independent external sources (press, audited financials, client contracts) or self-asserted?
+4. **Visual Artifact & Screenshot Integrity**: Do screenshots have verifiable public URLs, timestamps, or repository links, or are they unverified internal captures?
+
+---
+
+${(result.individualDocumentAudits || [])
+  .map(
+    (doc, idx) => `### Document #${idx + 1}: ${doc.documentName}
+- **Assigned Category:** ${doc.category}
+- **Statutory Length:** ${doc.pageCount} A4 pages ${doc.pageLimitExceeded ? "⚠️ **[EXCEEDS 3-PAGE LIMIT]**" : "✓ (Within 3-page cap)"}
+- **Caseworker Verdict:** **${doc.verdict}** (Score: ${doc.score}/100)
+
+#### 1. Personal Attribution Analysis ("We vs I" Test)
+- **Personally Attributable:** ${doc.personalAttribution.isPersonallyAttributable ? "✓ YES (Candidate's direct work proven)" : "❌ NO — FATAL DEFECT (Conflates corporate/team success with individual leadership)"}
+- **Caseworker Assessment:** ${doc.personalAttribution.analysis}
+
+#### 2. Screenshot & Visual Artifact Inspection
+- **Artifacts Present:** ${doc.screenshotAnalysis.hasScreenshots ? "Yes (Screenshots / UI Captures)" : "No Standalone Screenshots"}
+- **Verification Status:** \`${doc.screenshotAnalysis.verificationStatus}\`
+- **Caseworker Findings:** ${doc.screenshotAnalysis.details}
+
+#### 3. Independent Corroboration & Product-Led Check
+- **Third-Party Corroboration:** ${doc.corroboration.isThirdPartyCorroborated ? "✓ Corroborated by independent sources" : "❌ Uncorroborated / Self-Asserted"} (${doc.corroboration.corroborationType})
+- **Product-Led Qualification:** ${doc.productLedCheck.isProductLed ? "✓ Product-Led Tech Company" : "❌ Non-Product-Led (Agency/Consultancy/Services)"}
+
+#### 4. Fatal Evidentiary Defects
+${doc.fatalDefects.length > 0 ? doc.fatalDefects.map((d) => `- ${d}`).join("\n") : "- None detected. Complies with statutory rules."}
+
+#### 5. Remediation Directive
+> ${doc.remediationAdvice}
+`
+  )
+  .join("\n---\n\n")}
+`;
+
   return {
     "FINAL-REPORT.md": finalReport,
+    "per-document-forensics.md": perDocumentForensicsReport,
     "evidence-matrix.md": evidenceMatrixReport,
     "requirements.md": requirementsReport,
     "letter-forensics.md": letterForensicsReport,

@@ -30,6 +30,7 @@ export interface StructuredAnalysisResult extends AuditData {
   };
   markdownReports: {
     "FINAL-REPORT.md": string;
+    "per-document-forensics.md": string;
     "evidence-matrix.md": string;
     "requirements.md": string;
     "letter-forensics.md": string;
