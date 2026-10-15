@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { searchAllReports } from "@/lib/reports";
+import { getCurrentSession } from "@/lib/auth/session";
 
 export async function GET(request: NextRequest) {
+  const session = await getCurrentSession();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized." }, { status: 401 });
+  }
+
   const { searchParams } = new URL(request.url);
   const q = searchParams.get("q") || "";
 

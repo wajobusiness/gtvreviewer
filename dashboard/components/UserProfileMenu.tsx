@@ -4,13 +4,12 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context/AuthContext";
-import { User, Shield, Briefcase, UserCheck, ChevronDown, Check, Settings, CreditCard, LogOut } from "lucide-react";
-import { UserRole } from "@/types/auth";
+import { Shield, ChevronDown, Settings, CreditCard, LogOut, ShieldCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function UserProfileMenu() {
   const router = useRouter();
-  const { user, switchUserRole, logout } = useAuth();
+  const { user, logout } = useAuth();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -23,24 +22,6 @@ export function UserProfileMenu() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const roles: { role: UserRole; label: string; desc: string }[] = [
-    {
-      role: "SOLICITOR",
-      label: "Immigration Solicitor",
-      desc: "Full access across all candidate portfolios & forensic analysis",
-    },
-    {
-      role: "CANDIDATE",
-      label: "Visa Applicant",
-      desc: "Candidate view for reviewing findings & uploading documents",
-    },
-    {
-      role: "ADMIN",
-      label: "Firm Administrator",
-      desc: "Full administrative & billing management permissions",
-    },
-  ];
 
   return (
     <div className="relative" ref={dropdownRef}>
@@ -64,53 +45,33 @@ export function UserProfileMenu() {
       {open && (
         <div className="absolute top-full right-0 mt-1.5 w-72 rounded-xl border border-slate-800 bg-slate-900 shadow-2xl p-2 z-50 text-xs">
           <div className="p-2 border-b border-slate-800">
-            <div className="font-semibold text-foreground">{user.fullName}</div>
+            <div className="flex items-center justify-between">
+              <span className="font-semibold text-foreground">{user.fullName}</span>
+              <span className={cn(
+                "px-2 py-0.5 rounded text-[10px] font-mono font-bold uppercase",
+                user.role === "ADMIN" 
+                  ? "bg-purple-500/20 text-purple-300 border border-purple-500/30" 
+                  : user.role === "SOLICITOR" 
+                  ? "bg-blue-500/20 text-blue-300 border border-blue-500/30" 
+                  : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+              )}>
+                {user.role}
+              </span>
+            </div>
             <div className="text-[11px] text-muted-foreground font-mono mt-0.5">{user.email}</div>
           </div>
 
-          <div className="p-2 text-[10px] font-mono uppercase tracking-wider text-muted-foreground font-semibold">
-            Simulate Persona / Role View
-          </div>
-
-          <div className="space-y-1">
-            {roles.map((r) => {
-              const isSelected = r.role === user.role;
-              return (
-                <button
-                  key={r.role}
-                  onClick={() => {
-                    switchUserRole(r.role);
-                    setOpen(false);
-                  }}
-                  className={cn(
-                    "w-full flex items-start justify-between p-2 rounded-lg text-left transition-colors",
-                    isSelected
-                      ? "bg-blue-600/15 text-blue-300 font-medium"
-                      : "hover:bg-slate-800 text-slate-300"
-                  )}
-                >
-                  <div>
-                    <div className="font-semibold flex items-center gap-1.5">
-                      {r.role === "SOLICITOR" ? (
-                        <Briefcase className="w-3.5 h-3.5 text-blue-400" />
-                      ) : r.role === "CANDIDATE" ? (
-                        <UserCheck className="w-3.5 h-3.5 text-emerald-400" />
-                      ) : (
-                        <Shield className="w-3.5 h-3.5 text-purple-400" />
-                      )}
-                      <span>{r.label}</span>
-                    </div>
-                    <div className="text-[10px] text-muted-foreground mt-0.5 leading-tight">
-                      {r.desc}
-                    </div>
-                  </div>
-                  {isSelected && <Check className="w-3.5 h-3.5 text-blue-400 shrink-0 ml-2 mt-0.5" />}
-                </button>
-              );
-            })}
-          </div>
-
           <div className="mt-2 pt-2 border-t border-slate-800 space-y-0.5">
+            {user.role === "ADMIN" && (
+              <Link
+                href="/admin"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2 p-2 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 transition-colors font-medium"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />
+                <span>Admin Telemetry</span>
+              </Link>
+            )}
             <Link
               href="/settings"
               onClick={() => setOpen(false)}
@@ -119,14 +80,16 @@ export function UserProfileMenu() {
               <Settings className="w-3.5 h-3.5 text-slate-400" />
               <span>Workspace Settings</span>
             </Link>
-            <Link
-              href="/billing"
-              onClick={() => setOpen(false)}
-              className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
-            >
-              <CreditCard className="w-3.5 h-3.5 text-emerald-400" />
-              <span>Subscription & Billing</span>
-            </Link>
+            {user.role !== "CANDIDATE" && (
+              <Link
+                href="/billing"
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-2 p-2 rounded-lg hover:bg-slate-800 text-slate-300 hover:text-white transition-colors"
+              >
+                <CreditCard className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Subscription & Billing</span>
+              </Link>
+            )}
             <button
               type="button"
               onClick={async () => {

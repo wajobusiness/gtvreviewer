@@ -1,8 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { extractGoogleDriveId, isValidGoogleDriveUrl } from "@/lib/drive";
+import { getCurrentSession } from "@/lib/auth/session";
 
 export async function POST(request: NextRequest) {
   try {
+    const session = await getCurrentSession();
+    if (!session) {
+      return NextResponse.json(
+        { error: "Unauthorized. Please log in to inspect remote portfolios." },
+        { status: 401 }
+      );
+    }
+
     const { url } = await request.json().catch(() => ({}));
 
     if (!url || typeof url !== "string" || !url.trim()) {

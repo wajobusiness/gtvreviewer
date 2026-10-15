@@ -18,9 +18,10 @@ import {
   Trash2,
   ExternalLink,
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function SettingsPage() {
-  const { user, organization, switchUserRole } = useAuth();
+  const { user, organization } = useAuth();
   const [activeTab, setActiveTab] = useState<"profile" | "org" | "team" | "security" | "notifications">("profile");
   const [savedSuccess, setSavedSuccess] = useState(false);
 
@@ -193,18 +194,31 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <label className="block text-slate-300 font-semibold mb-1">Active User Role</label>
-              <select
-                value={user.role}
-                onChange={(e) => switchUserRole(e.target.value as any)}
-                className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-white focus:outline-none focus:border-blue-500"
-              >
-                <option value="SOLICITOR">Senior Solicitor / Partner</option>
-                <option value="CANDIDATE">Direct Visa Applicant</option>
-                <option value="ADMIN">System Administrator</option>
-              </select>
+              <label className="block text-slate-300 font-semibold mb-1">Assigned Platform Role</label>
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-950 border border-slate-800">
+                <div className="flex items-center gap-2">
+                  <span className={cn(
+                    "px-2.5 py-1 rounded text-xs font-mono font-bold uppercase",
+                    user.role === "ADMIN"
+                      ? "bg-purple-500/20 text-purple-300 border border-purple-500/30"
+                      : user.role === "SOLICITOR"
+                      ? "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                      : "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"
+                  )}>
+                    {user.role}
+                  </span>
+                  <span className="text-slate-300 text-xs font-medium">
+                    {user.role === "SOLICITOR"
+                      ? "Senior Immigration Solicitor"
+                      : user.role === "CANDIDATE"
+                      ? "Direct Visa Candidate"
+                      : "Firm Administrator"}
+                  </span>
+                </div>
+                <span className="text-[11px] text-muted-foreground font-mono">Verified by Neon DB</span>
+              </div>
               <p className="text-[11px] text-slate-400 mt-1">
-                Switching role toggles UI permissions and solicitor legal sign-off authority.
+                Roles govern portfolio visibility, solicitor export rights, and administrative capabilities. Role elevation requires workspace administrator approval.
               </p>
             </div>
           </div>

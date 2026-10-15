@@ -1,10 +1,16 @@
 import { NextRequest } from "next/server";
 import { jobManager } from "@/lib/queue/jobManager";
+import { getCurrentSession } from "@/lib/auth/session";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  const session = await getCurrentSession();
+  if (!session) {
+    return new Response("Unauthorized", { status: 401 });
+  }
+
   const { id } = await params;
   const initialJob = jobManager.getJob(id);
 

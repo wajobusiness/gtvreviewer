@@ -68,6 +68,19 @@ export async function ensureAuthSchema() {
       ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
     `.catch(() => {});
 
+    // 5. Ensure password_reset_tokens table exists
+    await sql`
+      CREATE TABLE IF NOT EXISTS password_reset_tokens (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        email VARCHAR(255) NOT NULL,
+        token VARCHAR(255) UNIQUE NOT NULL,
+        expires_at TIMESTAMP WITH TIME ZONE NOT NULL,
+        used BOOLEAN DEFAULT FALSE,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+      CREATE INDEX IF NOT EXISTS idx_reset_tokens_token ON password_reset_tokens(token);
+    `.catch(() => {});
+
     schemaChecked = true;
   } catch (err: any) {
     console.warn("[NeonDB:Auth] Schema check notice:", err?.message || err);
@@ -186,6 +199,106 @@ export async function createUser(params: {
   } catch (err: any) {
     console.error("[NeonDB:Auth] createUser error:", err?.message || err);
     throw err;
+  }
+}
+
+/**
+ * Creates a secure password reset token valid for 1 hour.
+ */
+export async function createPasswordResetToken(email: string): Promise<string | null> {
+  const sql = getDb();
+  if (!sql) return null;
+
+  await ensureAuthSchema();
+
+  try {
+    const cleanEmail = email.trim().toLowerCase();
+    const user = await findUserByEmail(cleanEmail);
+    if (!user) {
+      return null; // Email not registered
+    }
+
+    const { randomBytes } = await import("node:crypto");
+    const token = randomBytes(32).toString("hex");
+    const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+    await sql`
+      INSERT INTO password_reset_tokens (email, token, expires_at)
+      VALUES (${cleanEmail}, ${token}, ${expiresAt});
+    `;
+
+    return token;
+  } catch (err: any) {
+    console.error("[NeonDB:Auth] createPasswordResetToken error:", err?.message || err);
+    return null;
+  }
+}
+
+/**
+ * Verifies a reset token and returns the corresponding email if valid.
+ */
+export async function verifyResetToken(token: string): Promise<string | null> {
+  const sql = getDb();
+  if (!sql) return null;
+
+  await ensureAuthSchema();
+
+  try {
+    const rows = await sql`
+      SELECT email, expires_at, used
+      FROM password_reset_tokens
+      WHERE token = ${token.trim()}
+      LIMIT 1;
+    `;
+
+    if (!rows || rows.length === 0) return null;
+    const record = rows[0];
+
+    if (record.used) return null;
+    if (new Date(record.expires_at).getTime() < Date.now()) return null;
+
+    return String(record.email);
+  } catch (err: any) {
+    console.error("[NeonDB:Auth] verifyResetToken error:", err?.message || err);
+    return null;
+  }
+}
+
+/**
+ * Updates user password with a verified reset token.
+ */
+export async function resetUserPasswordWithToken(
+  token: string,
+  newPasswordHash: string
+): Promise<boolean> {
+  const sql = getDb();
+  if (!sql) return false;
+
+  await ensureAuthSchema();
+
+  try {
+    const email = await verifyResetToken(token);
+    if (!email) return false;
+
+    // 1. Update user password
+    await sql`
+      UPDATE users
+      SET password_hash = ${newPasswordHash},
+          updated_at = CURRENT_TIMESTAMP
+      WHERE LOWER(email) = LOWER(${email});
+    `;
+
+    // 2. Mark token as used
+    await sql`
+      UPDATE password_reset_tokens
+      SET used = TRUE
+      WHERE token = ${token.trim()};
+    `;
+
+    return true;
+  } catch (err: any) {
+    console.error("[NeonDB:Auth] resetUserPasswordWithToken error:", err?.message || err);
+    return false;
   }
 }
 
