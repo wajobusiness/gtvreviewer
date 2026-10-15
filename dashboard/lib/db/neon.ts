@@ -44,13 +44,17 @@ export async function saveAuditRunToDb(params: {
 
   try {
     const { projectId, candidateName, visaRoute, targetField, analysis } = params;
-    const runId = `run-${Date.now()}`;
+    const isUuid = (val?: string): boolean =>
+      !!val && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(val);
+
+    const projectUuid = isUuid(projectId) ? projectId : crypto.randomUUID();
+    const runUuid = crypto.randomUUID();
 
     // 1. Ensure project exists in DB
     await sql`
       INSERT INTO projects (id, organization_id, candidate_name, visa_route, target_field, current_score, status)
       VALUES (
-        ${projectId}::uuid,
+        ${projectUuid}::uuid,
         (SELECT id FROM organizations LIMIT 1),
         ${candidateName},
         ${visaRoute},
@@ -84,9 +88,9 @@ export async function saveAuditRunToDb(params: {
         raw_audit_json,
         status
       ) VALUES (
-        ${runId}::uuid,
-        ${projectId}::uuid,
-        (SELECT COALESCE(MAX(version_number), 0) + 1 FROM audit_runs WHERE project_id = ${projectId}::uuid),
+        ${runUuid}::uuid,
+        ${projectUuid}::uuid,
+        (SELECT COALESCE(MAX(version_number), 0) + 1 FROM audit_runs WHERE project_id = ${projectUuid}::uuid),
         ${analysis.kpis.overallScore},
         ${analysis.kpis.currentStatus},
         ${analysis.kpis.recommendation},
@@ -110,7 +114,7 @@ export async function saveAuditRunToDb(params: {
             category,
             content
           ) VALUES (
-            ${runId}::uuid,
+            ${runUuid}::uuid,
             ${slug},
             ${filename.replace(/\.md$/, "")},
             ${filename},
@@ -123,8 +127,8 @@ export async function saveAuditRunToDb(params: {
       }
     }
 
-    console.info(`[NeonDB] Successfully stored audit run ${runId} for project ${projectId}`);
-    return runId;
+    console.info(`[NeonDB] Successfully stored audit run ${runUuid} for project ${projectUuid}`);
+    return runUuid;
   } catch (err: any) {
     console.error("[NeonDB] Error saving audit run to Postgres:", err?.message || err);
     return null;

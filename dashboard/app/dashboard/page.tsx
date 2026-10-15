@@ -32,11 +32,14 @@ import {
 export default async function ExecutiveDashboardPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ sample?: string }>;
+  searchParams?: Promise<{ sample?: string; projectId?: string; runId?: string }>;
 }) {
   const resolvedParams = searchParams ? await searchParams : {};
   const isSample = resolvedParams.sample === "true";
-  const audit = getAuditData(isSample ? "sample-audit" : undefined);
+  const audit = getAuditData(
+    isSample ? "sample-audit" : resolvedParams.projectId,
+    resolvedParams.runId
+  );
   const { metadata, kpis, radarChart, complianceBreakdown, timeline, topRefusalRisks, reports = [] } = audit;
 
   const hasAnalysis = kpis.totalFilesAnalysed > 0 || kpis.overallScore > 0;

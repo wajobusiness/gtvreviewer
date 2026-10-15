@@ -32,9 +32,15 @@ export function getAuditData(projectId?: string, runId?: string): AuditData {
     const analysis = jobManager.getAnalysisForRun(runId);
     if (analysis) return analysis;
   }
-  if (projectId) {
+  if (projectId && projectId !== "sample-audit") {
     const analysis = jobManager.getAnalysisForProject(projectId);
     if (analysis) return analysis;
+  }
+
+  // Check if there is a recently completed analysis in memory
+  if (!projectId && !runId) {
+    const latest = jobManager.getLatestAnalysis();
+    if (latest) return latest;
   }
 
   // Explicit sample demonstration mode
@@ -51,8 +57,10 @@ export function getAllReports(projectId?: string, runId?: string): ReportMeta[] 
   let targetAnalysis = null;
   if (runId) {
     targetAnalysis = jobManager.getAnalysisForRun(runId);
-  } else if (projectId) {
+  } else if (projectId && projectId !== "sample-audit") {
     targetAnalysis = jobManager.getAnalysisForProject(projectId);
+  } else if (projectId !== "sample-audit" && runId !== "sample") {
+    targetAnalysis = jobManager.getLatestAnalysis();
   }
 
   if (targetAnalysis && targetAnalysis.markdownReports) {
@@ -91,8 +99,10 @@ export function getReportBySlug(
   let targetAnalysis = null;
   if (runId) {
     targetAnalysis = jobManager.getAnalysisForRun(runId);
-  } else if (projectId) {
+  } else if (projectId && projectId !== "sample-audit") {
     targetAnalysis = jobManager.getAnalysisForProject(projectId);
+  } else if (projectId !== "sample-audit" && runId !== "sample") {
+    targetAnalysis = jobManager.getLatestAnalysis();
   }
 
   if (targetAnalysis && targetAnalysis.markdownReports) {

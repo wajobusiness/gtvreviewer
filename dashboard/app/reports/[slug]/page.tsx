@@ -21,6 +21,7 @@ import {
 
 interface PageProps {
   params: Promise<{ slug: string }>;
+  searchParams?: Promise<{ sample?: string; projectId?: string; runId?: string }>;
 }
 
 export async function generateStaticParams() {
@@ -35,9 +36,12 @@ export async function generateStaticParams() {
   ];
 }
 
-export default async function ReportAnalysisPage({ params }: PageProps) {
+export default async function ReportAnalysisPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
-  let reportData = await Promise.resolve(getReportBySlug(slug));
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  let reportData = await Promise.resolve(
+    getReportBySlug(slug, resolvedSearchParams.projectId, resolvedSearchParams.runId)
+  );
 
   if (!reportData) {
     reportData = await Promise.resolve(getReportBySlug(slug, "sample-audit"));
@@ -62,7 +66,7 @@ export default async function ReportAnalysisPage({ params }: PageProps) {
   const wordCount = content.split(/\s+/).length;
   const readTimeMin = Math.max(1, Math.ceil(wordCount / 220));
 
-  const audit = getAuditData();
+  const audit = getAuditData(resolvedSearchParams.projectId, resolvedSearchParams.runId);
 
   // Determine metadata summary based on report slug and active audit
   const getAiSummary = (slug: string) => {

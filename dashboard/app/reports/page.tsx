@@ -4,8 +4,19 @@ import { getAllReports } from "@/lib/reports";
 import { ReportCard } from "@/components/ReportCard";
 import { FileText, Sparkles, FolderSync } from "lucide-react";
 
-export default async function ReportsIndexPage() {
-  const reportsData = await Promise.resolve(getAllReports());
+export default async function ReportsIndexPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ sample?: string; projectId?: string; runId?: string }>;
+}) {
+  const resolvedParams = searchParams ? await searchParams : {};
+  const isSample = resolvedParams.sample === "true";
+  const reportsData = await Promise.resolve(
+    getAllReports(
+      isSample ? "sample-audit" : resolvedParams.projectId,
+      resolvedParams.runId
+    )
+  );
   const reports = Array.isArray(reportsData) ? reportsData : [];
 
   return (

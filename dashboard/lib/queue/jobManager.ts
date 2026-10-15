@@ -144,6 +144,18 @@ class JobManager {
     return this.analysesByRunId.get(runId) || null;
   }
 
+  public getLatestAnalysis(): StructuredAnalysisResult | null {
+    const runs = Array.from(this.analysesByRunId.values());
+    if (runs.length > 0) {
+      return runs[runs.length - 1];
+    }
+    const projects = Array.from(this.analysesByProjectId.values());
+    if (projects.length > 0) {
+      return projects[projects.length - 1];
+    }
+    return null;
+  }
+
   public subscribe(jobId: string, listener: JobListener): () => void {
     if (!this.listeners.has(jobId)) {
       this.listeners.set(jobId, new Set());

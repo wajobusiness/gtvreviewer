@@ -198,13 +198,22 @@ export default function JobMonitorPage() {
                 {job.finalScore ?? 0}/100
               </div>
             </div>
-            <Link
-              href="/dashboard"
-              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white shadow-md transition-colors flex items-center gap-1.5"
-            >
-              <span>View Dashboard</span>
-              <ArrowRight className="w-3.5 h-3.5" />
-            </Link>
+            <div className="flex items-center gap-2">
+              <Link
+                href={job.resultRunId ? `/dashboard?runId=${job.resultRunId}&projectId=${job.projectId}` : "/dashboard"}
+                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold text-white shadow-md transition-colors flex items-center gap-1.5"
+              >
+                <span>View Dashboard</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
+              <Link
+                href={job.resultRunId ? `/reports?runId=${job.resultRunId}&projectId=${job.projectId}` : "/reports"}
+                className="px-3.5 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition-colors flex items-center gap-1.5"
+              >
+                <FileText className="w-3.5 h-3.5 text-blue-400" />
+                <span>Reports (7)</span>
+              </Link>
+            </div>
           </div>
         </div>
       )}
