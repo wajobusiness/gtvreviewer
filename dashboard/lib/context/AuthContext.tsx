@@ -94,6 +94,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             try {
               localStorage.setItem("gt_user_session", JSON.stringify(data.user));
             } catch {}
+
+            // Load persistent projects from Neon PostgreSQL
+            try {
+              const projRes = await fetch("/api/projects");
+              if (projRes.ok) {
+                const projData = await projRes.json();
+                if (Array.isArray(projData.projects) && projData.projects.length > 0) {
+                  setProjects(projData.projects);
+                  const savedActiveProj = localStorage.getItem("gt_active_proj");
+                  const target =
+                    projData.projects.find((p: any) => p.id === savedActiveProj) ||
+                    projData.projects[0];
+                  setCurrentProjectId(target.id);
+                  localStorage.setItem("gt_user_projects", JSON.stringify(projData.projects));
+                }
+              }
+            } catch (pErr) {
+              console.warn("[AuthContext] Projects fetch notice:", pErr);
+            }
+
             setIsLoading(false);
             return;
           }
@@ -220,9 +240,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     targetField: "Digital Technology" | "Arts and Culture" | "Research and Academia";
     applicantType: "Technical" | "Business" | "Both";
   }): ProjectSession => {
-    const newId = `proj-${Date.now()}`;
+    const tempId = `proj-${Date.now()}`;
     const newProject: ProjectSession = {
-      id: newId,
+      id: tempId,
       ...newProjectData,
       status: "draft",
       currentScore: 0,
@@ -238,10 +258,37 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return updated;
     });
 
-    setCurrentProjectId(newId);
+    setCurrentProjectId(tempId);
     try {
-      localStorage.setItem("gt_active_proj", newId);
+      localStorage.setItem("gt_active_proj", tempId);
     } catch {}
+
+    // Persist to Neon PostgreSQL
+    fetch("/api/projects", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(newProjectData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data?.project?.id) {
+          const persistedId = data.project.id;
+          setProjects((prev) => {
+            const updated = prev.map((p) =>
+              p.id === tempId ? { ...p, id: persistedId } : p
+            );
+            try {
+              localStorage.setItem("gt_user_projects", JSON.stringify(updated));
+            } catch {}
+            return updated;
+          });
+          setCurrentProjectId(persistedId);
+          try {
+            localStorage.setItem("gt_active_proj", persistedId);
+          } catch {}
+        }
+      })
+      .catch((err) => console.warn("[Projects] Error syncing to DB:", err));
 
     return newProject;
   };
@@ -259,10 +306,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const remaining = projects.filter((p) => p.id !== projectId);
       if (remaining.length > 0) {
         setCurrentProjectId(remaining[0].id);
+        try {
+          localStorage.setItem("gt_active_proj", remaining[0].id);
+        } catch {}
       } else {
         setCurrentProjectId("");
+        try {
+          localStorage.removeItem("gt_active_proj");
+        } catch {}
       }
     }
+
+    // Delete from Neon PostgreSQL
+    fetch(`/api/projects?id=${encodeURIComponent(projectId)}`, {
+      method: "DELETE",
+    }).catch((err) => console.warn("[Projects] Error deleting from DB:", err));
   };
 
   const updateProjectScore = (

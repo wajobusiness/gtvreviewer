@@ -333,4 +333,141 @@ export async function listJobsFromDb(projectId?: string): Promise<any[]> {
   }
 }
 
+let projectsTableChecked = false;
+
+export async function ensureProjectsTable() {
+  if (projectsTableChecked) return;
+  const sql = getDb();
+  if (!sql) return;
+
+  try {
+    await sql`
+      CREATE TABLE IF NOT EXISTS projects (
+        id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+        organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
+        candidate_name VARCHAR(255) NOT NULL,
+        visa_route VARCHAR(100) NOT NULL,
+        target_field VARCHAR(100) DEFAULT 'Digital Technology',
+        applicant_type VARCHAR(50) DEFAULT 'Both',
+        status VARCHAR(50) DEFAULT 'draft',
+        current_score INTEGER DEFAULT 0,
+        latest_run_id VARCHAR(100),
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      );
+      CREATE INDEX IF NOT EXISTS idx_projects_org ON projects(organization_id);
+    `.catch(() => {});
+    projectsTableChecked = true;
+  } catch (e: any) {
+    console.warn("[NeonDB] Error ensuring projects table:", e?.message);
+  }
+}
+
+export async function createProjectInDb(params: {
+  organizationId: string;
+  candidateName: string;
+  visaRoute: string;
+  targetField?: string;
+  applicantType?: string;
+}): Promise<any | null> {
+  const sql = getDb();
+  if (!sql) return null;
+
+  await ensureProjectsTable();
+
+  try {
+    const rows = await sql`
+      INSERT INTO projects (
+        organization_id,
+        candidate_name,
+        visa_route,
+        target_field,
+        applicant_type,
+        status,
+        current_score
+      ) VALUES (
+        ${params.organizationId}::uuid,
+        ${params.candidateName.trim()},
+        ${params.visaRoute},
+        ${params.targetField || "Digital Technology"},
+        ${params.applicantType || "Both"},
+        'draft',
+        0
+      )
+      RETURNING *;
+    `;
+
+    if (!rows || rows.length === 0) return null;
+    const r = rows[0];
+    return {
+      id: String(r.id),
+      organizationId: String(r.organization_id),
+      candidateName: r.candidate_name,
+      visaRoute: r.visa_route,
+      targetField: r.target_field,
+      applicantType: r.applicant_type,
+      status: r.status,
+      currentScore: r.current_score || 0,
+      totalRuns: 0,
+      activeRunId: "",
+      createdAt: r.created_at,
+    };
+  } catch (err: any) {
+    console.error("[NeonDB] createProjectInDb error:", err?.message || err);
+    return null;
+  }
+}
+
+export async function listProjectsFromDb(organizationId: string): Promise<any[]> {
+  const sql = getDb();
+  if (!sql) return [];
+
+  await ensureProjectsTable();
+
+  try {
+    const rows = await sql`
+      SELECT * FROM projects
+      WHERE organization_id = ${organizationId}::uuid
+      ORDER BY created_at DESC;
+    `;
+
+    return (rows || []).map((r: any) => ({
+      id: String(r.id),
+      organizationId: String(r.organization_id),
+      candidateName: r.candidate_name,
+      visaRoute: r.visa_route,
+      targetField: r.target_field,
+      applicantType: r.applicant_type,
+      status: r.status,
+      currentScore: r.current_score || 0,
+      totalRuns: 0,
+      activeRunId: r.latest_run_id || "",
+      createdAt: r.created_at,
+    }));
+  } catch (err: any) {
+    console.warn("[NeonDB] listProjectsFromDb warning:", err?.message || err);
+    return [];
+  }
+}
+
+export async function deleteProjectFromDb(
+  projectId: string,
+  organizationId: string
+): Promise<boolean> {
+  const sql = getDb();
+  if (!sql) return false;
+
+  try {
+    await sql`
+      DELETE FROM projects
+      WHERE id = ${projectId}::uuid AND organization_id = ${organizationId}::uuid;
+    `;
+    return true;
+  } catch (err: any) {
+    console.error("[NeonDB] deleteProjectFromDb error:", err?.message || err);
+    return false;
+  }
+}
+
+
 
